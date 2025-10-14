@@ -238,6 +238,12 @@ export default function POEditor() {
     setOrderLines(updated);
   };
 
+  const updateBillToAddress = (index, value) => {
+    const updated = [...billTo.address_lines];
+    updated[index] = value;
+    setBillTo({ ...billTo, address_lines: updated });
+  };
+
   const updateSupplierAddress = (index, value) => {
     const updated = [...supplier.address_lines];
     updated[index] = value;
