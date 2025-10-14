@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -6,7 +6,7 @@ import os
 import logging
 from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone
 
@@ -26,45 +26,201 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
+# PO Models
+class OrderLine(BaseModel):
+    style_code: str
+    product_description: str
+    fabric_gsm: str
+    colors: List[str]
+    size_range: List[str]
+    quantity: int
+    unit_price: float
+    unit: str = "pcs"
+
+class SizeColourBreakdown(BaseModel):
+    sizes: List[str]
+    colors: List[str]
+    values: Dict[str, Dict[str, int]]  # {color: {size: count}}
+    grand_total: int
+
+class PackingInstructions(BaseModel):
+    folding: Optional[str] = None
+    packing_type: Optional[str] = None
+    size_packing: Optional[str] = None
+    carton_bag_markings: Optional[str] = None
+    packing_ratio: Optional[str] = None
+    polybag: Optional[str] = None
+
+class OtherTerms(BaseModel):
+    qc: Optional[str] = None
+    labels_tags: Optional[str] = None
+    shortage_excess: Optional[str] = None
+    penalty: Optional[str] = None
+    notes: Optional[str] = None
+
+class Authorisation(BaseModel):
+    buyer_designation: Optional[str] = None
+    buyer_name: Optional[str] = None
+    supplier_designation: Optional[str] = None
+    supplier_name: Optional[str] = None
+
+class Supplier(BaseModel):
+    company: str
+    address_lines: List[str]
+    gstin: Optional[str] = None
+    contact_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+
+class PurchaseOrder(BaseModel):
+    model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    po_number: str
+    po_date: str
+    supplier: Supplier
+    delivery_date: str
+    delivery_terms: str
+    payment_terms: str
+    currency: str = "INR"
+    order_lines: List[OrderLine]
+    size_colour_breakdown: SizeColourBreakdown
+    packing_instructions: PackingInstructions
+    other_terms: OtherTerms
+    authorisation: Authorisation
+    logo_url: Optional[str] = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+class POCreate(BaseModel):
+    po_number: str
+    po_date: str
+    supplier: Supplier
+    delivery_date: str
+    delivery_terms: str
+    payment_terms: str
+    currency: str = "INR"
+    order_lines: List[OrderLine]
+    size_colour_breakdown: SizeColourBreakdown
+    packing_instructions: PackingInstructions
+    other_terms: OtherTerms
+    authorisation: Authorisation
+    logo_url: Optional[str] = None
 
-# Add your routes to the router instead of directly to app
+class POUpdate(BaseModel):
+    po_number: Optional[str] = None
+    po_date: Optional[str] = None
+    supplier: Optional[Supplier] = None
+    delivery_date: Optional[str] = None
+    delivery_terms: Optional[str] = None
+    payment_terms: Optional[str] = None
+    currency: Optional[str] = None
+    order_lines: Optional[List[OrderLine]] = None
+    size_colour_breakdown: Optional[SizeColourBreakdown] = None
+    packing_instructions: Optional[PackingInstructions] = None
+    other_terms: Optional[OtherTerms] = None
+    authorisation: Optional[Authorisation] = None
+    logo_url: Optional[str] = None
+
+
+# Routes
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Newline Apparel PO Generator API"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
+@api_router.post("/pos", response_model=PurchaseOrder)
+async def create_po(po_data: POCreate):
+    po_obj = PurchaseOrder(**po_data.model_dump())
+    doc = po_obj.model_dump()
+    doc['created_at'] = doc['created_at'].isoformat()
+    doc['updated_at'] = doc['updated_at'].isoformat()
     
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+    await db.purchase_orders.insert_one(doc)
+    return po_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
+@api_router.get("/pos", response_model=List[PurchaseOrder])
+async def get_all_pos(search: Optional[str] = None, supplier: Optional[str] = None):
+    query = {}
     
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
+    if search:
+        query["$or"] = [
+            {"po_number": {"$regex": search, "$options": "i"}},
+            {"supplier.company": {"$regex": search, "$options": "i"}}
+        ]
     
-    return status_checks
+    if supplier:
+        query["supplier.company"] = {"$regex": supplier, "$options": "i"}
+    
+    pos = await db.purchase_orders.find(query, {"_id": 0}).to_list(1000)
+    
+    for po in pos:
+        if isinstance(po['created_at'], str):
+            po['created_at'] = datetime.fromisoformat(po['created_at'])
+        if isinstance(po['updated_at'], str):
+            po['updated_at'] = datetime.fromisoformat(po['updated_at'])
+    
+    return pos
+
+@api_router.get("/pos/{po_id}", response_model=PurchaseOrder)
+async def get_po(po_id: str):
+    po = await db.purchase_orders.find_one({"id": po_id}, {"_id": 0})
+    
+    if not po:
+        raise HTTPException(status_code=404, detail="PO not found")
+    
+    if isinstance(po['created_at'], str):
+        po['created_at'] = datetime.fromisoformat(po['created_at'])
+    if isinstance(po['updated_at'], str):
+        po['updated_at'] = datetime.fromisoformat(po['updated_at'])
+    
+    return po
+
+@api_router.put("/pos/{po_id}", response_model=PurchaseOrder)
+async def update_po(po_id: str, po_update: POUpdate):
+    existing_po = await db.purchase_orders.find_one({"id": po_id}, {"_id": 0})
+    
+    if not existing_po:
+        raise HTTPException(status_code=404, detail="PO not found")
+    
+    update_data = po_update.model_dump(exclude_unset=True)
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    await db.purchase_orders.update_one(
+        {"id": po_id},
+        {"$set": update_data}
+    )
+    
+    updated_po = await db.purchase_orders.find_one({"id": po_id}, {"_id": 0})
+    
+    if isinstance(updated_po['created_at'], str):
+        updated_po['created_at'] = datetime.fromisoformat(updated_po['created_at'])
+    if isinstance(updated_po['updated_at'], str):
+        updated_po['updated_at'] = datetime.fromisoformat(updated_po['updated_at'])
+    
+    return updated_po
+
+@api_router.delete("/pos/{po_id}")
+async def delete_po(po_id: str):
+    result = await db.purchase_orders.delete_one({"id": po_id})
+    
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="PO not found")
+    
+    return {"message": "PO deleted successfully"}
+
+@api_router.get("/buyer-info")
+async def get_buyer_info():
+    return {
+        "company": "Newline Apparel",
+        "address_lines": [
+            "61, GKD Nagar, PN Palayam",
+            "Coimbatore – 641037",
+            "Tamil Nadu"
+        ],
+        "gstin": "33AABCN1234F1Z5",
+        "brand_name": "Newline Apparel"
+    }
+
 
 # Include the router in the main app
 app.include_router(api_router)
