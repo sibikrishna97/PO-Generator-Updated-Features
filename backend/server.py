@@ -64,13 +64,18 @@ class Authorisation(BaseModel):
     supplier_designation: Optional[str] = None
     supplier_name: Optional[str] = None
 
-class Supplier(BaseModel):
+class Party(BaseModel):
     company: str
     address_lines: List[str]
     gstin: Optional[str] = None
     contact_name: Optional[str] = None
     phone: Optional[str] = None
     email: Optional[str] = None
+
+class BuyerStatic(BaseModel):
+    company: str = "Newline Apparel"
+    address_lines: List[str] = ["61, GKD Nagar, PN Palayam", "Coimbatore – 641037", "Tamil Nadu"]
+    gstin: str = "33AABCN1234F1Z5"
 
 class PurchaseOrder(BaseModel):
     model_config = ConfigDict(extra="ignore")
