@@ -83,7 +83,9 @@ class PurchaseOrder(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     po_number: str
     po_date: str
-    supplier: Supplier
+    bill_to: Party
+    buyer_static: BuyerStatic = Field(default_factory=BuyerStatic)
+    supplier: Party
     delivery_date: str
     delivery_terms: str
     payment_terms: str
@@ -100,7 +102,8 @@ class PurchaseOrder(BaseModel):
 class POCreate(BaseModel):
     po_number: str
     po_date: str
-    supplier: Supplier
+    bill_to: Party
+    supplier: Party
     delivery_date: str
     delivery_terms: str
     payment_terms: str
@@ -115,7 +118,8 @@ class POCreate(BaseModel):
 class POUpdate(BaseModel):
     po_number: Optional[str] = None
     po_date: Optional[str] = None
-    supplier: Optional[Supplier] = None
+    bill_to: Optional[Party] = None
+    supplier: Optional[Party] = None
     delivery_date: Optional[str] = None
     delivery_terms: Optional[str] = None
     payment_terms: Optional[str] = None
