@@ -39,6 +39,16 @@ export default function POEditor() {
   const [currency, setCurrency] = useState('INR');
   const [logoUrl, setLogoUrl] = useState('');
 
+  // Bill To (Invoice Party)
+  const [billTo, setBillTo] = useState({
+    company: '',
+    address_lines: ['', '', ''],
+    gstin: '',
+    contact_name: '',
+    phone: '',
+    email: ''
+  });
+
   // Supplier
   const [supplier, setSupplier] = useState({
     company: '',
