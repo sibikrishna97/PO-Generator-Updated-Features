@@ -5,6 +5,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
   const { 
     logoUrl, 
     poNumber, 
+    billTo,
     buyer, 
     supplier, 
     meta, 
@@ -37,23 +38,41 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       </div>
 
-      {/* Addresses */}
+      {/* Top Address Band - Bill To & Buyer */}
       <div className="grid grid-cols-2 gap-6 mb-3 avoid-break">
         <div>
-          <div className="po-section-title mb-1">Bill To (Buyer)</div>
+          <div className="po-section-title mb-1">Bill To (Invoice Party)</div>
+          <div className="text-[9.5pt]">{billTo?.company}</div>
+          {billTo?.address_lines?.map((line, idx) => (
+            <div key={idx} className="text-[9.5pt]">{line}</div>
+          ))}
+          {billTo?.gstin && <div className="text-[9.5pt]">GSTIN: {billTo.gstin}</div>}
+          {billTo?.contact_name && <div className="text-[9.5pt]">Contact: {billTo.contact_name}</div>}
+          {billTo?.phone && <div className="text-[9.5pt]">Phone: {billTo.phone}</div>}
+        </div>
+        <div>
+          <div className="po-section-title mb-1">Buyer</div>
           <div className="text-[9.5pt]">{buyer?.company}</div>
           {buyer?.address_lines?.map((line, idx) => (
             <div key={idx} className="text-[9.5pt]">{line}</div>
           ))}
           {buyer?.gstin && <div className="text-[9.5pt]">GSTIN: {buyer.gstin}</div>}
         </div>
-        <div>
-          <div className="po-section-title mb-1">Supplier / Factory</div>
-          <div className="text-[9.5pt]">{supplier?.company}</div>
-          {supplier?.address_lines?.map((line, idx) => (
-            <div key={idx} className="text-[9.5pt]">{line}</div>
-          ))}
-          {supplier?.gstin && <div className="text-[9.5pt]">GSTIN: {supplier.gstin}</div>}
+      </div>
+
+      {/* Supplier Block - Full Width */}
+      <div className="mb-3 avoid-break">
+        <div className="po-section-title mb-1">Supplier / Factory</div>
+        <div className="text-[9.5pt]">
+          <strong>{supplier?.company}</strong>
+        </div>
+        {supplier?.address_lines?.map((line, idx) => (
+          <div key={idx} className="text-[9.5pt]">{line}</div>
+        ))}
+        <div className="flex gap-4 mt-1">
+          {supplier?.gstin && <span className="text-[9.5pt]">GSTIN: {supplier.gstin}</span>}
+          {supplier?.contact_name && <span className="text-[9.5pt]">Contact: {supplier.contact_name}</span>}
+          {supplier?.phone && <span className="text-[9.5pt]">Phone: {supplier.phone}</span>}
         </div>
       </div>
 
