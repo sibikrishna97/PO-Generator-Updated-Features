@@ -150,6 +150,10 @@ export default function POEditor() {
       toast.error('PO Date is required');
       return;
     }
+    if (!billTo.company.trim()) {
+      toast.error('Bill To company name is required');
+      return;
+    }
     if (!supplier.company.trim()) {
       toast.error('Supplier company name is required');
       return;
@@ -168,6 +172,7 @@ export default function POEditor() {
       const poData = {
         po_number: poNumber,
         po_date: poDate,
+        bill_to: billTo,
         supplier,
         delivery_date: deliveryDate,
         delivery_terms: deliveryTerms,
