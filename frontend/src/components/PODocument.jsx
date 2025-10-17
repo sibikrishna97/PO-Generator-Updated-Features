@@ -21,13 +21,17 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
     return sum + (Number(line.quantity) * Number(line.unit_price));
   }, 0) || 0;
 
+  // Auto-populate colours and sizes from matrix
+  const matrixColours = matrix?.colors?.join(', ') || '';
+  const matrixSizeRange = matrix?.sizes?.join(', ') || '';
+
   return (
     <div ref={ref} className="po-doc" data-testid="po-print-document">
       {/* Header - Logo and Title on same line */}
       <div className="flex items-center justify-between mb-4 avoid-break">
         <div className="flex items-center gap-4">
           {logoUrl ? (
-            <img src={logoUrl} alt="Company Logo" style={{ height: '32pt', width: 'auto' }} />
+            <img src={logoUrl} alt="Company Logo" style={{ height: '32pt', width: 'auto', maxWidth: '80pt' }} />
           ) : (
             <div style={{ 
               height: '32pt', 
@@ -85,84 +89,84 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       </div>
 
-      {/* PO Meta Details - Table Format */}
-      <div className="mb-3 avoid-break">
-        <table className="po-table" style={{ width: '100%' }}>
+      {/* PO Meta Details - Bordered Table Format */}
+      <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
-              <th style={{ width: '25%', fontSize: '9pt' }}>PO Date</th>
-              <th style={{ width: '25%', fontSize: '9pt' }}>Delivery Date</th>
-              <th style={{ width: '25%', fontSize: '9pt' }}>Payment Terms</th>
-              <th style={{ width: '25%', fontSize: '9pt' }}>Delivery Terms</th>
+            <tr style={{ backgroundColor: '#F5F5F7' }}>
+              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>PO Date</th>
+              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Delivery Date</th>
+              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Payment Terms</th>
+              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Delivery Terms</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td style={{ fontSize: '9pt' }}>{meta?.poDate || 'N/A'}</td>
-              <td style={{ fontSize: '9pt' }}>{meta?.deliveryDate || 'N/A'}</td>
-              <td style={{ fontSize: '9pt' }}>{meta?.paymentTerms || 'N/A'}</td>
-              <td style={{ fontSize: '9pt' }}>{meta?.deliveryTerms || 'N/A'}</td>
+              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.poDate || 'N/A'}</td>
+              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryDate || 'N/A'}</td>
+              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.paymentTerms || 'N/A'}</td>
+              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryTerms || 'N/A'}</td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      {/* Order Summary */}
+      {/* Order Summary - Full Bordered Table */}
       {Array.isArray(orderLines) && orderLines.length > 0 && (
-        <div className="mb-3 avoid-break">
-          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Order Summary</div>
-          <table className="po-table">
+        <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Order Summary</div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th style={{ fontSize: '9.5pt' }}>Style Code</th>
-                <th style={{ fontSize: '9.5pt' }}>Description</th>
-                <th style={{ fontSize: '9.5pt' }}>Fabric & GSM</th>
-                <th style={{ fontSize: '9.5pt' }}>Colours</th>
-                <th style={{ fontSize: '9.5pt' }}>Size Range</th>
-                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Quantity</th>
-                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Unit Price</th>
-                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Total Amount</th>
+              <tr style={{ backgroundColor: '#F5F5F7' }}>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Style Code</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Description</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Fabric & GSM</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Colours</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Size Range</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Quantity</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Unit Price</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Total Amount</th>
               </tr>
             </thead>
             <tbody>
               {orderLines.map((line, idx) => {
                 const amount = Number(line.quantity) * Number(line.unit_price);
                 return (
-                  <tr key={idx} className="po-row">
-                    <td style={{ fontSize: '9pt' }}>{line.style_code}</td>
-                    <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
-                    <td style={{ fontSize: '9pt' }}>{line.fabric_gsm}</td>
-                    <td style={{ fontSize: '9pt' }}>{line.colors?.join(', ') || 'N/A'}</td>
-                    <td style={{ fontSize: '9pt' }}>{line.size_range?.join(', ') || 'N/A'}</td>
-                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatQty(line.quantity)}</td>
-                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatINR(line.unit_price)}</td>
-                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatINR(amount)}</td>
+                  <tr key={idx}>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.style_code}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.fabric_gsm}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixColours}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixSizeRange}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatQty(line.quantity)}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatINR(line.unit_price)}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatINR(amount)}</td>
                   </tr>
                 );
               })}
             </tbody>
             <tfoot>
-              <tr>
-                <td colSpan="7" style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>Subtotal</td>
-                <td style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>{formatINR(subtotal)}</td>
+              <tr style={{ borderTop: '1pt solid #D1D5DB' }}>
+                <td colSpan="7" style={{ fontSize: '9.5pt', fontWeight: '600', padding: '8px', textAlign: 'right' }}>Subtotal</td>
+                <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '8px', textAlign: 'right' }}>{formatINR(subtotal)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       )}
 
-      {/* Size–Colour Breakdown */}
+      {/* Size–Colour Breakdown - Full Width Table */}
       {matrix && matrix.sizes?.length > 0 && matrix.colors?.length > 0 && (
-        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
-          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Size–Colour Breakdown</div>
-          <table className="po-table">
+        <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Size–Colour Breakdown</div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th style={{ fontSize: '9.5pt' }}>Colour</th>
+              <tr style={{ backgroundColor: '#F5F5F7' }}>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'left', minWidth: '120px' }}>Colour</th>
                 {matrix.sizes.map((size, i) => (
-                  <th key={i} style={{ fontSize: '9.5pt', textAlign: 'right' }}>{size}</th>
+                  <th key={i} style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '60px' }}>{size}</th>
                 ))}
-                <th style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>Total</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '70px' }}>Total</th>
               </tr>
             </thead>
             <tbody>
@@ -171,57 +175,55 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                   return acc + (Number(matrix.values?.[color]?.[size]) || 0);
                 }, 0);
                 return (
-                  <tr key={ri} className="po-row">
-                    <td style={{ fontSize: '9pt' }}>{color}</td>
+                  <tr key={ri}>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>{color}</td>
                     {matrix.sizes.map((size, ci) => (
-                      <td key={ci} style={{ fontSize: '9pt', textAlign: 'right' }}>
+                      <td key={ci} style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>
                         {Number(matrix.values?.[color]?.[size]) || 0}
                       </td>
                     ))}
-                    <td style={{ fontSize: '9pt', textAlign: 'right', fontWeight: '500' }}>{rowTotal}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', fontWeight: '500' }}>{rowTotal}</td>
                   </tr>
                 );
               })}
             </tbody>
             <tfoot>
-              <tr style={{ fontWeight: '600' }}>
-                <td style={{ fontSize: '9.5pt' }}>Total</td>
+              <tr style={{ fontWeight: '600', backgroundColor: '#F5F5F7' }}>
+                <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>Total</td>
                 {matrix.sizes.map((size, ci) => {
                   const colTotal = matrix.colors.reduce((acc, color) => {
                     return acc + (Number(matrix.values?.[color]?.[size]) || 0);
                   }, 0);
                   return (
-                    <td key={ci} style={{ fontSize: '9.5pt', textAlign: 'right' }}>{colTotal}</td>
+                    <td key={ci} style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{colTotal}</td>
                   );
                 })}
-                <td style={{ fontSize: '9.5pt', textAlign: 'right' }}>{matrix.grandTotal || 0}</td>
+                <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{matrix.grandTotal || 0}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       )}
 
-      {/* Packing Instructions - Table Format */}
+      {/* Packing Instructions - 4 Column Table (Polybag removed) */}
       {packing && Object.values(packing).some(v => v) && (
-        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
-          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Packing Instructions</div>
-          <table className="po-table">
+        <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Packing Instructions</div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
-              <tr>
-                <th style={{ fontSize: '9.5pt', width: '18%' }}>Folding</th>
-                <th style={{ fontSize: '9.5pt', width: '18%' }}>Packing Type</th>
-                <th style={{ fontSize: '9.5pt', width: '20%' }}>Size & Packing</th>
-                <th style={{ fontSize: '9.5pt', width: '16%' }}>Polybag</th>
-                <th style={{ fontSize: '9.5pt', width: '28%' }}>Carton/Bag Markings</th>
+              <tr style={{ backgroundColor: '#F5F5F7' }}>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '20%' }}>Folding</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '25%' }}>Packing Type</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '25%' }}>Size & Packing</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '30%' }}>Carton/Bag Markings</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.folding || '-'}</td>
-                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.packing_type || '-'}</td>
-                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.size_packing || '-'}</td>
-                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.polybag || '-'}</td>
-                <td style={{ fontSize: '9pt', verticalAlign: 'top', whiteSpace: 'pre-wrap' }}>{packing.carton_bag_markings || '-'}</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.folding || '-'}</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.packing_type || '-'}</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.size_packing || '-'}</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top', whiteSpace: 'pre-wrap' }}>{packing.carton_bag_markings || '-'}</td>
               </tr>
             </tbody>
           </table>
@@ -230,38 +232,38 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
 
       {/* Other Terms - Two Column Table */}
       {terms && Object.values(terms).some(v => v) && (
-        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
-          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Other Terms</div>
-          <table className="po-table">
+        <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Other Terms</div>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <tbody>
               {terms.qc && (
                 <tr>
-                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>QC</td>
-                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.qc}</td>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '20%', verticalAlign: 'top' }}>QC</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{terms.qc}</td>
                 </tr>
               )}
               {terms.labels_tags && (
                 <tr>
-                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Labels/Tags</td>
-                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.labels_tags}</td>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '20%', verticalAlign: 'top' }}>Labels/Tags</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{terms.labels_tags}</td>
                 </tr>
               )}
               {terms.shortage_excess && (
                 <tr>
-                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Shortage/Excess</td>
-                  <td style={{ fontSize: '9pt' }}>{terms.shortage_excess}</td>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '20%', verticalAlign: 'top' }}>Shortage/Excess</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{terms.shortage_excess}</td>
                 </tr>
               )}
               {terms.penalty && (
                 <tr>
-                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Penalty</td>
-                  <td style={{ fontSize: '9pt' }}>{terms.penalty}</td>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '20%', verticalAlign: 'top' }}>Penalty</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{terms.penalty}</td>
                 </tr>
               )}
               {terms.notes && (
                 <tr>
-                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Additional Notes</td>
-                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.notes}</td>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '20%', verticalAlign: 'top' }}>Additional Notes</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{terms.notes}</td>
                 </tr>
               )}
             </tbody>
@@ -269,10 +271,10 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       )}
 
-      {/* Authorisation - Bordered boxes */}
+      {/* Authorisation - Bordered boxes with equal padding */}
       <div className="grid grid-cols-2 gap-4 mt-6 avoid-break">
         <div style={{ 
-          minHeight: '70pt', 
+          minHeight: '75pt', 
           border: '0.75pt solid #D1D5DB', 
           borderRadius: '4px',
           padding: '10px'
@@ -281,13 +283,13 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
           {authorisation?.buyer_designation && (
             <div className="text-[9pt] mb-1">{authorisation.buyer_designation}</div>
           )}
-          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
+          <div style={{ height: '38pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
           <div className="text-[9pt]">
             {authorisation?.buyer_name ? `Name: ${authorisation.buyer_name}` : 'Authorised Signatory'}
           </div>
         </div>
         <div style={{ 
-          minHeight: '70pt', 
+          minHeight: '75pt', 
           border: '0.75pt solid #D1D5DB', 
           borderRadius: '4px',
           padding: '10px'
@@ -296,7 +298,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
           {authorisation?.supplier_designation && (
             <div className="text-[9pt] mb-1">{authorisation.supplier_designation}</div>
           )}
-          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
+          <div style={{ height: '38pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
           <div className="text-[9pt]">
             {authorisation?.supplier_name ? `Name: ${authorisation.supplier_name}` : 'Authorised Signatory'}
           </div>
