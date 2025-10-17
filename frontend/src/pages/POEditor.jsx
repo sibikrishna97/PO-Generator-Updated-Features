@@ -177,8 +177,7 @@ export default function POEditor() {
         size_colour_breakdown: matrix,
         packing_instructions: packing,
         other_terms: terms,
-        authorisation,
-        logo_url: logoUrl
+        authorisation
       };
 
       if (id && id !== 'new') {
