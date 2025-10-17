@@ -58,14 +58,25 @@ export default function POList() {
                 <FileText className="h-6 w-6 text-neutral-700" />
                 <CardTitle className="text-xl md:text-2xl font-semibold">Purchase Orders</CardTitle>
               </div>
-              <Button
-                onClick={() => navigate('/po/new')}
-                data-testid="po-list-new-button"
-                className="flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" />
-                New PO
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="secondary"
+                  onClick={() => navigate('/settings')}
+                  data-testid="po-list-settings-button"
+                  className="flex items-center gap-2"
+                >
+                  <Settings className="h-4 w-4" />
+                  Settings
+                </Button>
+                <Button
+                  onClick={() => navigate('/po/new')}
+                  data-testid="po-list-new-button"
+                  className="flex items-center gap-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  New PO
+                </Button>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
