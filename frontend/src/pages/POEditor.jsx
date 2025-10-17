@@ -680,8 +680,9 @@ export default function POEditor() {
                         <Input
                           type="number"
                           min="0"
-                          value={line.quantity}
-                          onChange={(e) => updateOrderLine(idx, 'quantity', parseInt(e.target.value) || 0)}
+                          value={line.quantity === 0 ? '' : line.quantity}
+                          onChange={(e) => updateOrderLine(idx, 'quantity', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
+                          placeholder="0"
                           data-testid={`order-line-${idx}-quantity`}
                         />
                       </div>
@@ -691,8 +692,9 @@ export default function POEditor() {
                           type="number"
                           min="0"
                           step="0.01"
-                          value={line.unit_price}
-                          onChange={(e) => updateOrderLine(idx, 'unit_price', parseFloat(e.target.value) || 0)}
+                          value={line.unit_price === 0 ? '' : line.unit_price}
+                          onChange={(e) => updateOrderLine(idx, 'unit_price', e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)}
+                          placeholder="0.00"
                           data-testid={`order-line-${idx}-price`}
                         />
                       </div>
