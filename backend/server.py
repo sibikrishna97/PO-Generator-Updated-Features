@@ -44,11 +44,9 @@ class SizeColourBreakdown(BaseModel):
     grand_total: int
 
 class PackingInstructions(BaseModel):
-    folding: Optional[str] = None
-    packing_type: Optional[str] = None
-    size_packing: Optional[str] = None
+    folding_instruction: Optional[str] = None
+    packing_instruction: Optional[str] = None
     carton_bag_markings: Optional[str] = None
-    packing_ratio: Optional[str] = None
 
 class OtherTerms(BaseModel):
     qc: Optional[str] = None
