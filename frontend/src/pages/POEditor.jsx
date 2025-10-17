@@ -672,26 +672,7 @@ export default function POEditor() {
                         rows={2}
                         data-testid={`order-line-${idx}-description`}
                       />
-                    </div>
-                    <div className="grid md:grid-cols-2 gap-3">
-                      <div>
-                        <Label>Colours (comma-separated)</Label>
-                        <Input
-                          value={line.colors?.join(', ') || ''}
-                          onChange={(e) => updateOrderLineColors(idx, e.target.value)}
-                          placeholder="Black, Grey Melange, Charcoal Melange"
-                          data-testid={`order-line-${idx}-colors`}
-                        />
-                      </div>
-                      <div>
-                        <Label>Size Range (comma-separated)</Label>
-                        <Input
-                          value={line.size_range?.join(', ') || ''}
-                          onChange={(e) => updateOrderLineSizes(idx, e.target.value)}
-                          placeholder="S, M, L, XL, XXL, XXXL"
-                          data-testid={`order-line-${idx}-sizes`}
-                        />
-                      </div>
+                      <p className=\"text-xs text-neutral-500 mt-1\">Note: Colours and Size Range will be auto-populated from Size–Colour Breakdown</p>
                     </div>
                     <div className="grid md:grid-cols-3 gap-3">
                       <div>
