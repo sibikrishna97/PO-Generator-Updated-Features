@@ -23,82 +23,105 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="po-doc" data-testid="po-print-document">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3 avoid-break">
-        <div className="flex items-center gap-3">
+      {/* Header - Logo and Title on same line */}
+      <div className="flex items-center justify-between mb-4 avoid-break">
+        <div className="flex items-center gap-4">
           {logoUrl ? (
-            <img src={logoUrl} alt="Company Logo" style={{ height: '28pt' }} />
+            <img src={logoUrl} alt="Company Logo" style={{ height: '32pt', width: 'auto' }} />
           ) : (
-            <div style={{ height: '28pt', width: '60pt', background: '#F5F5F7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '8pt' }}>Logo</div>
+            <div style={{ 
+              height: '32pt', 
+              width: '80pt', 
+              border: '1px dashed #D1D5DB', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              fontSize: '8pt',
+              color: '#9CA3AF'
+            }}>
+              Logo Here
+            </div>
           )}
         </div>
         <div className="text-right">
-          <div className="po-section-title">Purchase Order</div>
-          <div className="text-[10pt]">PO No: <span className="font-medium">{poNumber}</span></div>
+          <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
+          <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
         </div>
       </div>
 
-      {/* Top Address Band - Bill To & Buyer */}
-      <div className="grid grid-cols-2 gap-6 mb-3 avoid-break">
-        <div>
-          <div className="po-section-title mb-1">Bill To (Invoice Party)</div>
-          <div className="text-[9.5pt]">{billTo?.company}</div>
+      {/* Top Address Band - Bill To & Buyer with borders */}
+      <div className="grid grid-cols-2 gap-4 mb-3 avoid-break">
+        <div style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', padding: '8px' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '10pt' }}>Bill To (Invoice Party)</div>
+          <div className="text-[9pt] font-medium">{billTo?.company}</div>
           {billTo?.address_lines?.map((line, idx) => (
-            <div key={idx} className="text-[9.5pt]">{line}</div>
+            <div key={idx} className="text-[9pt]">{line}</div>
           ))}
-          {billTo?.gstin && <div className="text-[9.5pt]">GSTIN: {billTo.gstin}</div>}
-          {billTo?.contact_name && <div className="text-[9.5pt]">Contact: {billTo.contact_name}</div>}
-          {billTo?.phone && <div className="text-[9.5pt]">Phone: {billTo.phone}</div>}
+          {billTo?.gstin && <div className="text-[9pt] mt-1">GSTIN: {billTo.gstin}</div>}
+          {billTo?.contact_name && <div className="text-[9pt]">Contact: {billTo.contact_name}</div>}
+          {billTo?.phone && <div className="text-[9pt]">Phone: {billTo.phone}</div>}
         </div>
-        <div>
-          <div className="po-section-title mb-1">Buyer</div>
-          <div className="text-[9.5pt]">{buyer?.company}</div>
+        <div style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', padding: '8px', backgroundColor: '#FAFAFA' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '10pt' }}>Buyer</div>
+          <div className="text-[9pt] font-medium">{buyer?.company}</div>
           {buyer?.address_lines?.map((line, idx) => (
-            <div key={idx} className="text-[9.5pt]">{line}</div>
+            <div key={idx} className="text-[9pt]">{line}</div>
           ))}
-          {buyer?.gstin && <div className="text-[9.5pt]">GSTIN: {buyer.gstin}</div>}
+          {buyer?.gstin && <div className="text-[9pt] mt-1">GSTIN: {buyer.gstin}</div>}
         </div>
       </div>
 
-      {/* Supplier Block - Full Width */}
-      <div className="mb-3 avoid-break">
-        <div className="po-section-title mb-1">Supplier / Factory</div>
-        <div className="text-[9.5pt]">
-          <strong>{supplier?.company}</strong>
-        </div>
+      {/* Supplier Block - Full Width with border */}
+      <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', padding: '8px' }}>
+        <div className="po-section-title mb-2" style={{ fontSize: '10pt' }}>Supplier / Factory (Ship From)</div>
+        <div className="text-[9pt] font-medium">{supplier?.company}</div>
         {supplier?.address_lines?.map((line, idx) => (
-          <div key={idx} className="text-[9.5pt]">{line}</div>
+          <div key={idx} className="text-[9pt]">{line}</div>
         ))}
-        <div className="flex gap-4 mt-1">
-          {supplier?.gstin && <span className="text-[9.5pt]">GSTIN: {supplier.gstin}</span>}
-          {supplier?.contact_name && <span className="text-[9.5pt]">Contact: {supplier.contact_name}</span>}
-          {supplier?.phone && <span className="text-[9.5pt]">Phone: {supplier.phone}</span>}
+        <div className="flex gap-4 mt-1 text-[9pt]">
+          {supplier?.gstin && <span>GSTIN: {supplier.gstin}</span>}
+          {supplier?.contact_name && <span>Contact: {supplier.contact_name}</span>}
+          {supplier?.phone && <span>Phone: {supplier.phone}</span>}
         </div>
       </div>
 
-      {/* Meta strip */}
-      <div className="flex flex-wrap items-center gap-2 mb-3 avoid-break">
-        {meta?.poDate && <span className="po-chip" data-testid="po-meta-po-date">PO Date: {meta.poDate}</span>}
-        {meta?.deliveryDate && <span className="po-chip" data-testid="po-meta-delivery-date">Delivery: {meta.deliveryDate}</span>}
-        {meta?.paymentTerms && <span className="po-chip" data-testid="po-meta-payment-terms">Payment: {meta.paymentTerms}</span>}
-        {meta?.deliveryTerms && <span className="po-chip" data-testid="po-meta-delivery-terms">Delivery Terms: {meta.deliveryTerms}</span>}
+      {/* PO Meta Details - Table Format */}
+      <div className="mb-3 avoid-break">
+        <table className="po-table" style={{ width: '100%' }}>
+          <thead>
+            <tr>
+              <th style={{ width: '25%', fontSize: '9pt' }}>PO Date</th>
+              <th style={{ width: '25%', fontSize: '9pt' }}>Delivery Date</th>
+              <th style={{ width: '25%', fontSize: '9pt' }}>Payment Terms</th>
+              <th style={{ width: '25%', fontSize: '9pt' }}>Delivery Terms</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style={{ fontSize: '9pt' }}>{meta?.poDate || 'N/A'}</td>
+              <td style={{ fontSize: '9pt' }}>{meta?.deliveryDate || 'N/A'}</td>
+              <td style={{ fontSize: '9pt' }}>{meta?.paymentTerms || 'N/A'}</td>
+              <td style={{ fontSize: '9pt' }}>{meta?.deliveryTerms || 'N/A'}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       {/* Order Summary */}
       {Array.isArray(orderLines) && orderLines.length > 0 && (
         <div className="mb-3 avoid-break">
-          <div className="po-section-title mb-1">Order Summary</div>
+          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Order Summary</div>
           <table className="po-table">
             <thead>
               <tr>
-                <th>Style Code</th>
-                <th>Description</th>
-                <th>Fabric & GSM</th>
-                <th>Colours</th>
-                <th>Size Range</th>
-                <th className="text-right">Quantity</th>
-                <th className="text-right">Unit Price</th>
-                <th className="text-right">Total Amount</th>
+                <th style={{ fontSize: '9.5pt' }}>Style Code</th>
+                <th style={{ fontSize: '9.5pt' }}>Description</th>
+                <th style={{ fontSize: '9.5pt' }}>Fabric & GSM</th>
+                <th style={{ fontSize: '9.5pt' }}>Colours</th>
+                <th style={{ fontSize: '9.5pt' }}>Size Range</th>
+                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Quantity</th>
+                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Unit Price</th>
+                <th style={{ fontSize: '9.5pt', textAlign: 'right' }}>Total Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -106,40 +129,40 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                 const amount = Number(line.quantity) * Number(line.unit_price);
                 return (
                   <tr key={idx} className="po-row">
-                    <td>{line.style_code}</td>
-                    <td style={{ whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
-                    <td>{line.fabric_gsm}</td>
-                    <td>{line.colors?.join(', ')}</td>
-                    <td>{line.size_range?.join(', ')}</td>
-                    <td className="text-right">{formatQty(line.quantity)}</td>
-                    <td className="text-right">{formatINR(line.unit_price)}</td>
-                    <td className="text-right">{formatINR(amount)}</td>
+                    <td style={{ fontSize: '9pt' }}>{line.style_code}</td>
+                    <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
+                    <td style={{ fontSize: '9pt' }}>{line.fabric_gsm}</td>
+                    <td style={{ fontSize: '9pt' }}>{line.colors?.join(', ') || 'N/A'}</td>
+                    <td style={{ fontSize: '9pt' }}>{line.size_range?.join(', ') || 'N/A'}</td>
+                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatQty(line.quantity)}</td>
+                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatINR(line.unit_price)}</td>
+                    <td style={{ fontSize: '9pt', textAlign: 'right' }}>{formatINR(amount)}</td>
                   </tr>
                 );
               })}
             </tbody>
             <tfoot>
               <tr>
-                <td colSpan="7" className="text-right font-semibold">Subtotal</td>
-                <td className="text-right font-semibold">{formatINR(subtotal)}</td>
+                <td colSpan="7" style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>Subtotal</td>
+                <td style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>{formatINR(subtotal)}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       )}
 
-      {/* Size–Colour Matrix */}
+      {/* Size–Colour Breakdown */}
       {matrix && matrix.sizes?.length > 0 && matrix.colors?.length > 0 && (
-        <div className="mb-3 avoid-break">
-          <div className="po-section-title mb-1">Size–Colour Breakdown</div>
+        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Size–Colour Breakdown</div>
           <table className="po-table">
             <thead>
               <tr>
-                <th>Colour</th>
+                <th style={{ fontSize: '9.5pt' }}>Colour</th>
                 {matrix.sizes.map((size, i) => (
-                  <th key={i} className="text-right">{size}</th>
+                  <th key={i} style={{ fontSize: '9.5pt', textAlign: 'right' }}>{size}</th>
                 ))}
-                <th className="text-right">Total</th>
+                <th style={{ fontSize: '9.5pt', textAlign: 'right', fontWeight: '600' }}>Total</th>
               </tr>
             </thead>
             <tbody>
@@ -149,82 +172,131 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                 }, 0);
                 return (
                   <tr key={ri} className="po-row">
-                    <td>{color}</td>
+                    <td style={{ fontSize: '9pt' }}>{color}</td>
                     {matrix.sizes.map((size, ci) => (
-                      <td key={ci} className="text-right">
+                      <td key={ci} style={{ fontSize: '9pt', textAlign: 'right' }}>
                         {Number(matrix.values?.[color]?.[size]) || 0}
                       </td>
                     ))}
-                    <td className="text-right font-medium">{rowTotal}</td>
+                    <td style={{ fontSize: '9pt', textAlign: 'right', fontWeight: '500' }}>{rowTotal}</td>
                   </tr>
                 );
               })}
             </tbody>
             <tfoot>
-              <tr>
-                <td className="font-semibold">Total</td>
+              <tr style={{ fontWeight: '600' }}>
+                <td style={{ fontSize: '9.5pt' }}>Total</td>
                 {matrix.sizes.map((size, ci) => {
                   const colTotal = matrix.colors.reduce((acc, color) => {
                     return acc + (Number(matrix.values?.[color]?.[size]) || 0);
                   }, 0);
                   return (
-                    <td key={ci} className="text-right font-semibold">{colTotal}</td>
+                    <td key={ci} style={{ fontSize: '9.5pt', textAlign: 'right' }}>{colTotal}</td>
                   );
                 })}
-                <td className="text-right font-semibold">{matrix.grandTotal || 0}</td>
+                <td style={{ fontSize: '9.5pt', textAlign: 'right' }}>{matrix.grandTotal || 0}</td>
               </tr>
             </tfoot>
           </table>
         </div>
       )}
 
-      {/* Packing Instructions */}
+      {/* Packing Instructions - Table Format */}
       {packing && Object.values(packing).some(v => v) && (
-        <div className="mb-3 avoid-break">
-          <div className="po-section-title mb-1">Packing Instructions</div>
-          <div className="text-[9.5pt]">
-            {packing.folding && <div><strong>Folding:</strong> {packing.folding}</div>}
-            {packing.packing_type && <div><strong>Packing Type:</strong> {packing.packing_type}</div>}
-            {packing.size_packing && <div><strong>Size & Packing:</strong> {packing.size_packing}</div>}
-            {packing.polybag && <div><strong>Polybag:</strong> {packing.polybag}</div>}
-            {packing.carton_bag_markings && <div style={{ whiteSpace: 'pre-wrap' }}><strong>Carton/Bag Markings:</strong> {packing.carton_bag_markings}</div>}
-            {packing.packing_ratio && <div><strong>Packing Ratio:</strong> {packing.packing_ratio}</div>}
-          </div>
+        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Packing Instructions</div>
+          <table className="po-table">
+            <thead>
+              <tr>
+                <th style={{ fontSize: '9.5pt', width: '18%' }}>Folding</th>
+                <th style={{ fontSize: '9.5pt', width: '18%' }}>Packing Type</th>
+                <th style={{ fontSize: '9.5pt', width: '20%' }}>Size & Packing</th>
+                <th style={{ fontSize: '9.5pt', width: '16%' }}>Polybag</th>
+                <th style={{ fontSize: '9.5pt', width: '28%' }}>Carton/Bag Markings</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.folding || '-'}</td>
+                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.packing_type || '-'}</td>
+                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.size_packing || '-'}</td>
+                <td style={{ fontSize: '9pt', verticalAlign: 'top' }}>{packing.polybag || '-'}</td>
+                <td style={{ fontSize: '9pt', verticalAlign: 'top', whiteSpace: 'pre-wrap' }}>{packing.carton_bag_markings || '-'}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       )}
 
-      {/* Other Terms */}
+      {/* Other Terms - Two Column Table */}
       {terms && Object.values(terms).some(v => v) && (
-        <div className="mb-3 avoid-break">
-          <div className="po-section-title mb-1">Other Terms</div>
-          <div className="text-[9.5pt]">
-            {terms.qc && <div style={{ whiteSpace: 'pre-wrap' }}><strong>QC:</strong> {terms.qc}</div>}
-            {terms.labels_tags && <div style={{ whiteSpace: 'pre-wrap' }}><strong>Labels/Tags:</strong> {terms.labels_tags}</div>}
-            {terms.shortage_excess && <div><strong>Shortage/Excess:</strong> {terms.shortage_excess}</div>}
-            {terms.penalty && <div><strong>Penalty:</strong> {terms.penalty}</div>}
-            {terms.notes && <div style={{ whiteSpace: 'pre-wrap' }}><strong>Additional Notes:</strong> {terms.notes}</div>}
-          </div>
+        <div className="mb-3 avoid-break" style={{ borderTop: '1pt solid #D1D5DB', paddingTop: '8px' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '11pt', fontWeight: '600' }}>Other Terms</div>
+          <table className="po-table">
+            <tbody>
+              {terms.qc && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>QC</td>
+                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.qc}</td>
+                </tr>
+              )}
+              {terms.labels_tags && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Labels/Tags</td>
+                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.labels_tags}</td>
+                </tr>
+              )}
+              {terms.shortage_excess && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Shortage/Excess</td>
+                  <td style={{ fontSize: '9pt' }}>{terms.shortage_excess}</td>
+                </tr>
+              )}
+              {terms.penalty && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Penalty</td>
+                  <td style={{ fontSize: '9pt' }}>{terms.penalty}</td>
+                </tr>
+              )}
+              {terms.notes && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', width: '20%', verticalAlign: 'top' }}>Additional Notes</td>
+                  <td style={{ fontSize: '9pt', whiteSpace: 'pre-wrap' }}>{terms.notes}</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       )}
 
-      {/* Authorisation */}
-      <div className="grid grid-cols-2 gap-6 mt-6 avoid-break">
-        <div style={{ minHeight: '70pt' }} className="border border-[#D1D5DB] p-2">
-          <div className="po-section-title mb-1">For Newline Apparel</div>
+      {/* Authorisation - Bordered boxes */}
+      <div className="grid grid-cols-2 gap-4 mt-6 avoid-break">
+        <div style={{ 
+          minHeight: '70pt', 
+          border: '0.75pt solid #D1D5DB', 
+          borderRadius: '4px',
+          padding: '10px'
+        }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '10pt', fontWeight: '600' }}>For Newline Apparel</div>
           {authorisation?.buyer_designation && (
             <div className="text-[9pt] mb-1">{authorisation.buyer_designation}</div>
           )}
-          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '4pt' }} />
+          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
           <div className="text-[9pt]">
             {authorisation?.buyer_name ? `Name: ${authorisation.buyer_name}` : 'Authorised Signatory'}
           </div>
         </div>
-        <div style={{ minHeight: '70pt' }} className="border border-[#D1D5DB] p-2">
-          <div className="po-section-title mb-1">For Supplier/Factory</div>
+        <div style={{ 
+          minHeight: '70pt', 
+          border: '0.75pt solid #D1D5DB', 
+          borderRadius: '4px',
+          padding: '10px'
+        }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '10pt', fontWeight: '600' }}>For Supplier/Factory</div>
           {authorisation?.supplier_designation && (
             <div className="text-[9pt] mb-1">{authorisation.supplier_designation}</div>
           )}
-          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '4pt' }} />
+          <div style={{ height: '36pt', borderBottom: '0.5pt solid #D1D5DB', marginBottom: '6pt', marginTop: '8pt' }} />
           <div className="text-[9pt]">
             {authorisation?.supplier_name ? `Name: ${authorisation.supplier_name}` : 'Authorised Signatory'}
           </div>
