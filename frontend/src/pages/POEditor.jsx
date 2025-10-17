@@ -120,7 +120,6 @@ export default function POEditor() {
       setDeliveryTerms(po.delivery_terms);
       setPaymentTerms(po.payment_terms);
       setCurrency(po.currency);
-      setLogoUrl(po.logo_url || '');
       setBillTo(po.bill_to);
       setSupplier(po.supplier);
       setOrderLines(po.order_lines);
