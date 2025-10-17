@@ -49,7 +49,6 @@ class PackingInstructions(BaseModel):
     size_packing: Optional[str] = None
     carton_bag_markings: Optional[str] = None
     packing_ratio: Optional[str] = None
-    polybag: Optional[str] = None
 
 class OtherTerms(BaseModel):
     qc: Optional[str] = None
