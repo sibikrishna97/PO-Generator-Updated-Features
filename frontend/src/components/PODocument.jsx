@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { formatINR, formatQty } from '../utils/formatters';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 export const PODocument = React.forwardRef(({ data }, ref) => {
   const { 
-    logoUrl, 
     poNumber, 
     billTo,
     buyer, 
@@ -16,6 +19,23 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
     authorisation 
   } = data;
 
+  const [settingsLogo, setSettingsLogo] = useState(null);
+
+  useEffect(() => {
+    fetchLogo();
+  }, []);
+
+  const fetchLogo = async () => {
+    try {
+      const response = await axios.get(`${API}/settings/logo`);
+      if (response.data.logo_base64) {
+        setSettingsLogo(response.data.logo_base64);
+      }
+    } catch (error) {
+      console.error('Error fetching logo:', error);
+    }
+  };
+
   // Calculate order summary totals
   const subtotal = orderLines?.reduce((sum, line) => {
     return sum + (Number(line.quantity) * Number(line.unit_price));
@@ -27,29 +47,41 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="po-doc" data-testid="po-print-document">
-      {/* Header - Logo and Title on same line */}
-      <div className="flex items-center justify-between mb-4 avoid-break">
-        <div className="flex items-center gap-4">
-          {logoUrl ? (
-            <img src={logoUrl} alt="Company Logo" style={{ height: '32pt', width: 'auto', maxWidth: '80pt' }} />
+      {/* Header - Title left, Logo right */}
+      <div className="flex items-start justify-between mb-4 avoid-break">
+        <div>
+          <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
+          <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
+        </div>
+        <div className="flex items-center">
+          {settingsLogo ? (
+            <img 
+              src={settingsLogo} 
+              alt="Company Logo" 
+              style={{ 
+                maxHeight: '38pt', 
+                maxWidth: '120pt', 
+                width: 'auto',
+                height: 'auto',
+                objectFit: 'contain' 
+              }} 
+            />
           ) : (
             <div style={{ 
-              height: '32pt', 
-              width: '80pt', 
+              height: '38pt', 
+              width: '100pt', 
               border: '1px dashed #D1D5DB', 
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
               fontSize: '8pt',
-              color: '#9CA3AF'
+              color: '#9CA3AF',
+              textAlign: 'center',
+              padding: '4px'
             }}>
-              Logo Here
+              Upload Logo in Settings
             </div>
           )}
-        </div>
-        <div className="text-right">
-          <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
-          <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
         </div>
       </div>
 
