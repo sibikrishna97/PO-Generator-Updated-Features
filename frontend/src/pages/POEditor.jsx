@@ -37,7 +37,6 @@ export default function POEditor() {
   const [deliveryTerms, setDeliveryTerms] = useState('Ex-factory, Tirupur');
   const [paymentTerms, setPaymentTerms] = useState('100% After QC and counting by Sree Rajkondal Export Enterprises');
   const [currency, setCurrency] = useState('INR');
-  const [logoUrl, setLogoUrl] = useState('');
 
   // Bill To (Invoice Party)
   const [billTo, setBillTo] = useState({
