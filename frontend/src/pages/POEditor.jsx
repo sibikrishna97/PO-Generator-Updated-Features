@@ -12,7 +12,7 @@ import { SizeColourMatrix } from '../components/SizeColourMatrix';
 import { PODocument } from '../components/PODocument';
 import { useReactToPrint } from 'react-to-print';
 import { toast } from 'sonner';
-import { Save, Printer, ArrowLeft, Plus, X, AlertCircle } from 'lucide-react';
+import { Save, Printer, ArrowLeft, Plus, X, AlertCircle, Info } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
@@ -268,6 +268,7 @@ export default function POEditor() {
   const prepareDocumentData = () => ({
     logoUrl,
     poNumber,
+    billTo,
     buyer: STATIC_BUYER,
     supplier,
     meta: {
@@ -409,13 +410,138 @@ export default function POEditor() {
             </CardContent>
           </Card>
 
+          {/* Bill To & Buyer */}
+          <Card>
+            <CardContent className="pt-6">
+              <h2 className="text-lg font-semibold mb-4">Party Details</h2>
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Bill To (Invoice Party) - Editable */}
+                <div>
+                  <h3 className="font-medium mb-3 flex items-center gap-2">
+                    Bill To (Invoice Party) *
+                  </h3>
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="billto-company">Company Name</Label>
+                      <Input
+                        id="billto-company"
+                        value={billTo.company}
+                        onChange={(e) => setBillTo({ ...billTo, company: e.target.value })}
+                        placeholder="Company Name"
+                        data-testid="po-form-billto-company"
+                      />
+                    </div>
+                    <div>
+                      <Label>Address Lines</Label>
+                      {billTo.address_lines.map((line, idx) => (
+                        <Input
+                          key={idx}
+                          value={line}
+                          onChange={(e) => updateBillToAddress(idx, e.target.value)}
+                          placeholder={`Address line ${idx + 1}`}
+                          className="mt-2"
+                          data-testid={`po-form-billto-address-${idx}`}
+                        />
+                      ))}
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="billto-gstin">GSTIN</Label>
+                        <Input
+                          id="billto-gstin"
+                          value={billTo.gstin}
+                          onChange={(e) => setBillTo({ ...billTo, gstin: e.target.value })}
+                          data-testid="po-form-billto-gstin"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="billto-contact">Contact Name</Label>
+                        <Input
+                          id="billto-contact"
+                          value={billTo.contact_name}
+                          onChange={(e) => setBillTo({ ...billTo, contact_name: e.target.value })}
+                          data-testid="po-form-billto-contact"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="billto-phone">Phone</Label>
+                        <Input
+                          id="billto-phone"
+                          value={billTo.phone}
+                          onChange={(e) => setBillTo({ ...billTo, phone: e.target.value })}
+                          data-testid="po-form-billto-phone"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="billto-email">Email</Label>
+                        <Input
+                          id="billto-email"
+                          type="email"
+                          value={billTo.email}
+                          onChange={(e) => setBillTo({ ...billTo, email: e.target.value })}
+                          data-testid="po-form-billto-email"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Buyer (Static) - Read Only */}
+                <div>
+                  <h3 className="font-medium mb-3 flex items-center gap-2">
+                    Buyer
+                    <span className="text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">Read-only</span>
+                  </h3>
+                  <div className="space-y-3 bg-neutral-50 p-4 rounded-md border border-neutral-200">
+                    <div>
+                      <Label>Company Name</Label>
+                      <Input
+                        value={STATIC_BUYER.company}
+                        disabled
+                        className="bg-white"
+                        data-testid="po-form-buyer-company"
+                      />
+                    </div>
+                    <div>
+                      <Label>Address</Label>
+                      {STATIC_BUYER.address_lines.map((line, idx) => (
+                        <Input
+                          key={idx}
+                          value={line}
+                          disabled
+                          className="mt-2 bg-white"
+                          data-testid={`po-form-buyer-address-${idx}`}
+                        />
+                      ))}
+                    </div>
+                    <div>
+                      <Label>GSTIN</Label>
+                      <Input
+                        value={STATIC_BUYER.gstin}
+                        disabled
+                        className="bg-white"
+                        data-testid="po-form-buyer-gstin"
+                      />
+                    </div>
+                    <div className="flex items-start gap-2 mt-2 text-xs text-neutral-600">
+                      <Info className="h-3 w-3 mt-0.5" />
+                      <span>Buyer details are static and can only be changed in App Settings</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Supplier */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-4">Supplier / Factory Details</h2>
+              <h2 className="text-lg font-semibold mb-4">Supplier / Factory Details *</h2>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="supplier-company">Company Name *</Label>
+                  <Label htmlFor="supplier-company">Company Name</Label>
                   <Input
                     id="supplier-company"
                     value={supplier.company}
@@ -465,6 +591,17 @@ export default function POEditor() {
                       data-testid="po-form-supplier-phone"
                     />
                   </div>
+                </div>
+                <div>
+                  <Label htmlFor="supplier-email">Email</Label>
+                  <Input
+                    id="supplier-email"
+                    type="email"
+                    value={supplier.email}
+                    onChange={(e) => setSupplier({ ...supplier, email: e.target.value })}
+                    placeholder="supplier@example.com"
+                    data-testid="po-form-supplier-email"
+                  />
                 </div>
               </div>
             </CardContent>
