@@ -81,11 +81,9 @@ export default function POEditor() {
 
   // Packing
   const [packing, setPacking] = useState({
-    folding: '',
-    packing_type: '',
-    size_packing: '',
-    carton_bag_markings: '',
-    packing_ratio: ''
+    folding_instruction: '',
+    packing_instruction: '',
+    carton_bag_markings: ''
   });
 
   // Other Terms
