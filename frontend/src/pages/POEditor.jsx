@@ -85,8 +85,7 @@ export default function POEditor() {
     packing_type: '',
     size_packing: '',
     carton_bag_markings: '',
-    packing_ratio: '',
-    polybag: ''
+    packing_ratio: ''
   });
 
   // Other Terms
