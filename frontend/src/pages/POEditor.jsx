@@ -754,33 +754,25 @@ export default function POEditor() {
                     />
                   </div>
                 </div>
-                <div>
-                  <Label>Size & Packing</Label>
-                  <Input
-                    value={packing.size_packing}
-                    onChange={(e) => setPacking({ ...packing, size_packing: e.target.value })}
-                    placeholder="Master polybag / 5 pieces / size"
-                    data-testid="packing-size"
-                  />
-                </div>
-                <div>
-                  <Label>Polybag</Label>
-                  <Input
-                    value={packing.polybag}
-                    onChange={(e) => setPacking({ ...packing, polybag: e.target.value })}
-                    placeholder="Master poly only"
-                    data-testid="packing-polybag"
-                  />
-                </div>
-                <div>
-                  <Label>Carton/Bag Markings</Label>
-                  <Textarea
-                    value={packing.carton_bag_markings}
-                    onChange={(e) => setPacking({ ...packing, carton_bag_markings: e.target.value })}
-                    placeholder="Each bag to be numbered..."
-                    rows={2}
-                    data-testid="packing-markings"
-                  />
+                <div className="grid md:grid-cols-2 gap-3">
+                  <div>
+                    <Label>Size & Packing</Label>
+                    <Input
+                      value={packing.size_packing}
+                      onChange={(e) => setPacking({ ...packing, size_packing: e.target.value })}
+                      placeholder="6 pieces / size Master Polybag"
+                      data-testid="packing-size"
+                    />
+                  </div>
+                  <div>
+                    <Label>Carton/Bag Markings</Label>
+                    <Input
+                      value={packing.carton_bag_markings}
+                      onChange={(e) => setPacking({ ...packing, carton_bag_markings: e.target.value })}
+                      placeholder="Each carton should be numbered..."
+                      data-testid="packing-markings"
+                    />
+                  </div>
                 </div>
               </div>
             </CardContent>
