@@ -205,26 +205,30 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       )}
 
-      {/* Packing Instructions - 4 Column Table (Polybag removed) */}
+      {/* Packing Instructions - Full Width Rows */}
       {packing && Object.values(packing).some(v => v) && (
         <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
           <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Packing Instructions</div>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ backgroundColor: '#F5F5F7' }}>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '20%' }}>Folding</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '25%' }}>Packing Type</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '25%' }}>Size & Packing</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left', width: '30%' }}>Carton/Bag Markings</th>
-              </tr>
-            </thead>
             <tbody>
-              <tr>
-                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.folding || '-'}</td>
-                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.packing_type || '-'}</td>
-                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top' }}>{packing.size_packing || '-'}</td>
-                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', verticalAlign: 'top', whiteSpace: 'pre-wrap' }}>{packing.carton_bag_markings || '-'}</td>
-              </tr>
+              {packing.folding_instruction && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '25%', verticalAlign: 'top' }}>Folding Instruction</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{packing.folding_instruction}</td>
+                </tr>
+              )}
+              {packing.packing_instruction && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '25%', verticalAlign: 'top' }}>Packing Instruction</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{packing.packing_instruction}</td>
+                </tr>
+              )}
+              {packing.carton_bag_markings && (
+                <tr>
+                  <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', width: '25%', verticalAlign: 'top' }}>Carton / Bag Markings</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{packing.carton_bag_markings}</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
