@@ -671,7 +671,7 @@ export default function POEditor() {
                         rows={2}
                         data-testid={`order-line-${idx}-description`}
                       />
-                      <p className=\"text-xs text-neutral-500 mt-1\">Note: Colours and Size Range will be auto-populated from Size–Colour Breakdown</p>
+                      <p className="text-xs text-neutral-500 mt-1">Note: Colours and Size Range will be auto-populated from Size–Colour Breakdown</p>
                     </div>
                     <div className="grid md:grid-cols-3 gap-3">
                       <div>
