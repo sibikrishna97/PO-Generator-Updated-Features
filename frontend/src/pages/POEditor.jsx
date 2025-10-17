@@ -260,7 +260,6 @@ export default function POEditor() {
   };
 
   const prepareDocumentData = () => ({
-    logoUrl,
     poNumber,
     billTo,
     buyer: STATIC_BUYER,
