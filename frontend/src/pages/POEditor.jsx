@@ -394,26 +394,6 @@ export default function POEditor() {
                   />
                 </div>
               </div>
-              <div className="mt-4">
-                <Label htmlFor="logo-url">Company Logo</Label>
-                <div className="flex gap-3 items-end">
-                  <div className="flex-1">
-                    <Input
-                      id="logo-url"
-                      value={logoUrl}
-                      onChange={(e) => setLogoUrl(e.target.value)}
-                      placeholder="Enter logo URL (e.g., https://example.com/logo.png)"
-                      data-testid="po-form-logo-url"
-                    />
-                  </div>
-                  {logoUrl && (
-                    <div className="border rounded p-2 bg-white" style={{ height: '40px', width: '80px' }}>
-                      <img src={logoUrl} alt="Logo preview" className="h-full w-full object-contain" />
-                    </div>
-                  )}
-                </div>
-                <p className="text-xs text-neutral-500 mt-1">Upload logo to an image hosting service and paste the URL here</p>
-              </div>
             </CardContent>
           </Card>
 
