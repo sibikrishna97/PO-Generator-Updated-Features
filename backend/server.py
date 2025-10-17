@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
@@ -9,6 +9,7 @@ from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone
+import base64
 
 
 ROOT_DIR = Path(__file__).parent
@@ -73,6 +74,11 @@ class BuyerStatic(BaseModel):
     company: str = "Newline Apparel"
     address_lines: List[str] = ["61, GKD Nagar, PN Palayam", "Coimbatore – 641037", "Tamil Nadu"]
     gstin: str = "33AABCN1234F1Z5"
+
+class AppSettings(BaseModel):
+    logo_base64: Optional[str] = None
+    logo_filename: Optional[str] = None
+    updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class PurchaseOrder(BaseModel):
     model_config = ConfigDict(extra="ignore")
@@ -226,6 +232,65 @@ async def get_buyer_info():
         "gstin": "33AABCN1234F1Z5",
         "brand_name": "Newline Apparel"
     }
+
+# Settings Routes
+@api_router.post("/settings/logo")
+async def upload_logo(file: UploadFile = File(...)):
+    # Validate file type
+    allowed_types = ['image/png', 'image/jpeg', 'image/jpg']
+    if file.content_type not in allowed_types:
+        raise HTTPException(status_code=400, detail="Only PNG, JPG, and JPEG files are allowed")
+    
+    # Validate file size (max 5MB)
+    contents = await file.read()
+    if len(contents) > 5 * 1024 * 1024:
+        raise HTTPException(status_code=400, detail="File size must be less than 5MB")
+    
+    # Convert to base64
+    logo_base64 = base64.b64encode(contents).decode('utf-8')
+    data_uri = f"data:{file.content_type};base64,{logo_base64}"
+    
+    # Save to settings collection
+    settings_doc = {
+        "_id": "app_settings",
+        "logo_base64": data_uri,
+        "logo_filename": file.filename,
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.settings.update_one(
+        {"_id": "app_settings"},
+        {"$set": settings_doc},
+        upsert=True
+    )
+    
+    return {
+        "message": "Logo uploaded successfully",
+        "logo_base64": data_uri,
+        "filename": file.filename
+    }
+
+@api_router.get("/settings/logo")
+async def get_logo():
+    settings = await db.settings.find_one({"_id": "app_settings"}, {"_id": 0})
+    
+    if not settings or not settings.get('logo_base64'):
+        return {"logo_base64": None, "logo_filename": None}
+    
+    return {
+        "logo_base64": settings.get('logo_base64'),
+        "logo_filename": settings.get('logo_filename')
+    }
+
+@api_router.delete("/settings/logo")
+async def delete_logo():
+    await db.settings.update_one(
+        {"_id": "app_settings"},
+        {"$set": {"logo_base64": None, "logo_filename": None, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True
+    )
+    
+    return {"message": "Logo deleted successfully"}
 
 
 # Include the router in the main app
