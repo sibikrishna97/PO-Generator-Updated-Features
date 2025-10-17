@@ -238,6 +238,16 @@ export default function POEditor() {
     setOrderLines(updated);
   };
 
+  const updateOrderLineColors = (index, colorsString) => {
+    const colors = colorsString.split(',').map(c => c.trim()).filter(c => c);
+    updateOrderLine(index, 'colors', colors);
+  };
+
+  const updateOrderLineSizes = (index, sizesString) => {
+    const sizes = sizesString.split(',').map(s => s.trim()).filter(s => s);
+    updateOrderLine(index, 'size_range', sizes);
+  };
+
   const updateBillToAddress = (index, value) => {
     const updated = [...billTo.address_lines];
     updated[index] = value;
