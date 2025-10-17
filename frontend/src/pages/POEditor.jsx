@@ -730,46 +730,36 @@ export default function POEditor() {
           <Card>
             <CardContent className="pt-6">
               <h2 className="text-lg font-semibold mb-4">Packing Instructions</h2>
-              <div className="space-y-3">
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div>
-                    <Label>Folding</Label>
-                    <Input
-                      value={packing.folding}
-                      onChange={(e) => setPacking({ ...packing, folding: e.target.value })}
-                      placeholder="Flat fold, front side facing up"
-                      data-testid="packing-folding"
-                    />
-                  </div>
-                  <div>
-                    <Label>Packing Type</Label>
-                    <Input
-                      value={packing.packing_type}
-                      onChange={(e) => setPacking({ ...packing, packing_type: e.target.value })}
-                      placeholder="Bag packing"
-                      data-testid="packing-type"
-                    />
-                  </div>
+              <div className="space-y-4">
+                <div>
+                  <Label>Folding Instruction</Label>
+                  <Textarea
+                    value={packing.folding_instruction}
+                    onChange={(e) => setPacking({ ...packing, folding_instruction: e.target.value })}
+                    placeholder="Fold front side facing up with seams aligned neatly before stacking."
+                    rows={3}
+                    data-testid="packing-folding-instruction"
+                  />
                 </div>
-                <div className="grid md:grid-cols-2 gap-3">
-                  <div>
-                    <Label>Size & Packing</Label>
-                    <Input
-                      value={packing.size_packing}
-                      onChange={(e) => setPacking({ ...packing, size_packing: e.target.value })}
-                      placeholder="6 pieces / size Master Polybag"
-                      data-testid="packing-size"
-                    />
-                  </div>
-                  <div>
-                    <Label>Carton/Bag Markings</Label>
-                    <Input
-                      value={packing.carton_bag_markings}
-                      onChange={(e) => setPacking({ ...packing, carton_bag_markings: e.target.value })}
-                      placeholder="Each carton should be numbered..."
-                      data-testid="packing-markings"
-                    />
-                  </div>
+                <div>
+                  <Label>Packing Instruction</Label>
+                  <Textarea
+                    value={packing.packing_instruction}
+                    onChange={(e) => setPacking({ ...packing, packing_instruction: e.target.value })}
+                    placeholder="Master polybag only; 6 pieces per size; no individual poly."
+                    rows={3}
+                    data-testid="packing-packing-instruction"
+                  />
+                </div>
+                <div>
+                  <Label>Carton / Bag Markings</Label>
+                  <Textarea
+                    value={packing.carton_bag_markings}
+                    onChange={(e) => setPacking({ ...packing, carton_bag_markings: e.target.value })}
+                    placeholder="Each sack should be numbered, and a packing list attached per sack number."
+                    rows={3}
+                    data-testid="packing-carton-markings"
+                  />
                 </div>
               </div>
             </CardContent>
