@@ -48,6 +48,16 @@ export default function POEditor() {
     email: ''
   });
 
+  // Buyer (Editable)
+  const [buyer, setBuyer] = useState({
+    company: 'Newline Apparel',
+    address_lines: ['61, GKD Nagar, PN Palayam', 'Coimbatore – 641037', 'Tamil Nadu'],
+    gstin: '33AABCN1234F1Z5',
+    contact_name: '',
+    phone: '',
+    email: ''
+  });
+
   // Supplier
   const [supplier, setSupplier] = useState({
     company: '',
