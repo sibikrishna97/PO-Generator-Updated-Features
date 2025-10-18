@@ -112,7 +112,11 @@ class PurchaseOrder(BaseModel):
     po_number: str
     po_date: str
     bill_to: Optional[Party] = None  # Make optional for backward compatibility
-    buyer_static: BuyerStatic = Field(default_factory=BuyerStatic)
+    buyer: Party = Field(default_factory=lambda: Party(
+        company="Newline Apparel",
+        address_lines=["61, GKD Nagar, PN Palayam", "Coimbatore – 641037", "Tamil Nadu"],
+        gstin="33AABCN1234F1Z5"
+    ))
     supplier: Party
     delivery_date: str
     delivery_terms: str
