@@ -135,6 +135,7 @@ class POCreate(BaseModel):
     po_number: str
     po_date: str
     bill_to: Party
+    buyer: Party
     supplier: Party
     delivery_date: str
     delivery_terms: str
