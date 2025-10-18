@@ -197,6 +197,7 @@ export default function POEditor() {
         po_number: poNumber,
         po_date: poDate,
         bill_to: billTo,
+        buyer,
         supplier,
         delivery_date: deliveryDate,
         delivery_terms: deliveryTerms,
