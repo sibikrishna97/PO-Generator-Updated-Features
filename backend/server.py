@@ -111,7 +111,7 @@ class PurchaseOrder(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     po_number: str
     po_date: str
-    bill_to: Party
+    bill_to: Optional[Party] = None  # Make optional for backward compatibility
     buyer_static: BuyerStatic = Field(default_factory=BuyerStatic)
     supplier: Party
     delivery_date: str
