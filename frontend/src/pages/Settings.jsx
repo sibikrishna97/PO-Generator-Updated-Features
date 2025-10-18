@@ -97,14 +97,26 @@ export default function Settings() {
     }
 
     try {
-      await axios.delete(`${API}/settings/logo`);
-      setLogo(null);
-      setLogoFilename(null);
-      setSelectedFile(null);
-      toast.success('Logo removed successfully');
+      setDeleting(true);
+      const response = await axios.delete(`${API}/settings/logo`);
+      
+      if (response.status === 200) {
+        setLogo(null);
+        setLogoFilename(null);
+        setSelectedFile(null);
+        
+        // Clear file input if exists
+        const fileInput = document.getElementById('logo-upload');
+        if (fileInput) fileInput.value = '';
+        
+        toast.success('Logo removed successfully');
+      }
     } catch (error) {
       console.error('Error deleting logo:', error);
-      toast.error('Failed to remove logo');
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to remove logo';
+      toast.error(errorMessage);
+    } finally {
+      setDeleting(false);
     }
   };
 
