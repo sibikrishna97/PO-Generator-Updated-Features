@@ -1,24 +1,30 @@
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Form
+from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, Field, ConfigDict, field_validator
+from typing import List, Optional, Dict, Any, Union
 import uuid
 from datetime import datetime, timezone
 import base64
+import re
 
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
 # MongoDB connection
-mongo_url = os.environ['MONGO_URL']
+mongo_url = os.environ.get('MONGO_URL') or os.environ.get('MONGO_URI', 'mongodb://localhost:27017')
 client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+db = client[os.environ.get('DB_NAME', 'po_generator')]
+
+# Upload directory setup
+upload_dir = os.environ.get('UPLOAD_DIR', str(ROOT_DIR / 'uploads'))
+Path(upload_dir).mkdir(parents=True, exist_ok=True)
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -26,17 +32,36 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Mount uploads directory for static file serving
+app.mount("/uploads", StaticFiles(directory=upload_dir), name="uploads")
+
 
 # PO Models
 class OrderLine(BaseModel):
     style_code: str
     product_description: str
     fabric_gsm: str
-    colors: List[str]
-    size_range: List[str]
+    colors: Optional[Union[List[str], str]] = Field(default_factory=list)
+    size_range: Optional[Union[List[str], str]] = Field(default_factory=list)
     quantity: int
     unit_price: float
     unit: str = "pcs"
+    
+    @field_validator('colors', mode='before')
+    @classmethod
+    def parse_colors(cls, v):
+        if isinstance(v, str):
+            # Split comma-separated string into array
+            return [c.strip() for c in v.split(',') if c.strip()]
+        return v or []
+    
+    @field_validator('size_range', mode='before')
+    @classmethod
+    def parse_size_range(cls, v):
+        if isinstance(v, str):
+            # Split comma-separated string into array
+            return [s.strip() for s in v.split(',') if s.strip()]
+        return v or []
 
 class SizeColourBreakdown(BaseModel):
     sizes: List[str]
@@ -135,6 +160,18 @@ class POUpdate(BaseModel):
     logo_url: Optional[str] = None
 
 
+def sanitize_filename(filename: str) -> str:
+    """Sanitize filename to prevent path traversal and ensure safety"""
+    # Remove any path components
+    filename = os.path.basename(filename)
+    # Remove any non-alphanumeric characters except dots, hyphens, and underscores
+    filename = re.sub(r'[^a-zA-Z0-9._-]', '_', filename)
+    # Add timestamp to make unique
+    name, ext = os.path.splitext(filename)
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    return f"{name}_{timestamp}{ext}"
+
+
 # Routes
 @api_router.get("/")
 async def root():
@@ -142,13 +179,27 @@ async def root():
 
 @api_router.post("/pos", response_model=PurchaseOrder)
 async def create_po(po_data: POCreate):
-    po_obj = PurchaseOrder(**po_data.model_dump())
-    doc = po_obj.model_dump()
-    doc['created_at'] = doc['created_at'].isoformat()
-    doc['updated_at'] = doc['updated_at'].isoformat()
-    
-    await db.purchase_orders.insert_one(doc)
-    return po_obj
+    try:
+        # If colors/size_range not provided in order_lines, derive from breakdown
+        for line in po_data.order_lines:
+            if not line.colors:
+                line.colors = po_data.size_colour_breakdown.colors
+            if not line.size_range:
+                line.size_range = po_data.size_colour_breakdown.sizes
+        
+        po_obj = PurchaseOrder(**po_data.model_dump())
+        doc = po_obj.model_dump()
+        doc['created_at'] = doc['created_at'].isoformat()
+        doc['updated_at'] = doc['updated_at'].isoformat()
+        
+        await db.purchase_orders.insert_one(doc)
+        return po_obj
+    except Exception as e:
+        logging.error(f"Error creating PO: {str(e)}")
+        raise HTTPException(
+            status_code=422,
+            detail=f"Validation error creating PO: {str(e)}"
+        )
 
 @api_router.get("/pos", response_model=List[PurchaseOrder])
 async def get_all_pos(search: Optional[str] = None, supplier: Optional[str] = None):
@@ -194,22 +245,38 @@ async def update_po(po_id: str, po_update: POUpdate):
     if not existing_po:
         raise HTTPException(status_code=404, detail="PO not found")
     
-    update_data = po_update.model_dump(exclude_unset=True)
-    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
-    
-    await db.purchase_orders.update_one(
-        {"id": po_id},
-        {"$set": update_data}
-    )
-    
-    updated_po = await db.purchase_orders.find_one({"id": po_id}, {"_id": 0})
-    
-    if isinstance(updated_po['created_at'], str):
-        updated_po['created_at'] = datetime.fromisoformat(updated_po['created_at'])
-    if isinstance(updated_po['updated_at'], str):
-        updated_po['updated_at'] = datetime.fromisoformat(updated_po['updated_at'])
-    
-    return updated_po
+    try:
+        update_data = po_update.model_dump(exclude_unset=True)
+        
+        # If colors/size_range not provided in order_lines, derive from breakdown
+        if 'order_lines' in update_data and 'size_colour_breakdown' in update_data:
+            for line in update_data['order_lines']:
+                if not line.get('colors'):
+                    line['colors'] = update_data['size_colour_breakdown']['colors']
+                if not line.get('size_range'):
+                    line['size_range'] = update_data['size_colour_breakdown']['sizes']
+        
+        update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+        
+        await db.purchase_orders.update_one(
+            {"id": po_id},
+            {"$set": update_data}
+        )
+        
+        updated_po = await db.purchase_orders.find_one({"id": po_id}, {"_id": 0})
+        
+        if isinstance(updated_po['created_at'], str):
+            updated_po['created_at'] = datetime.fromisoformat(updated_po['created_at'])
+        if isinstance(updated_po['updated_at'], str):
+            updated_po['updated_at'] = datetime.fromisoformat(updated_po['updated_at'])
+        
+        return updated_po
+    except Exception as e:
+        logging.error(f"Error updating PO: {str(e)}")
+        raise HTTPException(
+            status_code=422,
+            detail=f"Validation error updating PO: {str(e)}"
+        )
 
 @api_router.delete("/pos/{po_id}")
 async def delete_po(po_id: str):
@@ -233,42 +300,78 @@ async def get_buyer_info():
         "brand_name": "Newline Apparel"
     }
 
-# Settings Routes
+# Settings Routes - Accept both 'file' and 'logo' field names
 @api_router.post("/settings/logo")
-async def upload_logo(file: UploadFile = File(...)):
+async def upload_logo(
+    file: Optional[UploadFile] = File(None),
+    logo: Optional[UploadFile] = File(None)
+):
+    # Use whichever field is present
+    upload_file = file or logo
+    
+    if not upload_file:
+        raise HTTPException(
+            status_code=422,
+            detail="No file provided. Please upload a file using 'file' or 'logo' field."
+        )
+    
     # Validate file type
     allowed_types = ['image/png', 'image/jpeg', 'image/jpg']
-    if file.content_type not in allowed_types:
-        raise HTTPException(status_code=400, detail="Only PNG, JPG, and JPEG files are allowed")
+    if upload_file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=422,
+            detail=f"Invalid file type '{upload_file.content_type}'. Only PNG, JPG, and JPEG files are allowed."
+        )
     
-    # Validate file size (max 5MB)
-    contents = await file.read()
+    # Read and validate file size (max 5MB)
+    contents = await upload_file.read()
     if len(contents) > 5 * 1024 * 1024:
-        raise HTTPException(status_code=400, detail="File size must be less than 5MB")
+        raise HTTPException(
+            status_code=422,
+            detail="File size must be less than 5MB"
+        )
     
-    # Convert to base64
-    logo_base64 = base64.b64encode(contents).decode('utf-8')
-    data_uri = f"data:{file.content_type};base64,{logo_base64}"
-    
-    # Save to settings collection
-    settings_doc = {
-        "_id": "app_settings",
-        "logo_base64": data_uri,
-        "logo_filename": file.filename,
-        "updated_at": datetime.now(timezone.utc).isoformat()
-    }
-    
-    await db.settings.update_one(
-        {"_id": "app_settings"},
-        {"$set": settings_doc},
-        upsert=True
-    )
-    
-    return {
-        "message": "Logo uploaded successfully",
-        "logo_base64": data_uri,
-        "filename": file.filename
-    }
+    try:
+        # Convert to base64 for database storage
+        logo_base64 = base64.b64encode(contents).decode('utf-8')
+        data_uri = f"data:{upload_file.content_type};base64,{logo_base64}"
+        
+        # Also save as file for static serving
+        safe_name = sanitize_filename(upload_file.filename)
+        file_path = Path(upload_dir).resolve() / safe_name
+        
+        with open(file_path, 'wb') as f:
+            f.write(contents)
+        
+        # Save to settings collection
+        settings_doc = {
+            "_id": "app_settings",
+            "logo_base64": data_uri,
+            "logo_filename": upload_file.filename,
+            "logo_path": str(file_path),
+            "logo_url": f"/uploads/{safe_name}",
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        
+        await db.settings.update_one(
+            {"_id": "app_settings"},
+            {"$set": settings_doc},
+            upsert=True
+        )
+        
+        return {
+            "message": "Logo uploaded successfully",
+            "logo_base64": data_uri,
+            "filename": upload_file.filename,
+            "url": f"/uploads/{safe_name}",
+            "path": str(file_path)
+        }
+    except Exception as e:
+        logging.error(f"Error uploading logo: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error uploading logo: {str(e)}"
+        )
 
 @api_router.get("/settings/logo")
 async def get_logo():
@@ -279,14 +382,30 @@ async def get_logo():
     
     return {
         "logo_base64": settings.get('logo_base64'),
-        "logo_filename": settings.get('logo_filename')
+        "logo_filename": settings.get('logo_filename'),
+        "logo_url": settings.get('logo_url')
     }
 
 @api_router.delete("/settings/logo")
 async def delete_logo():
+    settings = await db.settings.find_one({"_id": "app_settings"}, {"_id": 0})
+    
+    # Delete physical file if exists
+    if settings and settings.get('logo_path'):
+        try:
+            Path(settings['logo_path']).unlink(missing_ok=True)
+        except Exception as e:
+            logging.warning(f"Could not delete logo file: {str(e)}")
+    
     await db.settings.update_one(
         {"_id": "app_settings"},
-        {"$set": {"logo_base64": None, "logo_filename": None, "updated_at": datetime.now(timezone.utc).isoformat()}},
+        {"$set": {
+            "logo_base64": None,
+            "logo_filename": None,
+            "logo_path": None,
+            "logo_url": None,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }},
         upsert=True
     )
     
@@ -310,6 +429,13 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info(f"Upload directory: {upload_dir}")
+    logger.info(f"MongoDB URL: {mongo_url}")
+    logger.info(f"Database: {os.environ.get('DB_NAME', 'po_generator')}")
+    logger.info(f"CORS Origins: {os.environ.get('CORS_ORIGINS', '*')}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
