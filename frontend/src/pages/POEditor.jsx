@@ -299,7 +299,7 @@ export default function POEditor() {
   const prepareDocumentData = () => ({
     poNumber,
     billTo,
-    buyer: STATIC_BUYER,
+    buyer,
     supplier,
     meta: {
       poDate,
