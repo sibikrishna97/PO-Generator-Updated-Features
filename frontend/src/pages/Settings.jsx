@@ -101,15 +101,20 @@ export default function Settings() {
       const response = await axios.delete(`${API}/settings/logo`);
       
       if (response.status === 200) {
+        // Clear file input first
+        const fileInput = document.getElementById('logo-upload');
+        if (fileInput) fileInput.value = '';
+        
+        // Clear state
         setLogo(null);
         setLogoFilename(null);
         setSelectedFile(null);
         
-        // Clear file input if exists
-        const fileInput = document.getElementById('logo-upload');
-        if (fileInput) fileInput.value = '';
-        
+        // Show success message
         toast.success('Logo removed successfully');
+        
+        // Force re-fetch to ensure UI is in sync
+        await fetchLogo();
       }
     } catch (error) {
       console.error('Error deleting logo:', error);
