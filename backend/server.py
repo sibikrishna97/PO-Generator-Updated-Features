@@ -152,6 +152,7 @@ class POUpdate(BaseModel):
     po_number: Optional[str] = None
     po_date: Optional[str] = None
     bill_to: Optional[Party] = None
+    buyer: Optional[Party] = None
     supplier: Optional[Party] = None
     delivery_date: Optional[str] = None
     delivery_terms: Optional[str] = None
