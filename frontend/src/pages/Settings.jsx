@@ -156,9 +156,10 @@ export default function Settings() {
                         size="sm"
                         variant="ghost"
                         onClick={handleDelete}
+                        disabled={deleting}
                         data-testid="delete-logo-button"
                       >
-                        <X className="h-4 w-4" />
+                        {deleting ? 'Removing...' : <X className="h-4 w-4" />}
                       </Button>
                     </div>
                     <div className="flex justify-center p-4 bg-neutral-50 rounded">
