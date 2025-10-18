@@ -131,6 +131,7 @@ export default function POEditor() {
       setPaymentTerms(po.payment_terms);
       setCurrency(po.currency);
       setBillTo(po.bill_to);
+      setBuyer(po.buyer);
       setSupplier(po.supplier);
       setOrderLines(po.order_lines);
       setMatrix(po.size_colour_breakdown);
