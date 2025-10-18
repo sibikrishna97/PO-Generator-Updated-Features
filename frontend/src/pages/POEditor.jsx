@@ -502,46 +502,75 @@ export default function POEditor() {
                   </div>
                 </div>
 
-                {/* Buyer (Static) - Read Only */}
+                {/* Buyer - Editable */}
                 <div>
-                  <h3 className="font-medium mb-3 flex items-center gap-2">
-                    Buyer
-                    <span className="text-xs bg-neutral-100 text-neutral-600 px-2 py-1 rounded">Read-only</span>
+                  <h3 className="font-medium mb-3">
+                    Buyer *
                   </h3>
-                  <div className="space-y-3 bg-neutral-50 p-4 rounded-md border border-neutral-200">
+                  <div className="space-y-3">
                     <div>
-                      <Label>Company Name</Label>
+                      <Label htmlFor="buyer-company">Company Name</Label>
                       <Input
-                        value={STATIC_BUYER.company}
-                        disabled
-                        className="bg-white"
+                        id="buyer-company"
+                        value={buyer.company}
+                        onChange={(e) => setBuyer({ ...buyer, company: e.target.value })}
+                        placeholder="Company Name"
                         data-testid="po-form-buyer-company"
                       />
                     </div>
                     <div>
-                      <Label>Address</Label>
-                      {STATIC_BUYER.address_lines.map((line, idx) => (
+                      <Label>Address Lines</Label>
+                      {buyer.address_lines.map((line, idx) => (
                         <Input
                           key={idx}
                           value={line}
-                          disabled
-                          className="mt-2 bg-white"
+                          onChange={(e) => updateBuyerAddress(idx, e.target.value)}
+                          placeholder={`Address line ${idx + 1}`}
+                          className="mt-2"
                           data-testid={`po-form-buyer-address-${idx}`}
                         />
                       ))}
                     </div>
-                    <div>
-                      <Label>GSTIN</Label>
-                      <Input
-                        value={STATIC_BUYER.gstin}
-                        disabled
-                        className="bg-white"
-                        data-testid="po-form-buyer-gstin"
-                      />
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="buyer-gstin">GSTIN</Label>
+                        <Input
+                          id="buyer-gstin"
+                          value={buyer.gstin}
+                          onChange={(e) => setBuyer({ ...buyer, gstin: e.target.value })}
+                          data-testid="po-form-buyer-gstin"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="buyer-contact">Contact Name</Label>
+                        <Input
+                          id="buyer-contact"
+                          value={buyer.contact_name}
+                          onChange={(e) => setBuyer({ ...buyer, contact_name: e.target.value })}
+                          data-testid="po-form-buyer-contact"
+                        />
+                      </div>
                     </div>
-                    <div className="flex items-start gap-2 mt-2 text-xs text-neutral-600">
-                      <Info className="h-3 w-3 mt-0.5" />
-                      <span>Buyer details are static and can only be changed in App Settings</span>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <Label htmlFor="buyer-phone">Phone</Label>
+                        <Input
+                          id="buyer-phone"
+                          value={buyer.phone}
+                          onChange={(e) => setBuyer({ ...buyer, phone: e.target.value })}
+                          data-testid="po-form-buyer-phone"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="buyer-email">Email</Label>
+                        <Input
+                          id="buyer-email"
+                          type="email"
+                          value={buyer.email}
+                          onChange={(e) => setBuyer({ ...buyer, email: e.target.value })}
+                          data-testid="po-form-buyer-email"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
