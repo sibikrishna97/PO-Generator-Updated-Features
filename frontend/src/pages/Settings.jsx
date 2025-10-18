@@ -70,13 +70,21 @@ export default function Settings() {
         }
       });
 
-      setLogo(response.data.logo_base64);
-      setLogoFilename(response.data.filename);
-      setSelectedFile(null);
-      toast.success('Logo uploaded successfully! It will appear on all future POs.');
+      if (response.status === 200 || response.status === 201) {
+        setLogo(response.data.logo_base64);
+        setLogoFilename(response.data.filename);
+        setSelectedFile(null);
+        
+        // Clear file input
+        const fileInput = document.getElementById('logo-upload');
+        if (fileInput) fileInput.value = '';
+        
+        toast.success('Logo uploaded successfully! It will appear on all future POs.');
+      }
     } catch (error) {
       console.error('Error uploading logo:', error);
-      toast.error(error.response?.data?.detail || 'Failed to upload logo');
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to upload logo';
+      toast.error(errorMessage);
     } finally {
       setUploading(false);
     }
