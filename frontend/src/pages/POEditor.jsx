@@ -164,6 +164,24 @@ export default function POEditor() {
 
     try {
       setLoading(true);
+      
+      // Prepare order lines - colors and size_range will be derived from matrix if empty
+      const preparedOrderLines = orderLines.map(line => ({
+        ...line,
+        colors: [], // Let backend derive from matrix
+        size_range: [], // Let backend derive from matrix
+        quantity: Number(line.quantity) || 0,
+        unit_price: Number(line.unit_price) || 0
+      }));
+      
+      // Prepare matrix with proper number types
+      const preparedMatrix = {
+        sizes: matrix.sizes || [],
+        colors: matrix.colors || [],
+        values: matrix.values || {},
+        grand_total: Number(matrix.grandTotal) || 0
+      };
+      
       const poData = {
         po_number: poNumber,
         po_date: poDate,
@@ -173,8 +191,8 @@ export default function POEditor() {
         delivery_terms: deliveryTerms,
         payment_terms: paymentTerms,
         currency,
-        order_lines: orderLines,
-        size_colour_breakdown: matrix,
+        order_lines: preparedOrderLines,
+        size_colour_breakdown: preparedMatrix,
         packing_instructions: packing,
         other_terms: terms,
         authorisation
@@ -190,7 +208,8 @@ export default function POEditor() {
       }
     } catch (error) {
       console.error('Error saving PO:', error);
-      toast.error('Failed to save PO');
+      const errorMessage = error.response?.data?.detail || error.message || 'Failed to save PO';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
