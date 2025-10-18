@@ -269,6 +269,12 @@ export default function POEditor() {
     setBillTo({ ...billTo, address_lines: updated });
   };
 
+  const updateBuyerAddress = (index, value) => {
+    const updated = [...buyer.address_lines];
+    updated[index] = value;
+    setBuyer({ ...buyer, address_lines: updated });
+  };
+
   const updateSupplierAddress = (index, value) => {
     const updated = [...supplier.address_lines];
     updated[index] = value;
