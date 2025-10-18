@@ -154,6 +154,10 @@ export default function POEditor() {
       toast.error('Bill To company name is required');
       return;
     }
+    if (!buyer.company.trim()) {
+      toast.error('Buyer company name is required');
+      return;
+    }
     if (!supplier.company.trim()) {
       toast.error('Supplier company name is required');
       return;
