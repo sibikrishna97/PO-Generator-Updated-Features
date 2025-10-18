@@ -15,6 +15,7 @@ export default function Settings() {
   const [logo, setLogo] = useState(null);
   const [logoFilename, setLogoFilename] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
