@@ -17,12 +17,6 @@ import { Save, Printer, ArrowLeft, Plus, X, AlertCircle, Info } from 'lucide-rea
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const STATIC_BUYER = {
-  company: 'Newline Apparel',
-  address_lines: ['61, GKD Nagar, PN Palayam', 'Coimbatore – 641037', 'Tamil Nadu'],
-  gstin: '33AABCN1234F1Z5'
-};
-
 export default function POEditor() {
   const navigate = useNavigate();
   const { id } = useParams();
