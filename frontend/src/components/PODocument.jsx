@@ -47,8 +47,8 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="po-doc" data-testid="po-print-document">
-      {/* Header - Title left, Logo right */}
-      <div className="flex items-start justify-between mb-4 avoid-break">
+      {/* Header - Title left, Logo right - Repeats on every page */}
+      <div className="po-page-header flex items-start justify-between mb-4">
         <div>
           <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
           <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
