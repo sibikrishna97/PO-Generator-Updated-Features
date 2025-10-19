@@ -4,6 +4,15 @@ import { Button } from './ui/button';
 import { Plus, X } from 'lucide-react';
 
 export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
+  // Helper function to calculate grand total
+  const calculateGrandTotal = (sizesList, colorsList, valuesList) => {
+    return colorsList.reduce((acc, c) => {
+      return acc + sizesList.reduce((sum, s) => {
+        return sum + (Number(valuesList?.[c]?.[s]) || 0);
+      }, 0);
+    }, 0);
+  };
+
   const updateCell = (color, size, value) => {
     const newValues = {
       ...values,
@@ -13,18 +22,16 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
       }
     };
     
-    const grandTotal = colors.reduce((acc, c) => {
-      return acc + sizes.reduce((sum, s) => {
-        return sum + (Number(newValues?.[c]?.[s]) || 0);
-      }, 0);
-    }, 0);
+    const grandTotal = calculateGrandTotal(sizes, colors, newValues);
     
     onChange({ sizes, colors, values: newValues, grandTotal });
   };
 
   const addSize = () => {
     const newSize = `Size${sizes.length + 1}`;
-    onChange({ sizes: [...sizes, newSize], colors, values });
+    const newSizes = [...sizes, newSize];
+    const grandTotal = calculateGrandTotal(newSizes, colors, values);
+    onChange({ sizes: newSizes, colors, values, grandTotal });
   };
 
   const removeSize = (index) => {
@@ -36,12 +43,15 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
         delete newValues[color][sizes[index]];
       }
     });
-    onChange({ sizes: newSizes, colors, values: newValues });
+    const grandTotal = calculateGrandTotal(newSizes, colors, newValues);
+    onChange({ sizes: newSizes, colors, values: newValues, grandTotal });
   };
 
   const addColor = () => {
     const newColor = `Color${colors.length + 1}`;
-    onChange({ sizes, colors: [...colors, newColor], values });
+    const newColors = [...colors, newColor];
+    const grandTotal = calculateGrandTotal(sizes, newColors, values);
+    onChange({ sizes, colors: newColors, values, grandTotal });
   };
 
   const removeColor = (index) => {
@@ -49,7 +59,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
     const newColors = colors.filter((_, i) => i !== index);
     const newValues = { ...values };
     delete newValues[colors[index]];
-    onChange({ sizes, colors: newColors, values: newValues });
+    const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
+    onChange({ sizes, colors: newColors, values: newValues, grandTotal });
   };
 
   const updateSize = (index, newName) => {
@@ -65,7 +76,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
       }
     });
     
-    onChange({ sizes: newSizes, colors, values: newValues });
+    const grandTotal = calculateGrandTotal(newSizes, colors, newValues);
+    onChange({ sizes: newSizes, colors, values: newValues, grandTotal });
   };
 
   const updateColor = (index, newName) => {
@@ -79,7 +91,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
       delete newValues[oldColor];
     }
     
-    onChange({ sizes, colors: newColors, values: newValues });
+    const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
+    onChange({ sizes, colors: newColors, values: newValues, grandTotal });
   };
 
   const getRowTotal = (color) => {
