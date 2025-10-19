@@ -272,7 +272,7 @@ export default function POEditor() {
   };
 
   const handlePrint = useReactToPrint({
-    content: () => printRef.current,
+    contentRef: printRef,
     pageStyle: `
       @page { size: A4; margin: 12mm; }
       @media print {
