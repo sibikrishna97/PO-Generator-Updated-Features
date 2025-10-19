@@ -89,34 +89,14 @@
     color: var(--po-ink);
   }
 
-  /* Repeating header on every page */
-  .po-page-header {
-    position: running(header);
+  /* Repeating header using thead - automatically repeats on each page */
+  .po-repeating-header {
+    display: table-header-group;
   }
-
-  @page {
-    @top-center {
-      content: element(header);
-    }
-  }
-
-  /* Fallback for browsers that don't support position: running() */
-  @supports not (position: running(header)) {
-    .po-page-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: white;
-      z-index: 9999;
-      padding: 12mm;
-      padding-bottom: 8px;
-      border-bottom: 1px solid #E5E7EB;
-    }
-    
-    .po-doc {
-      padding-top: 60pt; /* Space for fixed header */
-    }
+  
+  .po-repeating-header td {
+    border: none !important;
+    background: white;
   }
 
   .po-doc * {
