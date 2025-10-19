@@ -61,7 +61,7 @@
 @media print {
   @page {
     size: A4;
-    margin: 12mm;
+    margin: 12mm 12mm 18mm 12mm; /* Extra bottom margin for page numbers */
     /* Add page numbers at bottom center */
     @bottom-center {
       content: "Page " counter(page) " of " counter(pages);
@@ -87,6 +87,36 @@
     width: 186mm;
     margin: 0 auto;
     color: var(--po-ink);
+  }
+
+  /* Repeating header on every page */
+  .po-page-header {
+    position: running(header);
+  }
+
+  @page {
+    @top-center {
+      content: element(header);
+    }
+  }
+
+  /* Fallback for browsers that don't support position: running() */
+  @supports not (position: running(header)) {
+    .po-page-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      z-index: 9999;
+      padding: 12mm;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #E5E7EB;
+    }
+    
+    .po-doc {
+      padding-top: 60pt; /* Space for fixed header */
+    }
   }
 
   .po-doc * {
