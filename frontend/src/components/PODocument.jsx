@@ -107,40 +107,43 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       </div>
 
-      {/* Supplier Block - Full Width with border */}
-      <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', padding: '8px' }}>
-        <div className="po-section-title mb-2" style={{ fontSize: '10pt' }}>Supplier / Factory (Ship From)</div>
-        <div className="text-[9pt] font-medium">{supplier?.company}</div>
-        {supplier?.address_lines?.map((line, idx) => (
-          <div key={idx} className="text-[9pt]">{line}</div>
-        ))}
-        <div className="flex gap-4 mt-1 text-[9pt]">
-          {supplier?.gstin && <span>GSTIN: {supplier.gstin}</span>}
-          {supplier?.contact_name && <span>Contact: {supplier.contact_name}</span>}
-          {supplier?.phone && <span>Phone: {supplier.phone}</span>}
+      {/* Second Row - Supplier & PO Meta side by side */}
+      <div className="grid grid-cols-2 gap-4 mb-3 avoid-break">
+        {/* Supplier Block - Same size as Bill To */}
+        <div style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', padding: '8px' }}>
+          <div className="po-section-title mb-2" style={{ fontSize: '10pt' }}>Supplier / Factory (Ship From)</div>
+          <div className="text-[9pt] font-medium">{supplier?.company}</div>
+          {supplier?.address_lines?.map((line, idx) => (
+            <div key={idx} className="text-[9pt]">{line}</div>
+          ))}
+          {supplier?.gstin && <div className="text-[9pt] mt-1">GSTIN: {supplier.gstin}</div>}
+          {supplier?.contact_name && <div className="text-[9pt]">Contact: {supplier.contact_name}</div>}
+          {supplier?.phone && <div className="text-[9pt]">Phone: {supplier.phone}</div>}
         </div>
-      </div>
 
-      {/* PO Meta Details - Bordered Table Format */}
-      <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr style={{ backgroundColor: '#F5F5F7' }}>
-              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>PO Date</th>
-              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Delivery Date</th>
-              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Payment Terms</th>
-              <th style={{ width: '25%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Delivery Terms</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.poDate || 'N/A'}</td>
-              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryDate || 'N/A'}</td>
-              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.paymentTerms || 'N/A'}</td>
-              <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryTerms || 'N/A'}</td>
-            </tr>
-          </tbody>
-        </table>
+        {/* PO Meta Details - As Rows */}
+        <div style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', height: '100%' }}>
+            <tbody>
+              <tr>
+                <td style={{ width: '40%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', backgroundColor: '#F5F5F7' }}>PO Date</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.poDate || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style={{ width: '40%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', backgroundColor: '#F5F5F7' }}>Delivery Date</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryDate || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style={{ width: '40%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', backgroundColor: '#F5F5F7' }}>Payment Terms</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.paymentTerms || 'N/A'}</td>
+              </tr>
+              <tr>
+                <td style={{ width: '40%', fontSize: '9pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', backgroundColor: '#F5F5F7' }}>Delivery Terms</td>
+                <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{meta?.deliveryTerms || 'N/A'}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Order Summary - Full Bordered Table */}
