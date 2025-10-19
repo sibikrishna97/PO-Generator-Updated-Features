@@ -354,6 +354,13 @@ export default function POEditor() {
       @page { 
         size: A4; 
         margin: 12mm;
+        counter-increment: page;
+        @bottom-center {
+          content: "Page " counter(page) " of " counter(pages);
+          font-family: Inter, sans-serif;
+          font-size: 8pt;
+          color: #6B7280;
+        }
       }
       @media print {
         html, body { 
@@ -363,6 +370,7 @@ export default function POEditor() {
         }
         body { 
           font-family: Inter, Roboto, system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, Noto Sans, sans-serif;
+          counter-reset: page 1;
         }
       }
     `
