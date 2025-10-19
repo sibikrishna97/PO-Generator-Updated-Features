@@ -273,6 +273,49 @@ export default function POEditor() {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
+    onBeforeGetContent: () => {
+      return new Promise((resolve) => {
+        // Calculate if content fits on one page and adjust font size
+        if (printRef.current) {
+          const element = printRef.current;
+          
+          // A4 dimensions at 96 DPI: 794px width x 1123px height
+          // With 12mm margins (45px): usable height = ~1033px
+          const maxHeight = 1033;
+          
+          // Temporarily make visible to measure
+          const originalDisplay = element.style.display;
+          element.style.display = 'block';
+          element.style.position = 'absolute';
+          element.style.visibility = 'hidden';
+          element.style.width = '749px'; // A4 width minus margins
+          
+          // Measure actual height
+          const actualHeight = element.scrollHeight;
+          
+          // Reset temporary styles
+          element.style.display = originalDisplay;
+          element.style.position = '';
+          element.style.visibility = '';
+          element.style.width = '';
+          
+          // Calculate scale factor if content overflows
+          if (actualHeight > maxHeight) {
+            const scaleFactor = maxHeight / actualHeight;
+            // Apply scale to font size (minimum 60% of original)
+            const newScale = Math.max(0.6, scaleFactor);
+            element.style.fontSize = `${newScale * 100}%`;
+            element.style.lineHeight = '1.3'; // Tighter line height for better fit
+          } else {
+            element.style.fontSize = '100%';
+            element.style.lineHeight = '1.5';
+          }
+        }
+        
+        // Small delay to let styles apply
+        setTimeout(resolve, 100);
+      });
+    },
     pageStyle: `
       @page { size: A4; margin: 12mm; }
       @media print {
