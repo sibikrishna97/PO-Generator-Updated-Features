@@ -317,10 +317,28 @@ export default function POEditor() {
       });
     },
     pageStyle: `
-      @page { size: A4; margin: 12mm; }
+      @page { 
+        size: A4; 
+        margin: 12mm;
+        /* Remove browser default headers and footers */
+        @top-left { content: none; }
+        @top-center { content: none; }
+        @top-right { content: none; }
+        @bottom-left { content: none; }
+        @bottom-center { content: none; }
+        @bottom-right { content: none; }
+      }
       @media print {
-        html, body { background: #fff !important; }
-        body { font-family: Inter, Roboto, system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, Noto Sans, sans-serif; }
+        html, body { 
+          background: #fff !important; 
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        body { 
+          font-family: Inter, Roboto, system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, Noto Sans, sans-serif;
+        }
+        /* Hide default browser print headers/footers */
+        @page { margin: 12mm; }
       }
     `
   });
