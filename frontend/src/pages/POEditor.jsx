@@ -273,6 +273,7 @@ export default function POEditor() {
 
   const handlePrint = useReactToPrint({
     contentRef: printRef,
+    documentTitle: `PO-${poNumber || 'Document'}`,
     onBeforeGetContent: () => {
       return new Promise((resolve) => {
         // Calculate if content fits on one page and adjust font size
@@ -316,17 +317,41 @@ export default function POEditor() {
         setTimeout(resolve, 100);
       });
     },
+    print: async (printIframe) => {
+      return new Promise((resolve) => {
+        // Set custom print settings to disable headers and footers
+        const document = printIframe.contentDocument || printIframe.contentWindow.document;
+        
+        // Try to programmatically set print settings (Chrome)
+        if (printIframe.contentWindow) {
+          const win = printIframe.contentWindow;
+          
+          // Execute print with custom settings
+          try {
+            // For Chrome - attempt to disable headers/footers via CSS
+            const style = document.createElement('style');
+            style.textContent = `
+              @page { 
+                size: A4;
+                margin: 12mm;
+              }
+            `;
+            document.head.appendChild(style);
+            
+            win.print();
+          } catch (err) {
+            // Fallback to normal print
+            win.print();
+          }
+        }
+        
+        resolve();
+      });
+    },
     pageStyle: `
       @page { 
         size: A4; 
         margin: 12mm;
-        /* Remove browser default headers and footers */
-        @top-left { content: none; }
-        @top-center { content: none; }
-        @top-right { content: none; }
-        @bottom-left { content: none; }
-        @bottom-center { content: none; }
-        @bottom-right { content: none; }
       }
       @media print {
         html, body { 
@@ -337,8 +362,6 @@ export default function POEditor() {
         body { 
           font-family: Inter, Roboto, system-ui, -apple-system, Segoe UI, Helvetica Neue, Arial, Noto Sans, sans-serif;
         }
-        /* Hide default browser print headers/footers */
-        @page { margin: 12mm; }
       }
     `
   });
