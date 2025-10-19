@@ -124,11 +124,57 @@ export default function POEditor() {
       setDeliveryTerms(po.delivery_terms);
       setPaymentTerms(po.payment_terms);
       setCurrency(po.currency);
-      setBillTo(po.bill_to);
-      setBuyer(po.buyer);
-      setSupplier(po.supplier);
+      
+      // Handle bill_to with fallback for old POs
+      setBillTo(po.bill_to || {
+        company: '',
+        address_lines: ['', '', ''],
+        gstin: '',
+        contact_name: '',
+        phone: '',
+        email: ''
+      });
+      
+      // Handle buyer with fallback
+      setBuyer(po.buyer || {
+        company: 'Newline Apparel',
+        address_lines: ['61, GKD Nagar, PN Palayam', 'Coimbatore – 641037', 'Tamil Nadu'],
+        gstin: '33AABCN1234F1Z5',
+        contact_name: '',
+        phone: '',
+        email: ''
+      });
+      
+      // Handle supplier with fallback
+      setSupplier(po.supplier || {
+        company: '',
+        address_lines: ['', '', ''],
+        gstin: '',
+        contact_name: '',
+        phone: '',
+        email: ''
+      });
+      
       setOrderLines(po.order_lines);
-      setMatrix(po.size_colour_breakdown);
+      
+      // Handle matrix with grandTotal calculation
+      const matrixData = po.size_colour_breakdown;
+      if (matrixData && !matrixData.grandTotal) {
+        // Calculate grandTotal if not present
+        const grandTotal = (matrixData.colors || []).reduce((acc, color) => {
+          return acc + (matrixData.sizes || []).reduce((sum, size) => {
+            return sum + (Number(matrixData.values?.[color]?.[size]) || 0);
+          }, 0);
+        }, 0);
+        matrixData.grandTotal = grandTotal;
+      }
+      setMatrix(matrixData || {
+        sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
+        colors: ['Black', 'Grey Melange', 'Charcoal Melange'],
+        values: {},
+        grandTotal: 0
+      });
+      
       setPacking(po.packing_instructions);
       setTerms(po.other_terms);
       setAuthorisation(po.authorisation);
