@@ -282,8 +282,7 @@ export default function POEditor() {
           
           // A4 dimensions at 96 DPI: 794px width x 1123px height
           // With 12mm margins (45px): usable height = ~1033px
-          // With reduced base font (8pt instead of 9.5pt), we have more room
-          const maxHeight = 1050;
+          const maxHeight = 1033;
           
           // Temporarily make visible to measure
           const originalDisplay = element.style.display;
@@ -302,16 +301,15 @@ export default function POEditor() {
           element.style.width = '';
           
           // Calculate scale factor if content overflows
-          // Since we've already reduced font size, be more lenient
           if (actualHeight > maxHeight) {
             const scaleFactor = maxHeight / actualHeight;
-            // Apply scale to font size (minimum 70% of already-reduced size)
-            const newScale = Math.max(0.7, scaleFactor);
+            // Apply scale to font size (minimum 60% of original)
+            const newScale = Math.max(0.6, scaleFactor);
             element.style.fontSize = `${newScale * 100}%`;
-            element.style.lineHeight = '1.15'; // Tighter line height for better fit
+            element.style.lineHeight = '1.3'; // Tighter line height for better fit
           } else {
             element.style.fontSize = '100%';
-            element.style.lineHeight = '1.2';
+            element.style.lineHeight = '1.5';
           }
         }
         
