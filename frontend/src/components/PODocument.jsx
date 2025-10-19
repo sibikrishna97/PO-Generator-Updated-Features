@@ -47,43 +47,55 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
 
   return (
     <div ref={ref} className="po-doc" data-testid="po-print-document">
-      {/* Header - Title left, Logo right - Repeats on every page */}
-      <div className="po-page-header flex items-start justify-between mb-4">
-        <div>
-          <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
-          <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
-        </div>
-        <div className="flex items-center">
-          {settingsLogo ? (
-            <img 
-              src={settingsLogo} 
-              alt="Company Logo" 
-              style={{ 
-                maxHeight: '38pt', 
-                maxWidth: '120pt', 
-                width: 'auto',
-                height: 'auto',
-                objectFit: 'contain' 
-              }} 
-            />
-          ) : (
-            <div style={{ 
-              height: '38pt', 
-              width: '100pt', 
-              border: '1px dashed #D1D5DB', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              fontSize: '8pt',
-              color: '#9CA3AF',
-              textAlign: 'center',
-              padding: '4px'
-            }}>
-              Upload Logo in Settings
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Use table structure for repeating header */}
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+        <thead className="po-repeating-header">
+          <tr>
+            <td colSpan="2" style={{ border: 'none', padding: '0', paddingBottom: '8px' }}>
+              {/* Header - Title left, Logo right - Repeats on every page */}
+              <div className="flex items-start justify-between" style={{ borderBottom: '1px solid #E5E7EB', paddingBottom: '8px' }}>
+                <div>
+                  <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
+                  <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
+                </div>
+                <div className="flex items-center">
+                  {settingsLogo ? (
+                    <img 
+                      src={settingsLogo} 
+                      alt="Company Logo" 
+                      style={{ 
+                        maxHeight: '38pt', 
+                        maxWidth: '120pt', 
+                        width: 'auto',
+                        height: 'auto',
+                        objectFit: 'contain' 
+                      }} 
+                    />
+                  ) : (
+                    <div style={{ 
+                      height: '38pt', 
+                      width: '100pt', 
+                      border: '1px dashed #D1D5DB', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'center', 
+                      fontSize: '8pt',
+                      color: '#9CA3AF',
+                      textAlign: 'center',
+                      padding: '4px'
+                    }}>
+                      Upload Logo in Settings
+                    </div>
+                  )}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colSpan="2" style={{ border: 'none', padding: '0' }}>
+              <div style={{ paddingTop: '12px' }}>
 
       {/* Top Address Band - Bill To & Buyer with borders */}
       <div className="grid grid-cols-2 gap-4 mb-3 avoid-break">
