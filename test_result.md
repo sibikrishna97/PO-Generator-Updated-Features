@@ -101,3 +101,82 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Matrix total () doesn't match order quantity (400) - Message is displayed even if the quantity matches. The issue is that the Size-Colour Breakdown matrix is not correctly updating the grand total quantity."
+
+backend:
+  - task: "Size-Colour Breakdown API"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Backend endpoints exist. No changes made to backend in this fix."
+
+frontend:
+  - task: "Matrix Grand Total Calculation"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/components/SizeColourMatrix.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "user"
+        comment: "User reported: Matrix total () doesn't match order quantity (400) - shows empty brackets even when quantities match"
+      - working: true
+        agent: "main"
+        comment: "Fixed by adding calculateGrandTotal helper function that is called in ALL onChange callbacks (updateCell, addSize, removeSize, addColor, removeColor, updateSize, updateColor). Previously, grandTotal was only calculated in updateCell, causing it to be undefined when other operations happened."
+
+  - task: "PO Loading with Backward Compatibility"
+    implemented: true
+    working: true
+    file: "/app/frontend/src/pages/POEditor.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "main"
+        comment: "Runtime error when loading old POs: Cannot read properties of null (reading 'company')"
+      - working: true
+        agent: "main"
+        comment: "Fixed by adding proper fallback values for bill_to, buyer, and supplier when loading POs. Also added grandTotal calculation for old POs that don't have it stored."
+
+  - task: "Matrix Mismatch Warning Display"
+    implemented: true
+    working: "unknown"
+    file: "/app/frontend/src/pages/POEditor.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "unknown"
+        agent: "main"
+        comment: "Need to verify that warning correctly shows when matrix.grandTotal != orderTotalQty, and doesn't show when they match. Also verify grandTotal is displayed correctly in the warning message (not as empty brackets)."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: true
+
+test_plan:
+  current_focus:
+    - "Matrix Grand Total Calculation"
+    - "Matrix Mismatch Warning Display"
+    - "PO Loading with Backward Compatibility"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Fixed the matrix grand total bug by ensuring grandTotal is calculated in all matrix operations. Also fixed backward compatibility issue when loading old POs. Ready for testing."
+  - agent: "main"
+    message: "Please test: 1) Create new PO and enter values in matrix - verify grandTotal updates correctly. 2) Verify warning shows with correct grandTotal value when quantities don't match. 3) Load existing PO and verify no errors. 4) Add/remove sizes/colors and verify grandTotal updates."
