@@ -355,6 +355,12 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
           </div>
         </div>
       </div>
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 });
