@@ -1055,6 +1055,16 @@ export default function POEditor() {
             <DialogHeader>
               <DialogTitle>Print Preview</DialogTitle>
             </DialogHeader>
+            
+            {/* Info message for clean printing */}
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-3">
+              <p className="text-sm text-blue-800">
+                <strong>💡 Tip:</strong> For a clean PDF without browser headers/footers, in the print dialog:
+                <br />• <strong>Chrome:</strong> Click "More settings" → Uncheck "Headers and footers"
+                <br />• <strong>Firefox:</strong> Uncheck "Print headers and footers"
+              </p>
+            </div>
+            
             <div className="border rounded bg-white p-6">
               <PODocument ref={printRef} data={prepareDocumentData()} />
             </div>
