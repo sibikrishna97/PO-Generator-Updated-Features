@@ -1009,8 +1009,17 @@ export default function POEditor() {
               <h2 className="text-lg font-semibold mb-4">Authorisation</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <h3 className="font-medium mb-3">For Newline Apparel</h3>
+                  <h3 className="font-medium mb-3">For</h3>
                   <div className="space-y-3">
+                    <div>
+                      <Label>Company Name</Label>
+                      <Input
+                        value={authorisation.buyer_company}
+                        onChange={(e) => setAuthorisation({ ...authorisation, buyer_company: e.target.value })}
+                        placeholder="Newline Apparel"
+                        data-testid="auth-buyer-company"
+                      />
+                    </div>
                     <div>
                       <Label>Designation</Label>
                       <Input
@@ -1032,8 +1041,17 @@ export default function POEditor() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="font-medium mb-3">For Supplier/Factory</h3>
+                  <h3 className="font-medium mb-3">For</h3>
                   <div className="space-y-3">
+                    <div>
+                      <Label>Company Name</Label>
+                      <Input
+                        value={authorisation.supplier_company}
+                        onChange={(e) => setAuthorisation({ ...authorisation, supplier_company: e.target.value })}
+                        placeholder="Supplier/Factory"
+                        data-testid="auth-supplier-company"
+                      />
+                    </div>
                     <div>
                       <Label>Designation</Label>
                       <Input
