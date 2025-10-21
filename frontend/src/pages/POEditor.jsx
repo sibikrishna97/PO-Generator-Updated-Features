@@ -100,8 +100,10 @@ export default function POEditor() {
 
   // Authorisation
   const [authorisation, setAuthorisation] = useState({
+    buyer_company: '',
     buyer_designation: '',
     buyer_name: '',
+    supplier_company: '',
     supplier_designation: '',
     supplier_name: ''
   });
