@@ -82,8 +82,10 @@ class OtherTerms(BaseModel):
     notes: Optional[str] = None
 
 class Authorisation(BaseModel):
+    buyer_company: Optional[str] = None
     buyer_designation: Optional[str] = None
     buyer_name: Optional[str] = None
+    supplier_company: Optional[str] = None
     supplier_designation: Optional[str] = None
     supplier_name: Optional[str] = None
 
