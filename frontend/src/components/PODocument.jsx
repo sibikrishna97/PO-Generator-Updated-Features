@@ -331,7 +331,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
           padding: '10px'
         }}>
           <div className="po-section-title mb-2" style={{ fontSize: '10pt', fontWeight: '600' }}>
-            For {authorisation?.buyer_company || 'Newline Apparel'}
+            For {authorisation?.buyer_company || 'Buyer'}
           </div>
           {authorisation?.buyer_designation && (
             <div className="text-[9pt] mb-1">{authorisation.buyer_designation}</div>
