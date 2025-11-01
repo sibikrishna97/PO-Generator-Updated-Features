@@ -144,6 +144,63 @@ export default function POEditor() {
     }
   };
 
+  const fetchDirectories = async () => {
+    try {
+      const [buyersRes, suppliersRes, billToRes] = await Promise.all([
+        axios.get(`${API}/buyers`),
+        axios.get(`${API}/suppliers`),
+        axios.get(`${API}/billto`)
+      ]);
+      setBuyers(buyersRes.data);
+      setSuppliers(suppliersRes.data);
+      setBillToParties(billToRes.data);
+    } catch (error) {
+      console.error('Error fetching directories:', error);
+    }
+  };
+
+  const handleSelectBillTo = (billToId) => {
+    const selected = billToParties.find(b => b.id === billToId);
+    if (selected) {
+      setBillTo({
+        company: selected.company_name,
+        address_lines: [selected.address1, selected.address2, selected.address3].filter(Boolean),
+        gstin: selected.gstin || '',
+        contact_name: selected.contact_name || '',
+        phone: selected.phone || '',
+        email: selected.email || ''
+      });
+    }
+  };
+
+  const handleSelectBuyer = (buyerId) => {
+    const selected = buyers.find(b => b.id === buyerId);
+    if (selected) {
+      setBuyer({
+        company: selected.company_name,
+        address_lines: [selected.address1, selected.address2, selected.address3].filter(Boolean),
+        gstin: selected.gstin || '',
+        contact_name: selected.contact_name || '',
+        phone: selected.phone || '',
+        email: selected.email || ''
+      });
+    }
+  };
+
+  const handleSelectSupplier = (supplierId) => {
+    const selected = suppliers.find(s => s.id === supplierId);
+    if (selected) {
+      setSupplier({
+        company: selected.company_name,
+        address_lines: [selected.address1, selected.address2, selected.address3].filter(Boolean),
+        gstin: selected.gstin || '',
+        contact_name: selected.contact_name || '',
+        phone: selected.phone || '',
+        email: selected.email || ''
+      });
+    }
+  };
+
   const fetchPO = async () => {
     try {
       setLoading(true);
