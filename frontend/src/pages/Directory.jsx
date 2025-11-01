@@ -162,9 +162,10 @@ export default function Directory() {
     }
 
     try {
-      const endpoint = activeTab === 'buyers' 
-        ? `${API}/buyers/${item.id}` 
-        : `${API}/suppliers/${item.id}`;
+      let endpoint;
+      if (activeTab === 'buyers') endpoint = `${API}/buyers/${item.id}`;
+      else if (activeTab === 'suppliers') endpoint = `${API}/suppliers/${item.id}`;
+      else endpoint = `${API}/billto/${item.id}`;
       
       await axios.delete(endpoint);
       toast.success('Deleted successfully');
@@ -172,8 +173,10 @@ export default function Directory() {
       // Refresh data
       if (activeTab === 'buyers') {
         await fetchBuyers();
-      } else {
+      } else if (activeTab === 'suppliers') {
         await fetchSuppliers();
+      } else {
+        await fetchBillToParties();
       }
     } catch (error) {
       console.error('Error deleting:', error);
