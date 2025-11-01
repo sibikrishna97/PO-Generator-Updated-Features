@@ -313,6 +313,54 @@ export default function Directory() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {/* Bill To Tab */}
+          <TabsContent value="billto">
+            <Card>
+              <CardContent className="pt-6">
+                {billToParties.length === 0 ? (
+                  <div className="text-center py-8 text-neutral-500">
+                    No bill-to parties found. Click "Add Bill-To" to create one.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {billToParties.map(billto => (
+                      <div 
+                        key={billto.id} 
+                        className="flex items-center justify-between p-4 border rounded-md hover:bg-neutral-50"
+                      >
+                        <div className="flex-1">
+                          <h3 className="font-semibold">{billto.company_name}</h3>
+                          <p className="text-sm text-neutral-600">
+                            {billto.address1} {billto.address2 && `, ${billto.address2}`}
+                          </p>
+                          {billto.contact_name && (
+                            <p className="text-sm text-neutral-500">Contact: {billto.contact_name}</p>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleOpenDialog(billto, 'billto')}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleDelete(billto)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
 
         {/* Add/Edit Dialog */}
