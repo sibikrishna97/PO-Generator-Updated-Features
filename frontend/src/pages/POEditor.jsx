@@ -28,6 +28,11 @@ export default function POEditor() {
   const [openPreview, setOpenPreview] = useState(false);
   const [docType, setDocType] = useState('PO'); // 'PO' or 'PI'
 
+  // Directory lists for dropdowns
+  const [buyers, setBuyers] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
+  const [billToParties, setBillToParties] = useState([]);
+
   // Form state
   const [poNumber, setPoNumber] = useState('');
   const [poDate, setPoDate] = useState('');
