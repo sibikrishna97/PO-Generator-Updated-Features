@@ -48,6 +48,19 @@ export default function POList() {
     navigate(`/po/${poId}`);
   };
 
+  const handleDuplicate = async (e, po) => {
+    e.stopPropagation();
+    try {
+      const response = await axios.post(`${API}/pos/${po.id}/duplicate`);
+      toast.success('PO duplicated successfully!');
+      // Navigate to the new duplicate
+      navigate(`/po/${response.data.id}`);
+    } catch (error) {
+      console.error('Error duplicating PO:', error);
+      toast.error('Failed to duplicate PO');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-8">
