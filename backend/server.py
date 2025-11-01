@@ -102,6 +102,34 @@ class BuyerStatic(BaseModel):
     address_lines: List[str] = ["61, GKD Nagar, PN Palayam", "Coimbatore – 641037", "Tamil Nadu"]
     gstin: str = "33AABCN1234F1Z5"
 
+# Directory models
+class Buyer(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_name: str
+    address1: str = ""
+    address2: str = ""
+    address3: str = ""
+    contact_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    gstin: Optional[str] = None
+    notes: Optional[str] = None
+    is_default_buyer: bool = False
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
+class Supplier(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_name: str
+    address1: str = ""
+    address2: str = ""
+    address3: str = ""
+    contact_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    gstin: Optional[str] = None
+    notes: Optional[str] = None
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
 class AppSettings(BaseModel):
     logo_base64: Optional[str] = None
     logo_filename: Optional[str] = None
