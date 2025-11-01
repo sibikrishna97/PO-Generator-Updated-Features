@@ -115,19 +115,14 @@ export default function POEditor() {
     if (id && !isNew) {
       // Editing existing PO/PI
       fetchPO();
-    } else if (isNew) {
-      // Creating new PO/PI - fetch next number
+    } else if (isNew && !poNumber) {
+      // Creating new PO/PI - fetch next number ONLY if empty
       fetchNextPoNumber();
     }
   }, [id, isNew]);
   
-  // Re-fetch number when docType changes (ONLY for new documents)
-  useEffect(() => {
-    if (isNew) {
-      fetchNextPoNumber();
-    }
-    // For existing documents, just keep the current number
-  }, [docType]);
+  // DO NOT re-fetch number when docType changes
+  // User can manually edit the number if they want to change format
 
   const fetchNextPoNumber = async () => {
     try {
