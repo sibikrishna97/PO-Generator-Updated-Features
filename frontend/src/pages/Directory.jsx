@@ -120,24 +120,31 @@ export default function Directory() {
       
       if (editMode) {
         // Update
-        const endpoint = activeTab === 'buyers' 
-          ? `${API}/buyers/${currentItem.id}` 
-          : `${API}/suppliers/${currentItem.id}`;
+        let endpoint;
+        if (activeTab === 'buyers') endpoint = `${API}/buyers/${currentItem.id}`;
+        else if (activeTab === 'suppliers') endpoint = `${API}/suppliers/${currentItem.id}`;
+        else endpoint = `${API}/billto/${currentItem.id}`;
         
         await axios.patch(endpoint, formData);
-        toast.success(`${activeTab === 'buyers' ? 'Buyer' : 'Supplier'} updated successfully`);
+        toast.success(`${activeTab === 'buyers' ? 'Buyer' : activeTab === 'suppliers' ? 'Supplier' : 'Bill-To'} updated successfully`);
       } else {
         // Create
-        const endpoint = activeTab === 'buyers' ? `${API}/buyers` : `${API}/suppliers`;
+        let endpoint;
+        if (activeTab === 'buyers') endpoint = `${API}/buyers`;
+        else if (activeTab === 'suppliers') endpoint = `${API}/suppliers`;
+        else endpoint = `${API}/billto`;
+        
         await axios.post(endpoint, formData);
-        toast.success(`${activeTab === 'buyers' ? 'Buyer' : 'Supplier'} created successfully`);
+        toast.success(`${activeTab === 'buyers' ? 'Buyer' : activeTab === 'suppliers' ? 'Supplier' : 'Bill-To'} created successfully`);
       }
       
       // Refresh data
       if (activeTab === 'buyers') {
         await fetchBuyers();
-      } else {
+      } else if (activeTab === 'suppliers') {
         await fetchSuppliers();
+      } else {
+        await fetchBillToParties();
       }
       
       setOpenDialog(false);
