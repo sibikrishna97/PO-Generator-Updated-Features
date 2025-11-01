@@ -148,6 +148,9 @@ export default function POEditor() {
       const response = await axios.get(`${API}/pos/${id}`);
       const po = response.data;
       
+      // Set document type (default to PO for backward compatibility)
+      setDocType(po.doc_type || 'PO');
+      
       setPoNumber(po.po_number);
       setPoDate(po.po_date);
       setDeliveryDate(po.delivery_date);
