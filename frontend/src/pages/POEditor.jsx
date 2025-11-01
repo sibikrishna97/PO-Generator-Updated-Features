@@ -111,13 +111,14 @@ export default function POEditor() {
   });
 
   useEffect(() => {
-    if (id && id !== 'new') {
+    if (id && !isNew) {
+      // Editing existing PO
       fetchPO();
-    } else if (id === 'new') {
-      // Fetch next PO number for new documents
+    } else if (isNew) {
+      // Creating new PO - fetch next number
       fetchNextPoNumber();
     }
-  }, [id]);
+  }, [id, isNew]);
 
   const fetchNextPoNumber = async () => {
     try {
