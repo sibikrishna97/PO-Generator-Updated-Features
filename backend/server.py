@@ -515,7 +515,7 @@ async def get_next_po_number():
 
 @api_router.post("/pi/next-number")
 async def get_next_pi_number():
-    """Atomically get and increment PI number"""
+    """Atomically get and increment PI number with format: PI/DDMMYY/XXXX"""
     # Find and update atomically
     result = await db.settings.find_one_and_update(
         {"_id": "app_settings"},
@@ -527,18 +527,26 @@ async def get_next_pi_number():
     if not result:
         raise HTTPException(status_code=500, detail="Failed to generate PI number")
     
-    # Get the number (before increment)
-    number = result.get('next_pi_number', 1) - 1
-    use_prefix = result.get('use_pi_prefix', False)
-    prefix = result.get('pi_prefix', 'PI/')
+    # Get the number (after increment, so we need to use it as-is)
+    number = result.get('next_pi_number', 1)
+    prefix = result.get('pi_prefix', 'PI')
     
-    # Compose final number
-    final_number = f"{prefix}{number}" if use_prefix else str(number)
+    # Format: PI/DDMMYY/XXXX
+    # Get current date in ddmmyy format
+    current_date = datetime.now(timezone.utc)
+    date_str = current_date.strftime('%d%m%y')  # e.g., 011125
+    
+    # Pad number to 4 digits
+    number_str = str(number).zfill(4)  # e.g., 0001, 1403
+    
+    # Compose final number: PI/011125/0001
+    final_number = f"{prefix}/{date_str}/{number_str}"
     
     return {
         "number": final_number,
         "raw_number": number,
-        "prefix": prefix if use_prefix else None
+        "date": date_str,
+        "formatted_number": number_str
     }
 
 
