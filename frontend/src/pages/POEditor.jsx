@@ -558,7 +558,6 @@ export default function POEditor() {
                     variant={docType === 'PO' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setDocType('PO')}
-                    disabled={!isNew}
                     data-testid="doc-type-po"
                   >
                     Purchase Order
@@ -568,17 +567,14 @@ export default function POEditor() {
                     variant={docType === 'PI' ? 'default' : 'outline'}
                     size="sm"
                     onClick={() => setDocType('PI')}
-                    disabled={!isNew}
                     data-testid="doc-type-pi"
                   >
                     Proforma Invoice
                   </Button>
                 </div>
-                {!isNew && (
-                  <p className="text-xs text-neutral-500 mt-1">
-                    Document type cannot be changed when editing existing documents
-                  </p>
-                )}
+                <p className="text-xs text-neutral-500 mt-1">
+                  You can switch between PO and PI at any time. The number will be preserved.
+                </p>
               </div>
               
               <div className="grid md:grid-cols-3 gap-4">
