@@ -286,18 +286,20 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
             </tr>
           </thead>
           <tbody>
-            {colors.map((color, ri) => {
-              const rowTotal = getRowTotal(color);
-              return (
-                <tr key={ri} className="border-t border-neutral-200" data-testid={`matrix-color-row-${color}`}>
-                  <td className="p-2 border-r border-neutral-200">
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="text"
-                        value={color}
-                        onChange={(e) => updateColor(ri, e.target.value)}
-                        className="h-8 border-0 bg-transparent font-medium"
-                        data-testid={`matrix-color-input-${ri}`}
+            <SortableContext
+              items={colors}
+              strategy={verticalListSortingStrategy}
+            >
+              {colors.map((color, ri) => (
+                <SortableColorRow
+                  key={color}
+                  color={color}
+                  sizes={sizes}
+                  values={values}
+                  onUpdate={updateCell}
+                  onRemove={() => removeColor(ri)}
+                  onUpdateName={(newName) => updateColor(ri, newName)}
+                  canRemove={colors.length > 1}
                       />
                       {colors.length > 1 && (
                         <Button
