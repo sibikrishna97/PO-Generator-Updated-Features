@@ -218,16 +218,21 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
   }, 0);
 
   return (
-    <div className="border rounded-md overflow-hidden" data-testid="matrix-container">
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm" data-testid="matrix-table">
-          <thead className="bg-neutral-100">
-            <tr>
-              <th className="text-left p-2 min-w-[140px] border-r border-neutral-200">
-                <div className="flex items-center justify-between">
-                  <span>Colour</span>
-                  <Button
-                    type="button"
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="border rounded-md overflow-hidden" data-testid="matrix-container">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm" data-testid="matrix-table">
+            <thead className="bg-neutral-100">
+              <tr>
+                <th className="text-left p-2 min-w-[180px] border-r border-neutral-200">
+                  <div className="flex items-center justify-between">
+                    <span>Colour</span>
+                    <Button
+                      type="button"
                     size="sm"
                     variant="ghost"
                     onClick={addColor}
