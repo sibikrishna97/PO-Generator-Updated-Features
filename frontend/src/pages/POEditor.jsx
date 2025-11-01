@@ -25,6 +25,7 @@ export default function POEditor() {
   const printRef = useRef();
   const [loading, setLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
+  const [docType, setDocType] = useState('PO'); // 'PO' or 'PI'
 
   // Form state
   const [poNumber, setPoNumber] = useState('');
