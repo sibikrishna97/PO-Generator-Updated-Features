@@ -532,7 +532,10 @@ async def get_next_pi_number():
     
     # Get the number (after increment, so we need to use it as-is)
     number = result.get('next_pi_number', 1)
-    prefix = result.get('pi_prefix', 'PI')
+    prefix = result.get('pi_prefix', 'PI/')
+    
+    # Remove trailing slash from prefix if present
+    prefix = prefix.rstrip('/')
     
     # Format: PI/DDMMYY/XXXX
     # Get current date in ddmmyy format
