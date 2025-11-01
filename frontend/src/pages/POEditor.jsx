@@ -118,6 +118,9 @@ export default function POEditor() {
   });
 
   useEffect(() => {
+    // Fetch directories on mount
+    fetchDirectories();
+    
     if (id && !isNew) {
       // Editing existing PO/PI
       fetchPO();
