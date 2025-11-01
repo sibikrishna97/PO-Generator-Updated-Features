@@ -13,7 +13,7 @@ import { SizeColourMatrix } from '../components/SizeColourMatrix';
 import { PODocument } from '../components/PODocument';
 import { useReactToPrint } from 'react-to-print';
 import { toast } from 'sonner';
-import { Save, Printer, ArrowLeft, Plus, X, AlertCircle } from 'lucide-react';
+import { Save, Printer, ArrowLeft, Plus, X, AlertCircle, Copy } from 'lucide-react';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
