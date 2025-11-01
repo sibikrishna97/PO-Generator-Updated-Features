@@ -7,6 +7,7 @@ const API = `${BACKEND_URL}/api`;
 
 export const PODocument = React.forwardRef(({ data }, ref) => {
   const { 
+    docType = 'PO',
     poNumber, 
     billTo,
     buyer, 
