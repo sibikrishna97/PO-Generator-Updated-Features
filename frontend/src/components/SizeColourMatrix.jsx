@@ -1,9 +1,98 @@
 import React from 'react';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, GripVertical } from 'lucide-react';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+// Sortable row component
+function SortableColorRow({ color, sizes, values, onUpdate, onRemove, onUpdateName, canRemove }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: color });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <tr ref={setNodeRef} style={style}>
+      <td className="border border-neutral-300 px-2 py-1 bg-neutral-50 font-medium">
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            className="cursor-grab active:cursor-grabbing touch-none"
+            {...attributes}
+            {...listeners}
+          >
+            <GripVertical className="h-4 w-4 text-neutral-400" />
+          </button>
+          <Input
+            value={color}
+            onChange={(e) => onUpdateName(e.target.value)}
+            className="h-7 text-sm"
+            placeholder="Color"
+          />
+          {canRemove && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={onRemove}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-3 w-3" />
+            </Button>
+          )}
+        </div>
+      </td>
+      {sizes.map(size => (
+        <td key={size} className="border border-neutral-300 px-2 py-1">
+          <Input
+            type="number"
+            value={values?.[color]?.[size] || ''}
+            onChange={(e) => onUpdate(color, size, e.target.value)}
+            className="h-7 text-sm text-center"
+            placeholder="0"
+            data-testid={`matrix-cell-${color}-${size}`}
+          />
+        </td>
+      ))}
+      <td className="border border-neutral-300 px-2 py-1 bg-neutral-100 font-medium text-center">
+        {sizes.reduce((sum, s) => sum + (Number(values?.[color]?.[s]) || 0), 0)}
+      </td>
+    </tr>
+  );
+}
 
 export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
   // Helper function to calculate grand total
   const calculateGrandTotal = (sizesList, colorsList, valuesList) => {
     return colorsList.reduce((acc, c) => {
