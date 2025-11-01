@@ -492,7 +492,10 @@ async def get_next_po_number():
     
     # Get the number (after increment, so we need to use it as-is)
     number = result.get('next_po_number', 1)
-    prefix = result.get('po_prefix', 'NA')
+    prefix = result.get('po_prefix', 'NA/')
+    
+    # Remove trailing slash from prefix if present
+    prefix = prefix.rstrip('/')
     
     # Format: NA/DDMMYY/XXXX
     # Get current date in ddmmyy format
