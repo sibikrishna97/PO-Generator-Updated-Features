@@ -478,7 +478,7 @@ async def update_settings(settings_update: Dict[str, Any]):
 
 @api_router.post("/po/next-number")
 async def get_next_po_number():
-    """Atomically get and increment PO number"""
+    """Atomically get and increment PO number with format: NA/DDMMYY/XXXX"""
     # Find and update atomically
     result = await db.settings.find_one_and_update(
         {"_id": "app_settings"},
@@ -490,18 +490,26 @@ async def get_next_po_number():
     if not result:
         raise HTTPException(status_code=500, detail="Failed to generate PO number")
     
-    # Get the number (before increment)
-    number = result.get('next_po_number', 1) - 1
-    use_prefix = result.get('use_po_prefix', False)
-    prefix = result.get('po_prefix', 'NA/')
+    # Get the number (after increment, so we need to use it as-is)
+    number = result.get('next_po_number', 1)
+    prefix = result.get('po_prefix', 'NA')
     
-    # Compose final number
-    final_number = f"{prefix}{number}" if use_prefix else str(number)
+    # Format: NA/DDMMYY/XXXX
+    # Get current date in ddmmyy format
+    current_date = datetime.now(timezone.utc)
+    date_str = current_date.strftime('%d%m%y')  # e.g., 181025
+    
+    # Pad number to 4 digits
+    number_str = str(number).zfill(4)  # e.g., 0001, 1403
+    
+    # Compose final number: NA/181025/1403
+    final_number = f"{prefix}/{date_str}/{number_str}"
     
     return {
         "number": final_number,
         "raw_number": number,
-        "prefix": prefix if use_prefix else None
+        "date": date_str,
+        "formatted_number": number_str
     }
 
 
