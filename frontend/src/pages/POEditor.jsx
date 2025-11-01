@@ -584,6 +584,16 @@ export default function POEditor() {
             </h1>
           </div>
           <div className="flex gap-2">
+            {!isNew && (
+              <Button
+                variant="outline"
+                onClick={handleDuplicate}
+                title="Duplicate this document"
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Duplicate
+              </Button>
+            )}
             <Button
               variant="secondary"
               onClick={() => setOpenPreview(true)}
