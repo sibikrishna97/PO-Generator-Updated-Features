@@ -210,6 +210,7 @@ export default function Directory() {
           <TabsList className="mb-4">
             <TabsTrigger value="buyers">Buyers</TabsTrigger>
             <TabsTrigger value="suppliers">Suppliers</TabsTrigger>
+            <TabsTrigger value="billto">Bill To</TabsTrigger>
           </TabsList>
 
           {/* Buyers Tab */}
