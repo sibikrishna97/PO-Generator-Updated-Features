@@ -143,6 +143,23 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
     onChange({ sizes, colors: newColors, values, grandTotal });
   };
 
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      const oldIndex = colors.indexOf(active.id);
+      const newIndex = colors.indexOf(over.id);
+      
+      // Reorder colors array
+      const newColors = arrayMove(colors, oldIndex, newIndex);
+      
+      // Values remain the same - just the order changes
+      const grandTotal = calculateGrandTotal(sizes, newColors, values);
+      
+      onChange({ sizes, colors: newColors, values, grandTotal });
+    }
+  };
+
   const removeColor = (index) => {
     if (colors.length <= 1) return;
     const newColors = colors.filter((_, i) => i !== index);
