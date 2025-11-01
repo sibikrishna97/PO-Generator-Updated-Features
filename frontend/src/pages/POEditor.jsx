@@ -8,6 +8,7 @@ import { Label } from '../components/ui/label';
 import { Card, CardContent } from '../components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '../components/ui/dialog';
 import { Separator } from '../components/ui/separator';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
 import { SizeColourMatrix } from '../components/SizeColourMatrix';
 import { PODocument } from '../components/PODocument';
 import { useReactToPrint } from 'react-to-print';
