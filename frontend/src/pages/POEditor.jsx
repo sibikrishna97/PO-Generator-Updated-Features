@@ -887,6 +887,23 @@ export default function POEditor() {
             <CardContent className="pt-6">
               <h2 className="text-lg font-semibold mb-4">Supplier / Factory Details *</h2>
               <div className="space-y-4">
+                {/* Select from Directory */}
+                <div>
+                  <Label>Select from Directory</Label>
+                  <Select onValueChange={handleSelectSupplier}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose a supplier..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {suppliers.map(supp => (
+                        <SelectItem key={supp.id} value={supp.id}>
+                          {supp.company_name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <Separator />
                 <div>
                   <Label htmlFor="supplier-company">Company Name</Label>
                   <Input
