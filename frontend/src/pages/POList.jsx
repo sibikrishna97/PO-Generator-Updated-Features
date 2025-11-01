@@ -61,6 +61,14 @@ export default function POList() {
               <div className="flex gap-2">
                 <Button
                   variant="secondary"
+                  onClick={() => navigate('/directory')}
+                  className="flex items-center gap-2"
+                >
+                  <FileText className="h-4 w-4" />
+                  Directory
+                </Button>
+                <Button
+                  variant="secondary"
                   onClick={() => navigate('/settings')}
                   data-testid="po-list-settings-button"
                   className="flex items-center gap-2"
