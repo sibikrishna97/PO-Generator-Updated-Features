@@ -467,6 +467,7 @@ export default function POEditor() {
   };
 
   const prepareDocumentData = () => ({
+    docType,
     poNumber,
     billTo,
     buyer,
