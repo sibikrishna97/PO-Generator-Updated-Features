@@ -709,6 +709,54 @@ async def delete_supplier(supplier_id: str):
     return {"message": "Supplier deleted successfully"}
 
 
+# Bill To CRUD endpoints
+@api_router.get("/billto")
+async def get_billto():
+    """Get all bill-to parties"""
+    billtos = await db.billto.find().to_list(length=None)
+    for billto in billtos:
+        billto['_id'] = str(billto['_id'])
+    return billtos
+
+@api_router.post("/billto")
+async def create_billto(billto: BillTo):
+    """Create a new bill-to party"""
+    billto_dict = billto.dict()
+    result = await db.billto.insert_one(billto_dict)
+    billto_dict['_id'] = str(result.inserted_id)
+    return billto_dict
+
+@api_router.get("/billto/{billto_id}")
+async def get_billto_by_id(billto_id: str):
+    """Get a specific bill-to party"""
+    billto = await db.billto.find_one({"id": billto_id})
+    if not billto:
+        raise HTTPException(status_code=404, detail="Bill-to party not found")
+    billto['_id'] = str(billto['_id'])
+    return billto
+
+@api_router.patch("/billto/{billto_id}")
+async def update_billto(billto_id: str, billto_update: Dict[str, Any]):
+    """Update a bill-to party"""
+    result = await db.billto.update_one(
+        {"id": billto_id},
+        {"$set": billto_update}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Bill-to party not found")
+    
+    return {"message": "Bill-to party updated successfully"}
+
+@api_router.delete("/billto/{billto_id}")
+async def delete_billto(billto_id: str):
+    """Delete a bill-to party"""
+    result = await db.billto.delete_one({"id": billto_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Bill-to party not found")
+    return {"message": "Bill-to party deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
