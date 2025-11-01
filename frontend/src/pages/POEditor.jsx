@@ -795,6 +795,23 @@ export default function POEditor() {
                     Buyer *
                   </h3>
                   <div className="space-y-3">
+                    {/* Select from Directory */}
+                    <div>
+                      <Label>Select from Directory</Label>
+                      <Select onValueChange={handleSelectBuyer}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a buyer..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {buyers.map(buyer => (
+                            <SelectItem key={buyer.id} value={buyer.id}>
+                              {buyer.company_name} {buyer.is_default_buyer && '⭐'}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Separator />
                     <div>
                       <Label htmlFor="buyer-company">Company Name</Label>
                       <Input
