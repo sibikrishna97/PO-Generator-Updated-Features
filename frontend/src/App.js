@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import POList from './pages/POList';
 import POEditor from './pages/POEditor';
 import Settings from './pages/Settings';
+import Directory from './pages/Directory';
 import { Toaster } from './components/ui/sonner';
 
 function App() {
