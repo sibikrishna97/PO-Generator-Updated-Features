@@ -323,5 +323,6 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
         </table>
       </div>
     </div>
+    </DndContext>
   );
 };
