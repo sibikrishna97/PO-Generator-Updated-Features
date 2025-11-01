@@ -123,13 +123,14 @@ export default function POEditor() {
 
   const fetchNextPoNumber = async () => {
     try {
-      console.log('Fetching next PO number...');
-      const response = await axios.post(`${API}/po/next-number`);
-      console.log('Next PO number response:', response.data);
+      const endpoint = docType === 'PI' ? '/pi/next-number' : '/po/next-number';
+      console.log(`Fetching next ${docType} number...`);
+      const response = await axios.post(`${API}${endpoint}`);
+      console.log(`Next ${docType} number response:`, response.data);
       setPoNumber(response.data.number);
-      console.log('PO number set to:', response.data.number);
+      console.log(`${docType} number set to:`, response.data.number);
     } catch (error) {
-      console.error('Error fetching next PO number:', error);
+      console.error(`Error fetching next ${docType} number:`, error);
       // Don't show error toast, just log it - user can manually enter
     }
   };
