@@ -705,6 +705,23 @@ export default function POEditor() {
                     Bill To (Invoice Party) *
                   </h3>
                   <div className="space-y-3">
+                    {/* Select from Directory */}
+                    <div>
+                      <Label>Select from Directory</Label>
+                      <Select onValueChange={handleSelectBillTo}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a bill-to party..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {billToParties.map(party => (
+                            <SelectItem key={party.id} value={party.id}>
+                              {party.company_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Separator />
                     <div>
                       <Label htmlFor="billto-company">Company Name</Label>
                       <Input
