@@ -300,39 +300,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
                   onRemove={() => removeColor(ri)}
                   onUpdateName={(newName) => updateColor(ri, newName)}
                   canRemove={colors.length > 1}
-                      />
-                      {colors.length > 1 && (
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => removeColor(ri)}
-                          className="h-6 w-6 p-0"
-                          data-testid={`matrix-remove-color-${ri}`}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      )}
-                    </div>
-                  </td>
-                  {sizes.map((size, ci) => (
-                    <td key={ci} className="p-1 border-r border-neutral-200">
-                      <Input
-                        type="number"
-                        min="0"
-                        value={values?.[color]?.[size] || ''}
-                        onChange={(e) => updateCell(color, size, e.target.value)}
-                        className="h-8 text-right"
-                        data-testid={`matrix-cell-${color}-${size}`}
-                      />
-                    </td>
-                  ))}
-                  <td className="p-2 text-right font-medium border-l-2 border-neutral-300" data-testid={`matrix-row-total-${color}`}>
-                    {rowTotal}
-                  </td>
-                </tr>
-              );
-            })}
+                />
+              ))}
           </tbody>
           <tfoot className="border-t-2 border-neutral-300">
             <tr className="bg-neutral-50 font-semibold">
