@@ -105,6 +105,13 @@ class BuyerStatic(BaseModel):
 class AppSettings(BaseModel):
     logo_base64: Optional[str] = None
     logo_filename: Optional[str] = None
+    # PO/PI auto-increment settings
+    next_po_number: int = 1
+    po_prefix: str = "NA/"
+    use_po_prefix: bool = False
+    next_pi_number: int = 1
+    pi_prefix: str = "PI/"
+    use_pi_prefix: bool = False
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class PurchaseOrder(BaseModel):
