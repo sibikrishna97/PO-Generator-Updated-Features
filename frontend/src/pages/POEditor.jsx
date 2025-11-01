@@ -113,13 +113,20 @@ export default function POEditor() {
 
   useEffect(() => {
     if (id && !isNew) {
-      // Editing existing PO
+      // Editing existing PO/PI
       fetchPO();
     } else if (isNew) {
-      // Creating new PO - fetch next number
+      // Creating new PO/PI - fetch next number
       fetchNextPoNumber();
     }
   }, [id, isNew]);
+  
+  // Re-fetch number when docType changes (for new documents)
+  useEffect(() => {
+    if (isNew) {
+      fetchNextPoNumber();
+    }
+  }, [docType]);
 
   const fetchNextPoNumber = async () => {
     try {
