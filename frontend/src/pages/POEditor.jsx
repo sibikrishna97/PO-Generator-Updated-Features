@@ -281,6 +281,19 @@ export default function POEditor() {
     }
   };
 
+  const handleDuplicate = async () => {
+    if (!id || isNew) return;
+    
+    try {
+      const response = await axios.post(`${API}/pos/${id}/duplicate`);
+      toast.success('Document duplicated successfully!');
+      navigate(`/po/${response.data.id}`);
+    } catch (error) {
+      console.error('Error duplicating:', error);
+      toast.error('Failed to duplicate document');
+    }
+  };
+
   const handleSave = async () => {
     // Validation
     if (!poNumber.trim()) {
