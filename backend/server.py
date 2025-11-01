@@ -558,6 +558,46 @@ async def startup_event():
     logger.info(f"MongoDB URL: {mongo_url}")
     logger.info(f"Database: {os.environ.get('DB_NAME', 'po_generator')}")
     logger.info(f"CORS Origins: {os.environ.get('CORS_ORIGINS', '*')}")
+    
+    # Seed default settings if missing
+    settings = await db.settings.find_one({"_id": "app_settings"})
+    if not settings:
+        default_settings = {
+            "_id": "app_settings",
+            "next_po_number": 1,
+            "po_prefix": "NA/",
+            "use_po_prefix": False,
+            "next_pi_number": 1,
+            "pi_prefix": "PI/",
+            "use_pi_prefix": False,
+            "logo_base64": None,
+            "logo_filename": None,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.settings.insert_one(default_settings)
+        logger.info("✅ Created default app settings")
+    else:
+        # Update existing settings to add new fields if missing
+        update_fields = {}
+        if 'next_po_number' not in settings:
+            update_fields['next_po_number'] = 1
+        if 'po_prefix' not in settings:
+            update_fields['po_prefix'] = "NA/"
+        if 'use_po_prefix' not in settings:
+            update_fields['use_po_prefix'] = False
+        if 'next_pi_number' not in settings:
+            update_fields['next_pi_number'] = 1
+        if 'pi_prefix' not in settings:
+            update_fields['pi_prefix'] = "PI/"
+        if 'use_pi_prefix' not in settings:
+            update_fields['use_pi_prefix'] = False
+        
+        if update_fields:
+            await db.settings.update_one(
+                {"_id": "app_settings"},
+                {"$set": update_fields}
+            )
+            logger.info(f"✅ Updated settings with new fields: {list(update_fields.keys())}")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
