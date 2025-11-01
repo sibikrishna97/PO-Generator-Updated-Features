@@ -344,6 +344,55 @@ async def delete_po(po_id: str):
     
     return {"message": "PO deleted successfully"}
 
+@api_router.post("/pos/{po_id}/duplicate")
+async def duplicate_po(po_id: str):
+    """Duplicate a PO/PI - creates new draft with fresh number and today's dates"""
+    # Get original document
+    original = await db.purchase_orders.find_one({"id": po_id})
+    if not original:
+        raise HTTPException(status_code=404, detail="PO not found")
+    
+    # Create new document
+    new_doc = dict(original)
+    new_doc['id'] = str(uuid.uuid4())
+    new_doc['_id'] = None  # Will be auto-generated
+    
+    # Get next number based on doc_type
+    doc_type = new_doc.get('doc_type', 'PO')
+    if doc_type == 'PI':
+        result = await db.settings.find_one_and_update(
+            {"_id": "app_settings"},
+            {"$inc": {"next_pi_number": 1}},
+            return_document=True
+        )
+        number = result.get('next_pi_number', 1)
+        prefix = result.get('pi_prefix', 'PI/').rstrip('/')
+    else:
+        result = await db.settings.find_one_and_update(
+            {"_id": "app_settings"},
+            {"$inc": {"next_po_number": 1}},
+            return_document=True
+        )
+        number = result.get('next_po_number', 1)
+        prefix = result.get('po_prefix', 'NA/').rstrip('/')
+    
+    # Format number
+    current_date = datetime.now(timezone.utc)
+    date_str = current_date.strftime('%d%m%y')
+    number_str = str(number).zfill(4)
+    new_doc['po_number'] = f"{prefix}/{date_str}/{number_str}"
+    
+    # Reset dates to today
+    today = current_date.strftime('%Y-%m-%d')
+    new_doc['po_date'] = today
+    new_doc['delivery_date'] = today
+    
+    # Insert new document
+    result = await db.purchase_orders.insert_one(new_doc)
+    new_doc['_id'] = str(result.inserted_id)
+    
+    return new_doc
+
 @api_router.get("/buyer-info")
 async def get_buyer_info():
     return {
