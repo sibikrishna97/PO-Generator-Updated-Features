@@ -20,6 +20,8 @@ const API = `${BACKEND_URL}/api`;
 export default function POEditor() {
   const navigate = useNavigate();
   const { id } = useParams();
+  const location = window.location;
+  const isNew = location.pathname === '/po/new';
   const printRef = useRef();
   const [loading, setLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
