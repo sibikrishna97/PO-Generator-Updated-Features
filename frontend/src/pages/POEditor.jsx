@@ -111,8 +111,21 @@ export default function POEditor() {
   useEffect(() => {
     if (id && id !== 'new') {
       fetchPO();
+    } else if (id === 'new') {
+      // Fetch next PO number for new documents
+      fetchNextPoNumber();
     }
   }, [id]);
+
+  const fetchNextPoNumber = async () => {
+    try {
+      const response = await axios.post(`${API}/po/next-number`);
+      setPoNumber(response.data.number);
+    } catch (error) {
+      console.error('Error fetching next PO number:', error);
+      // Don't show error toast, just log it - user can manually enter
+    }
+  };
 
   const fetchPO = async () => {
     try {
