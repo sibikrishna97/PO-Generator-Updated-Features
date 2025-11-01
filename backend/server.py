@@ -118,6 +118,7 @@ class PurchaseOrder(BaseModel):
     model_config = ConfigDict(extra="ignore")
     
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    doc_type: str = "PO"  # "PO" or "PI"
     po_number: str
     po_date: str
     bill_to: Optional[Party] = None  # Make optional for backward compatibility
