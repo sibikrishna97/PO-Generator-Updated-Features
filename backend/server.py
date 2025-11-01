@@ -585,6 +585,117 @@ async def get_next_pi_number():
     }
 
 
+# Buyer CRUD endpoints
+@api_router.get("/buyers")
+async def get_buyers():
+    """Get all buyers"""
+    buyers = await db.buyers.find().to_list(length=None)
+    for buyer in buyers:
+        buyer['_id'] = str(buyer['_id'])
+    return buyers
+
+@api_router.post("/buyers")
+async def create_buyer(buyer: Buyer):
+    """Create a new buyer"""
+    buyer_dict = buyer.dict()
+    
+    # If this is set as default, unset others
+    if buyer_dict.get('is_default_buyer'):
+        await db.buyers.update_many(
+            {"is_default_buyer": True},
+            {"$set": {"is_default_buyer": False}}
+        )
+    
+    result = await db.buyers.insert_one(buyer_dict)
+    buyer_dict['_id'] = str(result.inserted_id)
+    return buyer_dict
+
+@api_router.get("/buyers/{buyer_id}")
+async def get_buyer(buyer_id: str):
+    """Get a specific buyer"""
+    buyer = await db.buyers.find_one({"id": buyer_id})
+    if not buyer:
+        raise HTTPException(status_code=404, detail="Buyer not found")
+    buyer['_id'] = str(buyer['_id'])
+    return buyer
+
+@api_router.patch("/buyers/{buyer_id}")
+async def update_buyer(buyer_id: str, buyer_update: Dict[str, Any]):
+    """Update a buyer"""
+    # If setting as default, unset others
+    if buyer_update.get('is_default_buyer'):
+        await db.buyers.update_many(
+            {"is_default_buyer": True},
+            {"$set": {"is_default_buyer": False}}
+        )
+    
+    result = await db.buyers.update_one(
+        {"id": buyer_id},
+        {"$set": buyer_update}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Buyer not found")
+    
+    return {"message": "Buyer updated successfully"}
+
+@api_router.delete("/buyers/{buyer_id}")
+async def delete_buyer(buyer_id: str):
+    """Delete a buyer"""
+    result = await db.buyers.delete_one({"id": buyer_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Buyer not found")
+    return {"message": "Buyer deleted successfully"}
+
+
+# Supplier CRUD endpoints
+@api_router.get("/suppliers")
+async def get_suppliers():
+    """Get all suppliers"""
+    suppliers = await db.suppliers.find().to_list(length=None)
+    for supplier in suppliers:
+        supplier['_id'] = str(supplier['_id'])
+    return suppliers
+
+@api_router.post("/suppliers")
+async def create_supplier(supplier: Supplier):
+    """Create a new supplier"""
+    supplier_dict = supplier.dict()
+    result = await db.suppliers.insert_one(supplier_dict)
+    supplier_dict['_id'] = str(result.inserted_id)
+    return supplier_dict
+
+@api_router.get("/suppliers/{supplier_id}")
+async def get_supplier(supplier_id: str):
+    """Get a specific supplier"""
+    supplier = await db.suppliers.find_one({"id": supplier_id})
+    if not supplier:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    supplier['_id'] = str(supplier['_id'])
+    return supplier
+
+@api_router.patch("/suppliers/{supplier_id}")
+async def update_supplier(supplier_id: str, supplier_update: Dict[str, Any]):
+    """Update a supplier"""
+    result = await db.suppliers.update_one(
+        {"id": supplier_id},
+        {"$set": supplier_update}
+    )
+    
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    
+    return {"message": "Supplier updated successfully"}
+
+@api_router.delete("/suppliers/{supplier_id}")
+async def delete_supplier(supplier_id: str):
+    """Delete a supplier"""
+    result = await db.suppliers.delete_one({"id": supplier_id})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Supplier not found")
+    return {"message": "Supplier deleted successfully"}
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
