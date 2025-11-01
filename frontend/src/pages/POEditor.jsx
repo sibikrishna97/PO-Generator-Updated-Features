@@ -121,11 +121,12 @@ export default function POEditor() {
     }
   }, [id, isNew]);
   
-  // Re-fetch number when docType changes (for new documents)
+  // Re-fetch number when docType changes (ONLY for new documents)
   useEffect(() => {
     if (isNew) {
       fetchNextPoNumber();
     }
+    // For existing documents, just keep the current number
   }, [docType]);
 
   const fetchNextPoNumber = async () => {
