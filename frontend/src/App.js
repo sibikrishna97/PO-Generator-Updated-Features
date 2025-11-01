@@ -16,6 +16,7 @@ function App() {
           <Route path="/po/new" element={<POEditor />} />
           <Route path="/po/:id" element={<POEditor />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/directory" element={<Directory />} />
         </Routes>
       </BrowserRouter>
       <Toaster position="top-right" />
