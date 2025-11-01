@@ -271,6 +271,7 @@ export default function POEditor() {
       };
       
       const poData = {
+        doc_type: docType,
         po_number: poNumber,
         po_date: poDate,
         bill_to: billTo,
