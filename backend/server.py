@@ -130,6 +130,19 @@ class Supplier(BaseModel):
     notes: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
+class BillTo(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    company_name: str
+    address1: str = ""
+    address2: str = ""
+    address3: str = ""
+    contact_name: Optional[str] = None
+    phone: Optional[str] = None
+    email: Optional[str] = None
+    gstin: Optional[str] = None
+    notes: Optional[str] = None
+    created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+
 class AppSettings(BaseModel):
     logo_base64: Optional[str] = None
     logo_filename: Optional[str] = None
