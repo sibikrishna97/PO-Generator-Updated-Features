@@ -159,16 +159,26 @@ export default function POList() {
                         <TableCell>{po.supplier?.company || 'N/A'}</TableCell>
                         <TableCell>{formatDate(po.delivery_date)}</TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleRowClick(po.id);
-                            }}
-                          >
-                            View
-                          </Button>
+                          <div className="flex gap-2 justify-end">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRowClick(po.id);
+                              }}
+                            >
+                              View
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => handleDuplicate(e, po)}
+                              title="Duplicate PO"
+                            >
+                              <Copy className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
