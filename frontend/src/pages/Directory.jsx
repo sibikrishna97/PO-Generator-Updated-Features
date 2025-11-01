@@ -41,6 +41,7 @@ export default function Directory() {
   useEffect(() => {
     fetchBuyers();
     fetchSuppliers();
+    fetchBillToParties();
   }, []);
 
   const fetchBuyers = async () => {
