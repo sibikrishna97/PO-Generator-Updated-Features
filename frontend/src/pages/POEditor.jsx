@@ -582,17 +582,17 @@ export default function POEditor() {
               
               <div className="grid md:grid-cols-3 gap-4">
                 <div>
-                  <Label htmlFor="po-number">PO Number *</Label>
+                  <Label htmlFor="po-number">{docType} Number *</Label>
                   <Input
                     id="po-number"
                     value={poNumber}
                     onChange={(e) => setPoNumber(e.target.value)}
-                    placeholder="NA/290925/1402"
+                    placeholder={docType === 'PI' ? "PI/011125/0001" : "NA/011125/0001"}
                     data-testid="po-form-po-number-input"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="po-date">PO Date *</Label>
+                  <Label htmlFor="po-date">{docType} Date *</Label>
                   <Input
                     id="po-date"
                     type="date"
