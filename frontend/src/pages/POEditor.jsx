@@ -502,7 +502,9 @@ export default function POEditor() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <h1 className="text-xl md:text-2xl font-semibold">
-              {id && id !== 'new' ? 'Edit Purchase Order' : 'New Purchase Order'}
+              {id && id !== 'new' 
+                ? `Edit ${docType === 'PI' ? 'Proforma Invoice' : 'Purchase Order'}` 
+                : `New ${docType === 'PI' ? 'Proforma Invoice' : 'Purchase Order'}`}
             </h1>
           </div>
           <div className="flex gap-2">
