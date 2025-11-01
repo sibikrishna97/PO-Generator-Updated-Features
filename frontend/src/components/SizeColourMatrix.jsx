@@ -302,6 +302,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
                   canRemove={colors.length > 1}
                 />
               ))}
+            </SortableContext>
           </tbody>
           <tfoot className="border-t-2 border-neutral-300">
             <tr className="bg-neutral-50 font-semibold">
