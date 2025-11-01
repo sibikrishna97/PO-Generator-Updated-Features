@@ -621,6 +621,14 @@ async def startup_event():
                 {"$set": update_fields}
             )
             logger.info(f"✅ Updated settings with new fields: {list(update_fields.keys())}")
+    
+    # Migrate existing POs to have doc_type field
+    result = await db.pos.update_many(
+        {"doc_type": {"$exists": False}},
+        {"$set": {"doc_type": "PO"}}
+    )
+    if result.modified_count > 0:
+        logger.info(f"✅ Migrated {result.modified_count} existing documents to doc_type: PO")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
