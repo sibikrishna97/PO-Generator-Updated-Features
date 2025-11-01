@@ -64,6 +64,16 @@ export default function Directory() {
     }
   };
 
+  const fetchBillToParties = async () => {
+    try {
+      const response = await axios.get(`${API}/billto`);
+      setBillToParties(response.data);
+    } catch (error) {
+      console.error('Error fetching bill-to parties:', error);
+      toast.error('Failed to load bill-to parties');
+    }
+  };
+
   const handleOpenDialog = (item = null, type = 'buyer') => {
     if (item) {
       setEditMode(true);
