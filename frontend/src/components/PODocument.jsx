@@ -56,8 +56,12 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
               {/* Header - Title left, Logo right - Repeats on every page */}
               <div className="flex items-start justify-between" style={{ borderBottom: '1px solid #E5E7EB', paddingBottom: '8px' }}>
                 <div>
-                  <div className="po-section-title" style={{ fontSize: '14pt' }}>Purchase Order</div>
-                  <div className="text-[10pt] mt-1">PO No: <span className="font-medium">{poNumber}</span></div>
+                  <div className="po-section-title" style={{ fontSize: '14pt' }}>
+                    {docType === 'PI' ? 'Proforma Invoice' : 'Purchase Order'}
+                  </div>
+                  <div className="text-[10pt] mt-1">
+                    {docType === 'PI' ? 'PI' : 'PO'} No: <span className="font-medium">{poNumber}</span>
+                  </div>
                 </div>
                 <div className="flex items-center">
                   {settingsLogo ? (
