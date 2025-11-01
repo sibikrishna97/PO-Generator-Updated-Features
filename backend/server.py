@@ -768,6 +768,26 @@ async def startup_event():
     )
     if result.modified_count > 0:
         logger.info(f"✅ Migrated {result.modified_count} existing documents to doc_type: PO")
+    
+    # Seed default Newline Apparel buyer if no buyers exist
+    buyer_count = await db.buyers.count_documents({})
+    if buyer_count == 0:
+        default_buyer = {
+            "id": str(uuid.uuid4()),
+            "company_name": "Newline Apparel",
+            "address1": "61, GKD Nagar, PN Palayam",
+            "address2": "Coimbatore – 641037",
+            "address3": "Tamil Nadu",
+            "contact_name": "",
+            "phone": "",
+            "email": "",
+            "gstin": "33AABCN1234F1Z5",
+            "notes": "Default buyer - Newline Apparel",
+            "is_default_buyer": True,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.buyers.insert_one(default_buyer)
+        logger.info("✅ Seeded default buyer: Newline Apparel")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
