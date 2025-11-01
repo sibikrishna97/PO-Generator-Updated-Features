@@ -18,6 +18,7 @@ export default function Directory() {
   const [activeTab, setActiveTab] = useState('buyers');
   const [buyers, setBuyers] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [billToParties, setBillToParties] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [editMode, setEditMode] = useState(false);
