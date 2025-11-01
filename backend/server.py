@@ -427,6 +427,113 @@ async def delete_logo():
     return {"message": "Logo deleted successfully"}
 
 
+# Settings endpoints for PO/PI auto-increment
+@api_router.get("/settings")
+async def get_settings():
+    """Get all app settings including PO/PI counters"""
+    settings = await db.settings.find_one({"_id": "app_settings"})
+    
+    if not settings:
+        # Create default settings
+        default_settings = {
+            "_id": "app_settings",
+            "next_po_number": 1,
+            "po_prefix": "NA/",
+            "use_po_prefix": False,
+            "next_pi_number": 1,
+            "pi_prefix": "PI/",
+            "use_pi_prefix": False,
+            "logo_base64": None,
+            "logo_filename": None,
+            "updated_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.settings.insert_one(default_settings)
+        settings = default_settings
+    
+    # Remove _id from response
+    settings.pop('_id', None)
+    return settings
+
+
+@api_router.patch("/settings")
+async def update_settings(settings_update: Dict[str, Any]):
+    """Update app settings (PO/PI prefixes and flags)"""
+    # Only allow updating specific fields
+    allowed_fields = ['po_prefix', 'use_po_prefix', 'pi_prefix', 'use_pi_prefix']
+    update_data = {k: v for k, v in settings_update.items() if k in allowed_fields}
+    
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No valid fields to update")
+    
+    update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
+    
+    await db.settings.update_one(
+        {"_id": "app_settings"},
+        {"$set": update_data},
+        upsert=True
+    )
+    
+    return {"message": "Settings updated successfully", "updated_fields": list(update_data.keys())}
+
+
+@api_router.post("/po/next-number")
+async def get_next_po_number():
+    """Atomically get and increment PO number"""
+    # Find and update atomically
+    result = await db.settings.find_one_and_update(
+        {"_id": "app_settings"},
+        {"$inc": {"next_po_number": 1}},
+        return_document=True,
+        upsert=True
+    )
+    
+    if not result:
+        raise HTTPException(status_code=500, detail="Failed to generate PO number")
+    
+    # Get the number (before increment)
+    number = result.get('next_po_number', 1) - 1
+    use_prefix = result.get('use_po_prefix', False)
+    prefix = result.get('po_prefix', 'NA/')
+    
+    # Compose final number
+    final_number = f"{prefix}{number}" if use_prefix else str(number)
+    
+    return {
+        "number": final_number,
+        "raw_number": number,
+        "prefix": prefix if use_prefix else None
+    }
+
+
+@api_router.post("/pi/next-number")
+async def get_next_pi_number():
+    """Atomically get and increment PI number"""
+    # Find and update atomically
+    result = await db.settings.find_one_and_update(
+        {"_id": "app_settings"},
+        {"$inc": {"next_pi_number": 1}},
+        return_document=True,
+        upsert=True
+    )
+    
+    if not result:
+        raise HTTPException(status_code=500, detail="Failed to generate PI number")
+    
+    # Get the number (before increment)
+    number = result.get('next_pi_number', 1) - 1
+    use_prefix = result.get('use_pi_prefix', False)
+    prefix = result.get('pi_prefix', 'PI/')
+    
+    # Compose final number
+    final_number = f"{prefix}{number}" if use_prefix else str(number)
+    
+    return {
+        "number": final_number,
+        "raw_number": number,
+        "prefix": prefix if use_prefix else None
+    }
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
