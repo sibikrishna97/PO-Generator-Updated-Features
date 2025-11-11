@@ -211,10 +211,14 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
   };
 
   const removeColor = (index) => {
-    if (colors.length <= 1) return;
-    const newColors = colors.filter((_, i) => i !== index);
+    if (colorObjects.length <= 1) return;
+    const colorToRemove = colorObjects[index].name;
+    const newColorObjects = colorObjects.filter((_, i) => i !== index);
+    setColorObjects(newColorObjects);
+    
+    const newColors = newColorObjects.map(obj => obj.name);
     const newValues = { ...values };
-    delete newValues[colors[index]];
+    delete newValues[colorToRemove];
     const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
     onChange({ sizes, colors: newColors, values: newValues, grandTotal });
   };
