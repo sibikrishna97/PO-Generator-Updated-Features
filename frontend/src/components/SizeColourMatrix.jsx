@@ -176,8 +176,15 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
   };
 
   const addColor = () => {
-    const newColor = `Color${colors.length + 1}`;
-    const newColors = [...colors, newColor];
+    const newColorName = `Color${colors.length + 1}`;
+    const newColorObj = {
+      id: `color-${Date.now()}-${colorObjects.length}`,
+      name: newColorName
+    };
+    const newColorObjects = [...colorObjects, newColorObj];
+    setColorObjects(newColorObjects);
+    
+    const newColors = newColorObjects.map(obj => obj.name);
     const grandTotal = calculateGrandTotal(sizes, newColors, values);
     onChange({ sizes, colors: newColors, values, grandTotal });
   };
