@@ -190,7 +190,6 @@ metadata:
 test_plan:
   current_focus:
     - "Color Input Focus Issue in Matrix"
-    - "Delete PO/PI Functionality"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
