@@ -241,14 +241,17 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
   };
 
   const updateColor = (index, newName) => {
-    const oldColor = colors[index];
-    const newColors = [...colors];
-    newColors[index] = newName;
+    const oldColorName = colorObjects[index].name;
+    const newColorObjects = [...colorObjects];
+    newColorObjects[index] = { ...newColorObjects[index], name: newName };
+    setColorObjects(newColorObjects);
+    
+    const newColors = newColorObjects.map(obj => obj.name);
     
     const newValues = { ...values };
-    if (newValues[oldColor]) {
-      newValues[newName] = newValues[oldColor];
-      delete newValues[oldColor];
+    if (newValues[oldColorName]) {
+      newValues[newName] = newValues[oldColorName];
+      delete newValues[oldColorName];
     }
     
     const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
