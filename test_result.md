@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Matrix total () doesn't match order quantity (400) - Message is displayed even if the quantity matches. The issue is that the Size-Colour Breakdown matrix is not correctly updating the grand total quantity."
+user_problem_statement: "1. Fix bug where color input field in Size-Colour Matrix loses focus after each character typed. 2. Add delete PO/PI functionality."
 
 backend:
   - task: "Size-Colour Breakdown API"
