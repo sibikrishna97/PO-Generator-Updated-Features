@@ -118,23 +118,32 @@ backend:
         comment: "Backend endpoints exist. No changes made to backend in this fix."
 
 frontend:
-  - task: "Matrix Grand Total Calculation"
+  - task: "Color Input Focus Issue in Matrix"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/components/SizeColourMatrix.jsx"
     stuck_count: 0
-    priority: "high"
-    needs_retesting: false
+    priority: "critical"
+    needs_retesting: true
     status_history:
       - working: false
         agent: "user"
-        comment: "User reported: Matrix total () doesn't match order quantity (400) - shows empty brackets even when quantities match"
-      - working: true
+        comment: "User reported: Color name input field goes inactive after each character typed (e.g., typing 'Black' requires clicking field repeatedly)"
+      - working: "NA"
         agent: "main"
-        comment: "Fixed by adding calculateGrandTotal helper function that is called in ALL onChange callbacks (updateCell, addSize, removeSize, addColor, removeColor, updateSize, updateColor). Previously, grandTotal was only calculated in updateCell, causing it to be undefined when other operations happened."
-      - working: true
-        agent: "testing"
-        comment: "✅ TESTED SUCCESSFULLY: Matrix grand total calculation works perfectly. Tested scenarios: 1) New PO creation with matrix values (Black-S:10, Black-M:20, Grey Melange-L:15) correctly calculated total as 45. 2) Add/remove sizes and colors - grand total updates correctly (added size increased to 50, removed returned to 45, added color increased to 55). 3) Rename operations preserve values and totals. 4) Row and column totals calculate correctly. All matrix operations trigger proper grand total recalculation."
+        comment: "Fixed by implementing stable ID system for color objects. Previously used color names as keys, causing React to unmount/remount component on name change. Now using {id, name} objects with stable IDs while maintaining backward compatibility."
+        
+  - task: "Delete PO/PI Functionality"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/POList.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added delete button with confirmation dialog in POList. Uses existing backend endpoint /api/pos/{po_id}. Button styled in red with Trash icon, shows confirmation before deletion, refreshes list after success."
 
   - task: "PO Loading with Backward Compatibility"
     implemented: true
