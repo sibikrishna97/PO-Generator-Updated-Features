@@ -61,6 +61,27 @@ export default function POList() {
     }
   };
 
+  const handleDelete = async (e, po) => {
+    e.stopPropagation();
+    
+    // Show confirmation dialog
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${po.po_number}?\n\nThis action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
+    
+    try {
+      await axios.delete(`${API}/pos/${po.id}`);
+      toast.success('PO deleted successfully!');
+      // Refresh the list
+      fetchPOs();
+    } catch (error) {
+      console.error('Error deleting PO:', error);
+      toast.error('Failed to delete PO');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <div className="max-w-[1200px] mx-auto px-4 md:px-6 py-8">
