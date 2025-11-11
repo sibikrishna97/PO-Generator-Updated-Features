@@ -186,11 +186,15 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
     const { active, over } = event;
 
     if (active.id !== over.id) {
-      const oldIndex = colors.indexOf(active.id);
-      const newIndex = colors.indexOf(over.id);
+      const oldIndex = colorObjects.findIndex(obj => obj.id === active.id);
+      const newIndex = colorObjects.findIndex(obj => obj.id === over.id);
       
-      // Reorder colors array
-      const newColors = arrayMove(colors, oldIndex, newIndex);
+      // Reorder colorObjects array
+      const newColorObjects = arrayMove(colorObjects, oldIndex, newIndex);
+      setColorObjects(newColorObjects);
+      
+      // Extract color names for parent component
+      const newColors = newColorObjects.map(obj => obj.name);
       
       // Values remain the same - just the order changes
       const grandTotal = calculateGrandTotal(sizes, newColors, values);
