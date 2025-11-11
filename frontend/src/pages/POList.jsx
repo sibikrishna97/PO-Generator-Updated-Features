@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../components/ui/table';
-import { Plus, Search, FileText, Settings, Copy } from 'lucide-react';
+import { Plus, Search, FileText, Settings, Copy, Trash2 } from 'lucide-react';
 import { formatDate } from '../utils/formatters';
 import { toast } from 'sonner';
 
