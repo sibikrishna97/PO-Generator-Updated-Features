@@ -19,8 +19,8 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-// Sortable row component
-function SortableColorRow({ color, sizes, values, onUpdate, onRemove, onUpdateName, canRemove }) {
+// Sortable row component - now using colorId for stable keys
+function SortableColorRow({ colorId, color, sizes, values, onUpdate, onRemove, onUpdateName, canRemove }) {
   const {
     attributes,
     listeners,
@@ -28,7 +28,7 @@ function SortableColorRow({ color, sizes, values, onUpdate, onRemove, onUpdateNa
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: color });
+  } = useSortable({ id: colorId });
 
   const style = {
     transform: CSS.Transform.toString(transform),
