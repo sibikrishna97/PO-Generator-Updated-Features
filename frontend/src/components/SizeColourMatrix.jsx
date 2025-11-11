@@ -344,19 +344,20 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
           </thead>
           <tbody>
             <SortableContext
-              items={colors}
+              items={colorObjects.map(obj => obj.id)}
               strategy={verticalListSortingStrategy}
             >
-              {colors.map((color, ri) => (
+              {colorObjects.map((colorObj, ri) => (
                 <SortableColorRow
-                  key={color}
-                  color={color}
+                  key={colorObj.id}
+                  colorId={colorObj.id}
+                  color={colorObj.name}
                   sizes={sizes}
                   values={values}
                   onUpdate={updateCell}
                   onRemove={() => removeColor(ri)}
                   onUpdateName={(newName) => updateColor(ri, newName)}
-                  canRemove={colors.length > 1}
+                  canRemove={colorObjects.length > 1}
                 />
               ))}
             </SortableContext>
