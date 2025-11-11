@@ -87,12 +87,51 @@ function SortableColorRow({ colorId, color, sizes, values, onUpdate, onRemove, o
 }
 
 export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
+  // Convert colors array to objects with stable IDs if needed
+  // This ensures backward compatibility while fixing the focus issue
+  const [colorObjects, setColorObjects] = React.useState(() => {
+    return colors.map((color, index) => ({
+      id: `color-${Date.now()}-${index}`,
+      name: color
+    }));
+  });
+
+  // Update colorObjects when colors prop changes (e.g., on load)
+  React.useEffect(() => {
+    setColorObjects(prevColorObjects => {
+      // If color names have changed, update them while preserving IDs
+      if (colors.length !== prevColorObjects.length || 
+          colors.some((color, i) => color !== prevColorObjects[i]?.name)) {
+        // Check if this is a name change (same length) or structure change
+        if (colors.length === prevColorObjects.length) {
+          // Likely a name update, preserve IDs
+          return prevColorObjects.map((obj, i) => ({
+            id: obj.id,
+            name: colors[i]
+          }));
+        } else {
+          // Structure changed (add/remove), regenerate
+          return colors.map((color, index) => {
+            // Try to find existing ID for this color name
+            const existing = prevColorObjects.find(obj => obj.name === color);
+            return {
+              id: existing?.id || `color-${Date.now()}-${index}-${Math.random()}`,
+              name: color
+            };
+          });
+        }
+      }
+      return prevColorObjects;
+    });
+  }, [colors]);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+  
   // Helper function to calculate grand total
   const calculateGrandTotal = (sizesList, colorsList, valuesList) => {
     return colorsList.reduce((acc, c) => {
