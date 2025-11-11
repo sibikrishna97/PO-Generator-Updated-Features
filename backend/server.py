@@ -355,7 +355,9 @@ async def duplicate_po(po_id: str):
     # Create new document
     new_doc = dict(original)
     new_doc['id'] = str(uuid.uuid4())
-    new_doc['_id'] = None  # Will be auto-generated
+    # Remove _id so MongoDB generates a new one
+    if '_id' in new_doc:
+        del new_doc['_id']
     
     # Get next number based on doc_type
     doc_type = new_doc.get('doc_type', 'PO')
