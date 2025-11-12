@@ -288,15 +288,17 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     newSizes[index] = newName;
     
     const newValues = { ...values };
-    colors.forEach(color => {
-      if (newValues[color]?.[oldSize] !== undefined) {
-        newValues[color][newName] = newValues[color][oldSize];
-        delete newValues[color][oldSize];
+    colorObjects.forEach(colorObj => {
+      const colorName = colorObj.name;
+      if (newValues[colorName]?.[oldSize] !== undefined) {
+        newValues[colorName][newName] = newValues[colorName][oldSize];
+        delete newValues[colorName][oldSize];
       }
     });
     
-    const grandTotal = calculateGrandTotal(newSizes, colors, newValues);
-    onChange({ sizes: newSizes, colors, values: newValues, grandTotal });
+    const grandTotal = calculateGrandTotal(newSizes, colorObjects, newValues);
+    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes: newSizes, colors: colorData, values: newValues, grandTotal });
   };
 
   const updateColor = (index, newName) => {
@@ -304,8 +306,6 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     const newColorObjects = [...colorObjects];
     newColorObjects[index] = { ...newColorObjects[index], name: newName };
     setColorObjects(newColorObjects);
-    
-    const newColors = newColorObjects.map(obj => obj.name);
     
     const newValues = { ...values };
     if (newValues[oldColorName]) {
