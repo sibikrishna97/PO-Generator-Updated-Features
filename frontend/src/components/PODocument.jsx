@@ -17,7 +17,8 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
     matrix, 
     packing, 
     terms, 
-    authorisation 
+    authorisation,
+    taxDetails
   } = data;
 
   const [settingsLogo, setSettingsLogo] = useState(null);
