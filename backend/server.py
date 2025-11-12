@@ -552,12 +552,17 @@ async def get_settings():
             "next_pi_number": 1,
             "pi_prefix": "PI/",
             "use_pi_prefix": False,
+            "default_unit_price": 0.0,
             "logo_base64": None,
             "logo_filename": None,
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
         await db.settings.insert_one(default_settings)
         settings = default_settings
+    
+    # Ensure default_unit_price exists in response (for backward compatibility)
+    if 'default_unit_price' not in settings:
+        settings['default_unit_price'] = 0.0
     
     # Remove _id from response
     settings.pop('_id', None)
