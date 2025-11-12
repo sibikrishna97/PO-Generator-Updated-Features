@@ -135,51 +135,63 @@ backend:
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/SizeColourMatrix.jsx"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Complete rewrite to support per-row pricing: Added Unit Price and Row Amount columns, stable ID system for colors with pricing data, drag-and-drop maintains prices, live calculation updates, totals bar with Total Quantity and Total Amount, Indian currency formatting, validation with warning border for empty prices, backward compatibility with old data format."
+      - working: true
+        agent: "testing"
+        comment: "✅ COMPREHENSIVE TESTING PASSED: All per-row pricing features working perfectly! Confirmed: 1) Unit Price column with editable inputs (step=0.01), 2) Row Amount column with live calculations, 3) Row Qty column showing quantity totals, 4) Indian currency formatting (₹) with proper grouping, 5) Live calculation updates when editing prices/quantities, 6) Totals bar with Total Quantity and Total Amount, 7) Add color functionality working, 8) Edit functionality allows modifying unit prices with immediate updates. Matrix structure is complete and fully functional."
         
   - task: "POEditor - Remove Pricing from Order Summary"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/POEditor.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Removed Unit Price and Total Amount fields from Order Lines section. Added fetchSettings to get default_unit_price from backend. Passed defaultUnitPrice prop to SizeColourMatrix. Updated heading to 'Size–Colour Breakdown (with Pricing)'. Added note that pricing is managed in the matrix table."
+      - working: true
+        agent: "testing"
+        comment: "✅ PRICING REMOVAL CONFIRMED: Order Lines section successfully cleaned of pricing fields. Verified: 1) NO Unit Price fields in Order Lines, 2) NO Total Amount fields in Order Lines, 3) Helpful note present: 'Pricing is managed in Size-Colour Breakdown table below', 4) Heading correctly shows 'Size–Colour Breakdown (with Pricing)', 5) All pricing functionality moved to matrix section as intended. Clean separation achieved."
   
   - task: "PODocument - Preview/PDF with Pricing"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/components/PODocument.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Updated Size-Colour table in PDF/Preview to show Row Qty, Unit Price, Row Amount columns. Removed Unit Price and Total Amount from Order Summary. Added totals bar below matrix showing Total Quantity and Total Amount. Handles both old (string) and new (object) color formats. Uses Indian currency formatting for all price displays."
+      - working: true
+        agent: "testing"
+        comment: "✅ PREVIEW/PDF STRUCTURE CONFIRMED: Preview dialog shows correct pricing structure. Verified: 1) Order Summary table clean (NO Unit Price/Total Amount columns), 2) Size-Colour Breakdown (with Pricing) table includes all columns: Colour, S, M, L, XL, Row Qty, Unit Price, Row Amount, 3) Currency formatting with ₹ symbol throughout, 4) Total row calculations correct, 5) Totals bar shows 'Total Quantity: X pieces' and 'Total Amount: ₹X.XX', 6) Backward compatibility - existing POs display correctly. PDF structure updated successfully."
   
   - task: "Settings - Default Unit Price Configuration"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/frontend/src/pages/Settings.jsx"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Added 'Pricing Settings' card with Default Unit Price input field. Fetches and saves default_unit_price to backend. New color rows will be prefilled with this value. Added helpful notes about usage."
+      - working: true
+        agent: "testing"
+        comment: "✅ DEFAULT UNIT PRICE SETTINGS CONFIRMED: Settings page fully functional. Verified: 1) 'Pricing Settings' section present and visible, 2) 'Default Unit Price for New Colour Rows' input field working, 3) Number input accepts decimal values (tested with 295.50), 4) 'Save Price' button functional, 5) Success message appears: 'Default unit price updated successfully', 6) Helpful note explains usage: 'When you add a new colour row in the Size–Colour Breakdown table, it will be prefilled with this value', 7) Warning note: 'This setting only affects new colour rows. Existing rows will retain their current prices'. Complete settings implementation working."
 
   - task: "PO Loading with Backward Compatibility"
     implemented: true
