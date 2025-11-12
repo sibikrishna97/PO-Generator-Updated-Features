@@ -295,6 +295,11 @@ export default function POEditor() {
       setPacking(po.packing_instructions);
       setTerms(po.other_terms);
       setAuthorisation(po.authorisation);
+      
+      // Load tax details if available (for PI)
+      if (po.tax_details) {
+        setTaxDetails(po.tax_details);
+      }
     } catch (error) {
       console.error('Error fetching PO:', error);
       toast.error('Failed to load PO');
