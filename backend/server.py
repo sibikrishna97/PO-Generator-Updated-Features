@@ -571,9 +571,9 @@ async def get_settings():
 
 @api_router.patch("/settings")
 async def update_settings(settings_update: Dict[str, Any]):
-    """Update app settings (PO/PI prefixes and flags)"""
+    """Update app settings (PO/PI prefixes, flags, and default pricing)"""
     # Only allow updating specific fields
-    allowed_fields = ['po_prefix', 'use_po_prefix', 'pi_prefix', 'use_pi_prefix']
+    allowed_fields = ['po_prefix', 'use_po_prefix', 'pi_prefix', 'use_pi_prefix', 'default_unit_price']
     update_data = {k: v for k, v in settings_update.items() if k in allowed_fields}
     
     if not update_data:
