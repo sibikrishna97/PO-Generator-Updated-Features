@@ -257,17 +257,15 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
       const oldIndex = colorObjects.findIndex(obj => obj.id === active.id);
       const newIndex = colorObjects.findIndex(obj => obj.id === over.id);
       
-      // Reorder colorObjects array
+      // Reorder colorObjects array (including prices)
       const newColorObjects = arrayMove(colorObjects, oldIndex, newIndex);
       setColorObjects(newColorObjects);
       
-      // Extract color names for parent component
-      const newColors = newColorObjects.map(obj => obj.name);
-      
       // Values remain the same - just the order changes
-      const grandTotal = calculateGrandTotal(sizes, newColors, values);
+      const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
+      const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
       
-      onChange({ sizes, colors: newColors, values, grandTotal });
+      onChange({ sizes, colors: colorData, values, grandTotal });
     }
   };
 
@@ -277,11 +275,11 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     const newColorObjects = colorObjects.filter((_, i) => i !== index);
     setColorObjects(newColorObjects);
     
-    const newColors = newColorObjects.map(obj => obj.name);
     const newValues = { ...values };
     delete newValues[colorToRemove];
-    const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
-    onChange({ sizes, colors: newColors, values: newValues, grandTotal });
+    const grandTotal = calculateGrandTotal(sizes, newColorObjects, newValues);
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes, colors: colorData, values: newValues, grandTotal });
   };
 
   const updateSize = (index, newName) => {
