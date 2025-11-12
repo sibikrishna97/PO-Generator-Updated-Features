@@ -27,6 +27,7 @@ export default function POEditor() {
   const [loading, setLoading] = useState(false);
   const [openPreview, setOpenPreview] = useState(false);
   const [docType, setDocType] = useState('PO'); // 'PO' or 'PI'
+  const [defaultUnitPrice, setDefaultUnitPrice] = useState(0);
 
   // Directory lists for dropdowns
   const [buyers, setBuyers] = useState([]);
