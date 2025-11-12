@@ -164,7 +164,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       </div>
 
-      {/* Order Summary - Full Bordered Table */}
+      {/* Order Summary - Full Bordered Table (No Pricing) */}
       {Array.isArray(orderLines) && orderLines.length > 0 && (
         <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
           <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Order Summary</div>
@@ -177,33 +177,20 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                 <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Colours</th>
                 <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'left' }}>Size Range</th>
                 <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Quantity</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Unit Price</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>Total Amount</th>
               </tr>
             </thead>
             <tbody>
-              {orderLines.map((line, idx) => {
-                const amount = Number(line.quantity) * Number(line.unit_price);
-                return (
-                  <tr key={idx}>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.style_code}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.fabric_gsm}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixColours}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixSizeRange}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatQty(line.quantity)}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatINR(line.unit_price)}</td>
-                    <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatINR(amount)}</td>
-                  </tr>
-                );
-              })}
+              {orderLines.map((line, idx) => (
+                <tr key={idx}>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.style_code}</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', whiteSpace: 'pre-wrap' }}>{line.product_description}</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{line.fabric_gsm}</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixColours}</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB' }}>{matrixSizeRange}</td>
+                  <td style={{ fontSize: '9pt', padding: '6px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatQty(line.quantity)}</td>
+                </tr>
+              ))}
             </tbody>
-            <tfoot>
-              <tr style={{ borderTop: '1pt solid #D1D5DB' }}>
-                <td colSpan="7" style={{ fontSize: '9.5pt', fontWeight: '600', padding: '8px', textAlign: 'right' }}>Subtotal</td>
-                <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '8px', textAlign: 'right' }}>{formatINR(subtotal)}</td>
-              </tr>
-            </tfoot>
           </table>
         </div>
       )}
