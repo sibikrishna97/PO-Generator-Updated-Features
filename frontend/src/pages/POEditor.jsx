@@ -554,6 +554,17 @@ export default function POEditor() {
     }
   };
 
+  // Auto-sync order line quantity from matrix total
+  React.useEffect(() => {
+    if (orderLines.length === 1 && matrix.grandTotal !== undefined) {
+      const updated = [...orderLines];
+      if (updated[0].quantity !== matrix.grandTotal) {
+        updated[0].quantity = matrix.grandTotal;
+        setOrderLines(updated);
+      }
+    }
+  }, [matrix.grandTotal]);
+
   const prepareDocumentData = () => ({
     docType,
     poNumber,
