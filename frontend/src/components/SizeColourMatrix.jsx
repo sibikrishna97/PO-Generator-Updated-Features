@@ -403,7 +403,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
                 </th>
               ))}
               <th className="text-center p-2 min-w-[80px] border-r border-neutral-200">
-                <span className="font-semibold">Row Qty</span>
+                <span className="font-semibold">Quantity</span>
               </th>
               <th className="text-center p-2 min-w-[100px] border-r border-neutral-200">
                 <span className="font-semibold">Unit Price</span>
@@ -420,7 +420,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
-                  <span className="font-semibold">Row Amount</span>
+                  <span className="font-semibold">Amount</span>
                 </div>
               </th>
             </tr>
