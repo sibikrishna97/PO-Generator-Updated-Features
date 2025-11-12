@@ -48,6 +48,11 @@ function SortableColorRow({
     opacity: isDragging ? 0.5 : 1,
   };
 
+  // Calculate row quantity and amount
+  const rowQty = sizes.reduce((sum, s) => sum + (Number(values?.[color]?.[s]) || 0), 0);
+  const rowAmount = rowQty * (unitPrice || 0);
+  const hasWarning = unitPrice === 0 || unitPrice === '' || unitPrice === null;
+
   return (
     <tr ref={setNodeRef} style={style}>
       <td className="border border-neutral-300 px-2 py-1 bg-neutral-50 font-medium">
@@ -92,7 +97,27 @@ function SortableColorRow({
         </td>
       ))}
       <td className="border border-neutral-300 px-2 py-1 bg-neutral-100 font-medium text-center">
-        {sizes.reduce((sum, s) => sum + (Number(values?.[color]?.[s]) || 0), 0)}
+        {rowQty}
+      </td>
+      <td className={`border border-neutral-300 px-2 py-1 ${hasWarning ? 'border-amber-400 border-2' : ''}`}>
+        <Input
+          type="number"
+          step="0.01"
+          min="0"
+          value={unitPrice || ''}
+          onChange={(e) => {
+            const value = e.target.value;
+            // Allow only numbers and up to 2 decimal places
+            if (value === '' || /^\d*\.?\d{0,2}$/.test(value)) {
+              onUpdatePrice(parseFloat(value) || 0);
+            }
+          }}
+          className="h-7 text-sm text-right"
+          placeholder="0.00"
+        />
+      </td>
+      <td className="border border-neutral-300 px-2 py-1 bg-neutral-50 font-medium text-right">
+        {formatINR(rowAmount)}
       </td>
     </tr>
   );
