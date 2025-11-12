@@ -125,6 +125,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "FINAL RE-TEST RESULTS: ✅ Settings API (Scenario 1): All tests pass - default_unit_price field exists, PUT updates work, values persist correctly. ❌ PO Creation with New Format (Scenario 2): STILL FAILING - OrderLine.colors field validation error. The test sends colors as objects in order_lines but OrderLine model only accepts List[str]. The logic in create_po (lines 258-264) should extract color names from size_colour_breakdown.colors and populate order_lines.colors with strings only. ✅ Backward Compatibility (Scenario 3): Perfect - old POs load correctly, string colors converted to objects with unit_price: 0.0. ROOT CAUSE: Test data incorrectly sends colors as objects in order_lines. Should send empty colors array [] in order_lines and let backend extract from size_colour_breakdown."
+      - working: false
+        agent: "testing"
+        comment: "CORRECTED TEST RESULTS: Even with corrected test data (empty colors:[] in order_lines), PO creation still fails with same validation error. ANALYSIS: The issue occurs during POCreate model validation BEFORE the create_po logic runs. When size_colour_breakdown.colors contains objects, and if any order_lines.colors field gets populated with these objects during validation, OrderLine model rejects them. The create_po extraction logic (lines 258-264) runs AFTER Pydantic validation. CONCLUSION: Backend per-row pricing implementation has a fundamental validation flow issue that prevents new format PO creation."
 
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
