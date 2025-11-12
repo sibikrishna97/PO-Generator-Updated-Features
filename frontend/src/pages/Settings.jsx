@@ -17,20 +17,25 @@ export default function Settings() {
   const [uploading, setUploading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
+  const [defaultUnitPrice, setDefaultUnitPrice] = useState(0);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    fetchLogo();
+    fetchSettings();
   }, []);
 
-  const fetchLogo = async () => {
+  const fetchSettings = async () => {
     try {
-      const response = await axios.get(`${API}/settings/logo`);
-      if (response.data.logo_base64) {
-        setLogo(response.data.logo_base64);
-        setLogoFilename(response.data.logo_filename);
+      const response = await axios.get(`${API}/settings`);
+      if (response.data) {
+        if (response.data.logo_base64) {
+          setLogo(response.data.logo_base64);
+          setLogoFilename(response.data.logo_filename);
+        }
+        setDefaultUnitPrice(response.data.default_unit_price || 0);
       }
     } catch (error) {
-      console.error('Error fetching logo:', error);
+      console.error('Error fetching settings:', error);
     }
   };
 
