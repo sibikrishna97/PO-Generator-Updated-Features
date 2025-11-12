@@ -313,8 +313,19 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
       delete newValues[oldColorName];
     }
     
-    const grandTotal = calculateGrandTotal(sizes, newColors, newValues);
-    onChange({ sizes, colors: newColors, values: newValues, grandTotal });
+    const grandTotal = calculateGrandTotal(sizes, newColorObjects, newValues);
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes, colors: colorData, values: newValues, grandTotal });
+  };
+
+  const updatePrice = (index, newPrice) => {
+    const newColorObjects = [...colorObjects];
+    newColorObjects[index] = { ...newColorObjects[index], unitPrice: newPrice };
+    setColorObjects(newColorObjects);
+    
+    const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes, colors: colorData, values, grandTotal });
   };
 
   const getRowTotal = (color) => {
@@ -324,8 +335,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
   };
 
   const getColTotal = (size) => {
-    return colors.reduce((sum, color) => {
-      return sum + (Number(values?.[color]?.[size]) || 0);
+    return colorObjects.reduce((sum, colorObj) => {
+      return sum + (Number(values?.[colorObj.name]?.[size]) || 0);
     }, 0);
   };
 
