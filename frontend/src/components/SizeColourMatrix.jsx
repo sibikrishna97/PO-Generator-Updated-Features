@@ -123,44 +123,59 @@ function SortableColorRow({
   );
 }
 
-export const SizeColourMatrix = ({ sizes, colors, values, onChange }) => {
-  // Convert colors array to objects with stable IDs if needed
-  // This ensures backward compatibility while fixing the focus issue
+export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitPrice = 0 }) => {
+  // Convert colors to objects with stable IDs and pricing
+  // Colors can be: ["Black", "Grey"] (old) or [{name: "Black", unitPrice: 295}, ...] (new)
   const [colorObjects, setColorObjects] = React.useState(() => {
-    return colors.map((color, index) => ({
-      id: `color-${Date.now()}-${index}`,
-      name: color
-    }));
+    return colors.map((color, index) => {
+      if (typeof color === 'string') {
+        // Old format - convert to new
+        return {
+          id: `color-${Date.now()}-${index}`,
+          name: color,
+          unitPrice: defaultUnitPrice
+        };
+      } else {
+        // New format - add ID if missing
+        return {
+          id: color.id || `color-${Date.now()}-${index}`,
+          name: color.name,
+          unitPrice: color.unitPrice || color.unit_price || defaultUnitPrice
+        };
+      }
+    });
   });
 
   // Update colorObjects when colors prop changes (e.g., on load)
   React.useEffect(() => {
     setColorObjects(prevColorObjects => {
-      // If color names have changed, update them while preserving IDs
-      if (colors.length !== prevColorObjects.length || 
-          colors.some((color, i) => color !== prevColorObjects[i]?.name)) {
-        // Check if this is a name change (same length) or structure change
-        if (colors.length === prevColorObjects.length) {
-          // Likely a name update, preserve IDs
-          return prevColorObjects.map((obj, i) => ({
-            id: obj.id,
-            name: colors[i]
-          }));
-        } else {
-          // Structure changed (add/remove), regenerate
-          return colors.map((color, index) => {
-            // Try to find existing ID for this color name
-            const existing = prevColorObjects.find(obj => obj.name === color);
-            return {
-              id: existing?.id || `color-${Date.now()}-${index}-${Math.random()}`,
-              name: color
-            };
-          });
-        }
+      // Convert incoming colors to comparable format
+      const incomingColors = colors.map(c => 
+        typeof c === 'string' ? { name: c, unitPrice: defaultUnitPrice } : 
+        { name: c.name, unitPrice: c.unitPrice || c.unit_price || defaultUnitPrice }
+      );
+      
+      // Check if data has changed
+      const hasChanged = colors.length !== prevColorObjects.length || 
+        incomingColors.some((color, i) => 
+          color.name !== prevColorObjects[i]?.name || 
+          color.unitPrice !== prevColorObjects[i]?.unitPrice
+        );
+      
+      if (hasChanged) {
+        // Update while preserving IDs where possible
+        return incomingColors.map((color, index) => {
+          const existing = prevColorObjects.find(obj => obj.name === color.name);
+          return {
+            id: existing?.id || `color-${Date.now()}-${index}-${Math.random()}`,
+            name: color.name,
+            unitPrice: color.unitPrice
+          };
+        });
       }
       return prevColorObjects;
     });
-  }, [colors]);
+  }, [colors, defaultUnitPrice]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
