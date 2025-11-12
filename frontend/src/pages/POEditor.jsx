@@ -119,6 +119,14 @@ export default function POEditor() {
     supplier_name: ''
   });
 
+  // Tax/GST details (for PI only)
+  const [taxDetails, setTaxDetails] = useState({
+    gst_percentage: 0,
+    cgst_percentage: 0,
+    sgst_percentage: 0,
+    igst_percentage: 0
+  });
+
   useEffect(() => {
     // Fetch directories and settings on mount
     fetchDirectories();
