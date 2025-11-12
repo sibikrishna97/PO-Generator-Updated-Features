@@ -395,7 +395,13 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
                   </div>
                 </th>
               ))}
-              <th className="text-center p-2 min-w-[80px] border-l-2 border-neutral-300">
+              <th className="text-center p-2 min-w-[80px] border-r border-neutral-200">
+                <span className="font-semibold">Row Qty</span>
+              </th>
+              <th className="text-center p-2 min-w-[100px] border-r border-neutral-200">
+                <span className="font-semibold">Unit Price</span>
+              </th>
+              <th className="text-center p-2 min-w-[120px] border-l-2 border-neutral-300">
                 <div className="flex items-center justify-center">
                   <Button
                     type="button"
