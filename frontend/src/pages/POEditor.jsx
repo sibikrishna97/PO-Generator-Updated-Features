@@ -637,8 +637,8 @@ export default function POEditor() {
           </div>
         </div>
 
-        {/* Mismatch Warning */}
-        {matrixMismatch && (
+        {/* Mismatch Warning - Only show for multiple order lines since single line auto-syncs */}
+        {matrixMismatch && orderLines.length > 1 && (
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-md flex items-center justify-between" data-testid="matrix-mismatch-warning">
             <div className="flex items-center gap-2 text-amber-800">
               <AlertCircle className="h-4 w-4" />
