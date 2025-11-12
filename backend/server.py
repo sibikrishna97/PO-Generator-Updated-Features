@@ -256,7 +256,12 @@ async def create_po(po_data: POCreate):
         # If colors/size_range not provided in order_lines, derive from breakdown
         for line in po_data.order_lines:
             if not line.colors:
-                line.colors = po_data.size_colour_breakdown.colors
+                # Extract color names from color objects (backward compatible)
+                breakdown_colors = po_data.size_colour_breakdown.colors
+                if breakdown_colors and isinstance(breakdown_colors[0], dict):
+                    line.colors = [c.get('name', c) if isinstance(c, dict) else c for c in breakdown_colors]
+                else:
+                    line.colors = breakdown_colors
             if not line.size_range:
                 line.size_range = po_data.size_colour_breakdown.sizes
         
