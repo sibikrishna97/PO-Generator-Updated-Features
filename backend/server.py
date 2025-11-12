@@ -330,7 +330,12 @@ async def update_po(po_id: str, po_update: POUpdate):
         if 'order_lines' in update_data and 'size_colour_breakdown' in update_data:
             for line in update_data['order_lines']:
                 if not line.get('colors'):
-                    line['colors'] = update_data['size_colour_breakdown']['colors']
+                    # Extract color names from color objects (backward compatible)
+                    breakdown_colors = update_data['size_colour_breakdown']['colors']
+                    if breakdown_colors and isinstance(breakdown_colors[0], dict):
+                        line['colors'] = [c.get('name', c) if isinstance(c, dict) else c for c in breakdown_colors]
+                    else:
+                        line['colors'] = breakdown_colors
                 if not line.get('size_range'):
                     line['size_range'] = update_data['size_colour_breakdown']['sizes']
         
