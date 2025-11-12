@@ -148,7 +148,7 @@ def test_create_po_new_format():
             ],
             "values": {
                 "Black": {"S": 20, "M": 30, "L": 25, "XL": 15},
-                "Navy": {"S": 25, "M": 35, "L": 30, "XL": 20}
+                "Navy Blue": {"S": 25, "M": 35, "L": 30, "XL": 20}
             },
             "grand_total": 200
         },
