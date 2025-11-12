@@ -87,7 +87,7 @@ export default function POEditor() {
   // Matrix
   const [matrix, setMatrix] = useState({
     sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-    colors: ['Black', 'Grey Melange', 'Charcoal Melange'],
+    colors: ['Color1'],
     values: {},
     grandTotal: 0
   });
