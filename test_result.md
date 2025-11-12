@@ -105,17 +105,17 @@
 user_problem_statement: "Per-row custom pricing in Size-Colour table: Add editable Unit Price per row, auto Row Amount, totals bar, remove pricing from Order Summary, update Preview/PDF, and add default price setting."
 
 backend:
-  - task: "Size-Colour Breakdown API"
+  - task: "Per-row Pricing Data Model"
     implemented: true
     working: "NA"
     file: "/app/backend/server.py"
     stuck_count: 0
-    priority: "medium"
-    needs_retesting: false
+    priority: "high"
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Backend endpoints exist. No changes made to backend in this fix."
+        comment: "Updated Pydantic models: Added ColorRow class with name/unitPrice, updated SizeColourBreakdown to support both old (strings) and new (objects) format with validator for backward compatibility. Added default_unit_price to AppSettings model."
 
 frontend:
   - task: "Color Input Focus Issue in Matrix"
