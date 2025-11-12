@@ -253,19 +253,29 @@ async def root():
 @api_router.post("/pos", response_model=PurchaseOrder)
 async def create_po(po_data: POCreate):
     try:
-        # If colors/size_range not provided in order_lines, derive from breakdown
-        for line in po_data.order_lines:
-            if not line.colors:
-                # Extract color names from color objects (backward compatible)
-                breakdown_colors = po_data.size_colour_breakdown.colors
-                if breakdown_colors and isinstance(breakdown_colors[0], dict):
-                    line.colors = [c.get('name', c) if isinstance(c, dict) else c for c in breakdown_colors]
-                else:
-                    line.colors = breakdown_colors
-            if not line.size_range:
-                line.size_range = po_data.size_colour_breakdown.sizes
+        # Convert to dict for manipulation
+        po_dict = po_data.model_dump()
         
-        po_obj = PurchaseOrder(**po_data.model_dump())
+        # If colors/size_range not provided in order_lines, derive from breakdown
+        breakdown_colors = po_dict.get('size_colour_breakdown', {}).get('colors', [])
+        breakdown_sizes = po_dict.get('size_colour_breakdown', {}).get('sizes', [])
+        
+        # Extract color names if colors are objects
+        color_names = []
+        if breakdown_colors:
+            for c in breakdown_colors:
+                if isinstance(c, dict):
+                    color_names.append(c.get('name', ''))
+                else:
+                    color_names.append(c)
+        
+        for line in po_dict.get('order_lines', []):
+            if not line.get('colors'):
+                line['colors'] = color_names
+            if not line.get('size_range'):
+                line['size_range'] = breakdown_sizes
+        
+        po_obj = PurchaseOrder(**po_dict)
         doc = po_obj.model_dump()
         doc['created_at'] = doc['created_at'].isoformat()
         doc['updated_at'] = doc['updated_at'].isoformat()
