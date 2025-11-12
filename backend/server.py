@@ -225,6 +225,7 @@ class POCreate(BaseModel):
     logo_url: Optional[str] = None
 
 class POUpdate(BaseModel):
+    doc_type: Optional[str] = None
     po_number: Optional[str] = None
     po_date: Optional[str] = None
     bill_to: Optional[Party] = None
@@ -239,6 +240,7 @@ class POUpdate(BaseModel):
     packing_instructions: Optional[PackingInstructions] = None
     other_terms: Optional[OtherTerms] = None
     authorisation: Optional[Authorisation] = None
+    tax_details: Optional[TaxDetails] = None
     logo_url: Optional[str] = None
 
 
