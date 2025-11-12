@@ -300,6 +300,72 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       )}
 
+      {/* Tax Details Section (Only for Proforma Invoice) */}
+      {docType === 'PI' && taxDetails && (
+        <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Tax Details</div>
+          <div style={{ padding: '12px' }}>
+            {(() => {
+              // Calculate amounts
+              const subtotal = matrix?.colors?.reduce((total, colorData) => {
+                const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || 0);
+                const rowQty = matrix.sizes.reduce((sum, size) => {
+                  return sum + (Number(matrix.values?.[colorName]?.[size]) || 0);
+                }, 0);
+                return total + (rowQty * unitPrice);
+              }, 0) || 0;
+
+              const gstAmount = subtotal * ((taxDetails.gst_percentage || 0) / 100);
+              const cgstAmount = subtotal * ((taxDetails.cgst_percentage || 0) / 100);
+              const sgstAmount = subtotal * ((taxDetails.sgst_percentage || 0) / 100);
+              const igstAmount = subtotal * ((taxDetails.igst_percentage || 0) / 100);
+              const totalTax = gstAmount + cgstAmount + sgstAmount + igstAmount;
+              const netTotal = subtotal + totalTax;
+
+              return (
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <tbody>
+                    <tr>
+                      <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', textAlign: 'right', width: '70%' }}>Subtotal:</td>
+                      <td style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', textAlign: 'right', width: '30%' }}>{formatINR(subtotal)}</td>
+                    </tr>
+                    {(taxDetails.gst_percentage || 0) > 0 && (
+                      <tr>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>GST ({taxDetails.gst_percentage}%):</td>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>{formatINR(gstAmount)}</td>
+                      </tr>
+                    )}
+                    {(taxDetails.cgst_percentage || 0) > 0 && (
+                      <tr>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>CGST ({taxDetails.cgst_percentage}%):</td>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>{formatINR(cgstAmount)}</td>
+                      </tr>
+                    )}
+                    {(taxDetails.sgst_percentage || 0) > 0 && (
+                      <tr>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>SGST ({taxDetails.sgst_percentage}%):</td>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>{formatINR(sgstAmount)}</td>
+                      </tr>
+                    )}
+                    {(taxDetails.igst_percentage || 0) > 0 && (
+                      <tr>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>IGST ({taxDetails.igst_percentage}%):</td>
+                        <td style={{ fontSize: '9pt', padding: '6px 8px', textAlign: 'right' }}>{formatINR(igstAmount)}</td>
+                      </tr>
+                    )}
+                    <tr style={{ borderTop: '1.5pt solid #374151' }}>
+                      <td style={{ fontSize: '11pt', fontWeight: '700', padding: '8px', textAlign: 'right', color: '#1F2937' }}>Net Total (Payable Amount):</td>
+                      <td style={{ fontSize: '11pt', fontWeight: '700', padding: '8px', textAlign: 'right', color: '#2563EB' }}>{formatINR(netTotal)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              );
+            })()}
+          </div>
+        </div>
+      )}
+
       {/* Packing Instructions - Full Width Rows */}
       {packing && Object.values(packing).some(v => v) && (
         <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
