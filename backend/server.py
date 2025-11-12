@@ -63,11 +63,25 @@ class OrderLine(BaseModel):
             return [s.strip() for s in v.split(',') if s.strip()]
         return v or []
 
+class ColorRow(BaseModel):
+    """Represents a single color row with quantities and pricing"""
+    name: str
+    unit_price: Optional[float] = 0.0
+    
 class SizeColourBreakdown(BaseModel):
     sizes: List[str]
-    colors: List[str]
+    colors: Union[List[str], List[ColorRow]]  # Support both old (strings) and new (objects) format
     values: Dict[str, Dict[str, int]]  # {color: {size: count}}
     grand_total: int
+    
+    @field_validator('colors', mode='before')
+    @classmethod
+    def ensure_color_objects(cls, v):
+        """Convert old string format to new object format for backward compatibility"""
+        if v and isinstance(v[0], str):
+            # Old format: ["Black", "Grey"]
+            return [{"name": color, "unit_price": 0.0} for color in v]
+        return v or []
 
 class PackingInstructions(BaseModel):
     folding_instruction: Optional[str] = None
