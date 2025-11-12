@@ -1100,7 +1100,7 @@ export default function POEditor() {
                       />
                       <p className="text-xs text-neutral-500 mt-1">Note: Colours and Size Range will be auto-populated from Size–Colour Breakdown</p>
                     </div>
-                    <div className="grid md:grid-cols-1 gap-3">
+                    <div className="grid md:grid-cols-2 gap-3">
                       <div>
                         <Label>Quantity</Label>
                         <Input
@@ -1114,9 +1114,22 @@ export default function POEditor() {
                         />
                         <p className="text-xs text-neutral-500 mt-1">
                           {orderLines.length === 1 
-                            ? 'Auto-synced from Size-Colour Breakdown Total Quantity. Pricing managed in breakdown table.'
-                            : 'Note: Pricing is managed in Size-Colour Breakdown table below'
+                            ? 'Auto-synced from matrix total'
+                            : 'Enter quantity'
                           }
+                        </p>
+                      </div>
+                      <div>
+                        <Label>Total Amount</Label>
+                        <Input
+                          type="text"
+                          value={formatINR(calculateMatrixTotalAmount())}
+                          disabled
+                          className="bg-neutral-50 font-semibold"
+                          data-testid={`order-line-${idx}-total-amount`}
+                        />
+                        <p className="text-xs text-neutral-500 mt-1">
+                          Auto-calculated from Size-Colour Breakdown
                         </p>
                       </div>
                     </div>
