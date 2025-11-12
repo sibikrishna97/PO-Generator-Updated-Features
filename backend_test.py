@@ -196,7 +196,7 @@ def test_create_po_new_format():
                     
                     # Verify specific values
                     black_color = next((c for c in colors if c['name'] == 'Black'), None)
-                    navy_color = next((c for c in colors if c['name'] == 'Navy'), None)
+                    navy_color = next((c for c in colors if c['name'] == 'Navy Blue'), None)
                     
                     if black_color and black_color.get('unit_price') == 295:
                         print("✅ Black color unit_price correctly saved (295)")
@@ -204,10 +204,26 @@ def test_create_po_new_format():
                         print(f"❌ Black color unit_price incorrect: {black_color}")
                         return False, None
                     
-                    if navy_color and navy_color.get('unit_price') == 300:
-                        print("✅ Navy color unit_price correctly saved (300)")
+                    if navy_color and navy_color.get('unit_price') == 310:
+                        print("✅ Navy Blue color unit_price correctly saved (310)")
                     else:
-                        print(f"❌ Navy color unit_price incorrect: {navy_color}")
+                        print(f"❌ Navy Blue color unit_price incorrect: {navy_color}")
+                        return False, None
+                        
+                    # CRITICAL: Verify order_lines.colors was populated with extracted names
+                    order_lines = created_po.get('order_lines', [])
+                    if order_lines and len(order_lines) > 0:
+                        line_colors = order_lines[0].get('colors', [])
+                        print(f"Order line colors: {line_colors}")
+                        
+                        expected_names = ["Black", "Navy Blue"]
+                        if isinstance(line_colors, list) and set(line_colors) == set(expected_names):
+                            print("✅ Order line colors correctly extracted from size_colour_breakdown")
+                        else:
+                            print(f"❌ Order line colors not extracted correctly. Expected: {expected_names}, Got: {line_colors}")
+                            return False, None
+                    else:
+                        print("❌ No order lines found in response")
                         return False, None
                         
                 else:
