@@ -453,17 +453,35 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
               {sizes.map((size, ci) => {
                 const colTotal = getColTotal(size);
                 return (
-                  <td key={ci} className="p-2 text-right border-r border-neutral-200" data-testid={`matrix-col-total-${size}`}>
+                  <td key={ci} className="p-2 text-center border-r border-neutral-200" data-testid={`matrix-col-total-${size}`}>
                     {colTotal}
                   </td>
                 );
               })}
-              <td className="p-2 text-right border-l-2 border-neutral-300" data-testid="matrix-grand-total">
-                {grandTotal}
+              <td className="p-2 text-center border-r border-neutral-200" data-testid="matrix-grand-total-qty">
+                {grandTotalQty}
+              </td>
+              <td className="p-2 text-center border-r border-neutral-200" colSpan="1">
+                {/* Empty cell for Unit Price column */}
+              </td>
+              <td className="p-2 text-right border-l-2 border-neutral-300" data-testid="matrix-grand-total-amount">
+                {formatINR(grandTotalAmount)}
               </td>
             </tr>
           </tfoot>
         </table>
+      </div>
+      
+      {/* Totals Summary Bar */}
+      <div className="mt-4 flex justify-end gap-8 text-sm font-semibold">
+        <div className="flex items-center gap-2">
+          <span className="text-neutral-600">Total Quantity:</span>
+          <span className="text-lg">{grandTotalQty} pieces</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-neutral-600">Total Amount:</span>
+          <span className="text-lg text-blue-600">{formatINR(grandTotalAmount)}</span>
+        </div>
       </div>
     </div>
     </DndContext>
