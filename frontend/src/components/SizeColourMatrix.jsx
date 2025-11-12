@@ -430,9 +430,11 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
                   color={colorObj.name}
                   sizes={sizes}
                   values={values}
+                  unitPrice={colorObj.unitPrice}
                   onUpdate={updateCell}
                   onRemove={() => removeColor(ri)}
                   onUpdateName={(newName) => updateColor(ri, newName)}
+                  onUpdatePrice={(newPrice) => updatePrice(ri, newPrice)}
                   canRemove={colorObjects.length > 1}
                 />
               ))}
