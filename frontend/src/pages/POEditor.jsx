@@ -1106,16 +1106,14 @@ export default function POEditor() {
           {/* Size-Colour Matrix */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-4">Size–Colour Breakdown</h2>
+              <h2 className="text-lg font-semibold mb-4">Size–Colour Breakdown (with Pricing)</h2>
               <SizeColourMatrix
                 sizes={matrix.sizes}
                 colors={matrix.colors}
                 values={matrix.values}
                 onChange={setMatrix}
+                defaultUnitPrice={defaultUnitPrice}
               />
-              <div className="mt-3 text-sm text-neutral-600">
-                Grand Total: <span className="font-semibold text-lg">{matrix.grandTotal}</span> pieces
-              </div>
             </CardContent>
           </Card>
 
