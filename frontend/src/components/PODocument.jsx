@@ -206,9 +206,9 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                 {matrix.sizes.map((size, i) => (
                   <th key={i} style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '50px' }}>{size}</th>
                 ))}
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '55px' }}>Row Qty</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '55px' }}>Quantity</th>
                 <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '70px' }}>Unit Price</th>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '85px' }}>Row Amount</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '85px' }}>Amount</th>
               </tr>
             </thead>
             <tbody>
