@@ -632,6 +632,7 @@ def main():
         print("✅ Settings API with default_unit_price works correctly")
         print("✅ PO creation with new format (colors as objects) works")
         print("✅ Data persistence verified for new format")
+        print("✅ PO update with new format works correctly")
         print("✅ Backward compatibility with old format maintained")
         print("=" * 80)
         sys.exit(0)
