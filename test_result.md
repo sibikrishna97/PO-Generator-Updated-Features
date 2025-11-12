@@ -218,10 +218,6 @@ test_plan:
 
 agent_communication:
   - agent: "main"
-    message: "Implemented two fixes: 1) Color input focus bug - added stable ID system to prevent component remount on name changes. 2) Delete PO - added delete button with confirmation in POList, uses existing backend endpoint. Frontend changes complete, ready for testing only the problematic areas."
+    message: "Implemented per-row custom pricing feature across entire application: 1) Backend models updated with ColorRow class and backward compatibility. 2) SizeColourMatrix completely enhanced with Unit Price/Row Amount columns, totals bar, live calculations. 3) Order Summary cleaned - removed pricing fields. 4) PODocument updated for preview/PDF with new columns and totals. 5) Settings page added default unit price configuration. Ready for comprehensive testing."
   - agent: "main"
-    message: "Please test: 1) Edit color names in matrix - verify input maintains focus while typing. 2) Delete a PO from list - verify confirmation dialog appears and PO is removed. User will test manually after automated testing of problematic areas."
-  - agent: "testing"
-    message: "Completed backend testing for DELETE PO functionality. All test scenarios passed successfully: 1) DELETE existing PO returns correct success message, 2) DELETE non-existent PO returns proper 404 error, 3) PO is actually removed from database after deletion. Backend endpoint /api/pos/{po_id} is fully functional. Frontend delete button should work correctly with this backend endpoint."
-  - agent: "testing"
-    message: "✅ BOTH CRITICAL FIXES VERIFIED SUCCESSFULLY: 1) Color Input Focus Fix - Stable ID system working perfectly, no more focus loss when typing in color fields. Users can now type continuously without clicking between characters. 2) Delete PO Functionality - Red delete button visible, confirmation dialog appears with correct PO number and warning message. Both frontend fixes are working as expected and ready for user testing."
+    message: "Please test: 1) Create new PO - verify Unit Price/Row Amount columns appear in matrix, 2) Edit unit prices and quantities - verify live calculations work, 3) Test drag-and-drop maintains prices, 4) Check totals bar displays correctly, 5) Verify Order Summary has no pricing, 6) Test preview/PDF shows all columns, 7) Test Settings default price save/load, 8) Load old POs - verify backward compatibility."
