@@ -109,7 +109,7 @@ backend:
     implemented: true
     working: false
     file: "/app/backend/server.py"
-    stuck_count: 1
+    stuck_count: 2
     priority: "high"
     needs_retesting: false
     status_history:
@@ -122,6 +122,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "RE-TEST RESULTS: ✅ FIXED: Settings API now includes default_unit_price field and PUT endpoint works correctly. ❌ STILL FAILING: PO creation with new format colors still fails with Pydantic validation error. OrderLine model colors field (line 44) only accepts List[str], needs to support Union[List[str], List[ColorRow]] like SizeColourBreakdown does. ✅ Backward compatibility confirmed working - old POs load and convert string colors to objects with unit_price: 0.0."
+      - working: false
+        agent: "testing"
+        comment: "FINAL RE-TEST RESULTS: ✅ Settings API (Scenario 1): All tests pass - default_unit_price field exists, PUT updates work, values persist correctly. ❌ PO Creation with New Format (Scenario 2): STILL FAILING - OrderLine.colors field validation error. The test sends colors as objects in order_lines but OrderLine model only accepts List[str]. The logic in create_po (lines 258-264) should extract color names from size_colour_breakdown.colors and populate order_lines.colors with strings only. ✅ Backward Compatibility (Scenario 3): Perfect - old POs load correctly, string colors converted to objects with unit_price: 0.0. ROOT CAUSE: Test data incorrectly sends colors as objects in order_lines. Should send empty colors array [] in order_lines and let backend extract from size_colour_breakdown."
 
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
