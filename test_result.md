@@ -118,41 +118,53 @@ backend:
         comment: "Updated Pydantic models: Added ColorRow class with name/unitPrice, updated SizeColourBreakdown to support both old (strings) and new (objects) format with validator for backward compatibility. Added default_unit_price to AppSettings model."
 
 frontend:
-  - task: "Color Input Focus Issue in Matrix"
+  - task: "Size-Colour Matrix with Per-row Pricing"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/components/SizeColourMatrix.jsx"
     stuck_count: 0
     priority: "critical"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
-      - working: false
-        agent: "user"
-        comment: "User reported: Color name input field goes inactive after each character typed (e.g., typing 'Black' requires clicking field repeatedly)"
       - working: "NA"
         agent: "main"
-        comment: "Fixed by implementing stable ID system for color objects. Previously used color names as keys, causing React to unmount/remount component on name change. Now using {id, name} objects with stable IDs while maintaining backward compatibility."
-      - working: true
-        agent: "testing"
-        comment: "✅ CRITICAL FIX VERIFIED: Color input focus issue has been resolved. Tested typing 'Navy Blue' character by character in color input fields. The stable ID system is working correctly - input fields maintain focus throughout continuous typing. No more need to click between characters. The fix successfully prevents React component remounting when color names change. Matrix functionality is working perfectly."
+        comment: "Complete rewrite to support per-row pricing: Added Unit Price and Row Amount columns, stable ID system for colors with pricing data, drag-and-drop maintains prices, live calculation updates, totals bar with Total Quantity and Total Amount, Indian currency formatting, validation with warning border for empty prices, backward compatibility with old data format."
         
-  - task: "Delete PO/PI Functionality"
+  - task: "POEditor - Remove Pricing from Order Summary"
     implemented: true
-    working: true
-    file: "/app/frontend/src/pages/POList.jsx"
+    working: "NA"
+    file: "/app/frontend/src/pages/POEditor.jsx"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
       - working: "NA"
         agent: "main"
-        comment: "Added delete button with confirmation dialog in POList. Uses existing backend endpoint /api/pos/{po_id}. Button styled in red with Trash icon, shows confirmation before deletion, refreshes list after success."
-      - working: true
-        agent: "testing"
-        comment: "✅ TESTED SUCCESSFULLY: DELETE PO endpoint works perfectly. 1) Successfully deletes existing PO with correct response message 'PO deleted successfully'. 2) Returns proper 404 error for non-existent PO with message 'PO not found'. 3) Verified PO is actually removed from database after deletion. All test scenarios passed. Backend endpoint /api/pos/{po_id} is fully functional."
-      - working: true
-        agent: "testing"
-        comment: "✅ FRONTEND DELETE FUNCTIONALITY VERIFIED: Delete button (red trash icon) is visible and working correctly in PO list. Confirmation dialog appears with proper message format: 'Are you sure you want to delete [PO_NUMBER]? This action cannot be undone.' Dialog contains correct PO number and warning text. UI integration with backend delete endpoint is functioning perfectly."
+        comment: "Removed Unit Price and Total Amount fields from Order Lines section. Added fetchSettings to get default_unit_price from backend. Passed defaultUnitPrice prop to SizeColourMatrix. Updated heading to 'Size–Colour Breakdown (with Pricing)'. Added note that pricing is managed in the matrix table."
+  
+  - task: "PODocument - Preview/PDF with Pricing"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/components/PODocument.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Updated Size-Colour table in PDF/Preview to show Row Qty, Unit Price, Row Amount columns. Removed Unit Price and Total Amount from Order Summary. Added totals bar below matrix showing Total Quantity and Total Amount. Handles both old (string) and new (object) color formats. Uses Indian currency formatting for all price displays."
+  
+  - task: "Settings - Default Unit Price Configuration"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/pages/Settings.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Added 'Pricing Settings' card with Default Unit Price input field. Fetches and saves default_unit_price to backend. New color rows will be prefilled with this value. Added helpful notes about usage."
 
   - task: "PO Loading with Backward Compatibility"
     implemented: true
