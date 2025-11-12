@@ -620,7 +620,8 @@ export default function POEditor() {
     matrix,
     packing,
     terms,
-    authorisation
+    authorisation,
+    taxDetails
   });
 
   if (loading && id && id !== 'new') {
