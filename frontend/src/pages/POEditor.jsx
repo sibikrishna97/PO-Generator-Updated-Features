@@ -1169,6 +1169,120 @@ export default function POEditor() {
             </CardContent>
           </Card>
 
+          {/* Tax Details Section (Only for Proforma Invoice) */}
+          {docType === 'PI' && (
+            <Card>
+              <CardContent className="pt-6">
+                <h2 className="text-lg font-semibold mb-4">Tax Details</h2>
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>GST / Tax Percentage (%)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={taxDetails.gst_percentage === 0 ? '' : taxDetails.gst_percentage}
+                        onChange={(e) => setTaxDetails({ ...taxDetails, gst_percentage: parseFloat(e.target.value) || 0 })}
+                        placeholder="0.00"
+                        data-testid="tax-gst-percentage"
+                      />
+                      <p className="text-xs text-neutral-500 mt-1">Total GST percentage (e.g., 18 for 18%)</p>
+                    </div>
+                    <div>
+                      <Label>CGST Percentage (%)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={taxDetails.cgst_percentage === 0 ? '' : taxDetails.cgst_percentage}
+                        onChange={(e) => setTaxDetails({ ...taxDetails, cgst_percentage: parseFloat(e.target.value) || 0 })}
+                        placeholder="0.00"
+                        data-testid="tax-cgst-percentage"
+                      />
+                      <p className="text-xs text-neutral-500 mt-1">Central GST (usually GST/2)</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>SGST Percentage (%)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={taxDetails.sgst_percentage === 0 ? '' : taxDetails.sgst_percentage}
+                        onChange={(e) => setTaxDetails({ ...taxDetails, sgst_percentage: parseFloat(e.target.value) || 0 })}
+                        placeholder="0.00"
+                        data-testid="tax-sgst-percentage"
+                      />
+                      <p className="text-xs text-neutral-500 mt-1">State GST (usually GST/2)</p>
+                    </div>
+                    <div>
+                      <Label>IGST Percentage (%)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value={taxDetails.igst_percentage === 0 ? '' : taxDetails.igst_percentage}
+                        onChange={(e) => setTaxDetails({ ...taxDetails, igst_percentage: parseFloat(e.target.value) || 0 })}
+                        placeholder="0.00"
+                        data-testid="tax-igst-percentage"
+                      />
+                      <p className="text-xs text-neutral-500 mt-1">Integrated GST (for inter-state)</p>
+                    </div>
+                  </div>
+
+                  {/* Tax Summary Display */}
+                  <div className="mt-6 p-4 bg-neutral-50 rounded-md space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="font-medium">Subtotal (from Size-Colour Breakdown):</span>
+                      <span className="font-semibold">{formatINR(calculateMatrixTotalAmount())}</span>
+                    </div>
+                    {taxDetails.gst_percentage > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span>GST ({taxDetails.gst_percentage}%):</span>
+                        <span>{formatINR(calculateMatrixTotalAmount() * (taxDetails.gst_percentage / 100))}</span>
+                      </div>
+                    )}
+                    {taxDetails.cgst_percentage > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span>CGST ({taxDetails.cgst_percentage}%):</span>
+                        <span>{formatINR(calculateMatrixTotalAmount() * (taxDetails.cgst_percentage / 100))}</span>
+                      </div>
+                    )}
+                    {taxDetails.sgst_percentage > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span>SGST ({taxDetails.sgst_percentage}%):</span>
+                        <span>{formatINR(calculateMatrixTotalAmount() * (taxDetails.sgst_percentage / 100))}</span>
+                      </div>
+                    )}
+                    {taxDetails.igst_percentage > 0 && (
+                      <div className="flex justify-between text-sm">
+                        <span>IGST ({taxDetails.igst_percentage}%):</span>
+                        <span>{formatINR(calculateMatrixTotalAmount() * (taxDetails.igst_percentage / 100))}</span>
+                      </div>
+                    )}
+                    <Separator className="my-2" />
+                    <div className="flex justify-between text-base font-bold">
+                      <span>Net Total (Payable Amount):</span>
+                      <span className="text-blue-600">
+                        {formatINR(
+                          calculateMatrixTotalAmount() + 
+                          (calculateMatrixTotalAmount() * (taxDetails.gst_percentage + taxDetails.cgst_percentage + taxDetails.sgst_percentage + taxDetails.igst_percentage) / 100)
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Packing Instructions */}
           <Card>
             <CardContent className="pt-6">
