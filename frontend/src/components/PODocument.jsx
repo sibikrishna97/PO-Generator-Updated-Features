@@ -43,7 +43,8 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
   }, 0) || 0;
 
   // Auto-populate colours and sizes from matrix
-  const matrixColours = matrix?.colors?.join(', ') || '';
+  // Handle both old format (strings) and new format (objects with name/unitPrice)
+  const matrixColours = matrix?.colors?.map(c => typeof c === 'string' ? c : c.name).join(', ') || '';
   const matrixSizeRange = matrix?.sizes?.join(', ') || '';
 
   return (
