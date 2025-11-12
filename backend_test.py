@@ -144,7 +144,7 @@ def test_create_po_new_format():
             "sizes": ["S", "M", "L", "XL"],
             "colors": [
                 {"name": "Black", "unit_price": 295},
-                {"name": "Navy", "unit_price": 300}
+                {"name": "Navy Blue", "unit_price": 310}
             ],
             "values": {
                 "Black": {"S": 20, "M": 30, "L": 25, "XL": 15},
