@@ -570,6 +570,7 @@ async def get_settings():
 
 
 @api_router.patch("/settings")
+@api_router.put("/settings")
 async def update_settings(settings_update: Dict[str, Any]):
     """Update app settings (PO/PI prefixes, flags, and default pricing)"""
     # Only allow updating specific fields
