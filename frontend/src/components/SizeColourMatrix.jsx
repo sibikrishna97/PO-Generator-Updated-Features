@@ -401,19 +401,19 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
               <th className="text-center p-2 min-w-[100px] border-r border-neutral-200">
                 <span className="font-semibold">Unit Price</span>
               </th>
-              <th className="text-center p-2 min-w-[120px] border-l-2 border-neutral-300">
-                <div className="flex items-center justify-center">
+              <th className="text-center p-2 min-w-[80px] border-l-2 border-neutral-300">
+                <div className="flex items-center justify-center gap-2">
                   <Button
                     type="button"
                     size="sm"
                     variant="ghost"
                     onClick={addSize}
-                    className="h-6 w-6 p-0 mr-2"
+                    className="h-6 w-6 p-0"
                     data-testid="matrix-add-size"
                   >
                     <Plus className="h-3 w-3" />
                   </Button>
-                  <span className="font-semibold">Total</span>
+                  <span className="font-semibold">Row Amount</span>
                 </div>
               </th>
             </tr>
