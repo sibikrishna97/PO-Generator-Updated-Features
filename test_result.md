@@ -206,7 +206,12 @@ metadata:
   run_ui: true
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Per-row Pricing Data Model"
+    - "Size-Colour Matrix with Per-row Pricing"
+    - "POEditor - Remove Pricing from Order Summary"
+    - "PODocument - Preview/PDF with Pricing"
+    - "Settings - Default Unit Price Configuration"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
