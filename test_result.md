@@ -119,6 +119,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUES FOUND: 1) Settings API missing default_unit_price field - GET /api/settings returns all fields except default_unit_price. 2) PO creation with new format fails - Pydantic validation error when trying to create PO with colors as objects [{name: 'Black', unit_price: 295}]. Error: 'Input should be a valid string' for colors field. The OrderLine model still expects colors as List[str] instead of supporting both formats. ✅ Backward compatibility works - old POs with string colors load correctly and are converted to objects with unit_price: 0.0."
+      - working: false
+        agent: "testing"
+        comment: "RE-TEST RESULTS: ✅ FIXED: Settings API now includes default_unit_price field and PUT endpoint works correctly. ❌ STILL FAILING: PO creation with new format colors still fails with Pydantic validation error. OrderLine model colors field (line 44) only accepts List[str], needs to support Union[List[str], List[ColorRow]] like SizeColourBreakdown does. ✅ Backward compatibility confirmed working - old POs load and convert string colors to objects with unit_price: 0.0."
 
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
