@@ -157,6 +157,12 @@ class BillTo(BaseModel):
     notes: Optional[str] = None
     created_at: str = Field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
 
+class TaxDetails(BaseModel):
+    gst_percentage: float = 0.0
+    cgst_percentage: float = 0.0
+    sgst_percentage: float = 0.0
+    igst_percentage: float = 0.0
+
 class AppSettings(BaseModel):
     logo_base64: Optional[str] = None
     logo_filename: Optional[str] = None
