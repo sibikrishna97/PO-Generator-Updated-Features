@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "1. Fix bug where color input field in Size-Colour Matrix loses focus after each character typed. 2. Add delete PO/PI functionality."
+user_problem_statement: "Per-row custom pricing in Size-Colour table: Add editable Unit Price per row, auto Row Amount, totals bar, remove pricing from Order Summary, update Preview/PDF, and add default price setting."
 
 backend:
   - task: "Size-Colour Breakdown API"
