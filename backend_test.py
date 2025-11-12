@@ -459,108 +459,60 @@ def create_and_test_old_format_po():
         print(f"❌ Error creating old format PO: {str(e)}")
         return False
 
-def create_test_po():
-    """Create a test PO for deletion testing"""
-    print("Creating test PO...")
-    
-    test_po_data = {
-        "po_number": f"TEST-DELETE-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-        "po_date": "2024-01-15",
-        "bill_to": {
-            "company": "Test Bill To Company",
-            "address_lines": ["123 Test Street", "Test City", "Test State"],
-            "gstin": "TEST123456789",
-            "contact_name": "Test Contact",
-            "phone": "1234567890",
-            "email": "test@example.com"
-        },
-        "buyer": {
-            "company": "Newline Apparel",
-            "address_lines": ["61, GKD Nagar, PN Palayam", "Coimbatore – 641037", "Tamil Nadu"],
-            "gstin": "33AABCN1234F1Z5"
-        },
-        "supplier": {
-            "company": "Test Supplier Ltd",
-            "address_lines": ["456 Supplier Ave", "Supplier City", "Supplier State"],
-            "gstin": "SUP123456789",
-            "contact_name": "Supplier Contact",
-            "phone": "9876543210",
-            "email": "supplier@example.com"
-        },
-        "delivery_date": "2024-02-15",
-        "delivery_terms": "FOB Destination",
-        "payment_terms": "Net 30",
-        "currency": "INR",
-        "order_lines": [
-            {
-                "style_code": "TEST-001",
-                "product_description": "Test Product for Deletion",
-                "fabric_gsm": "180 GSM",
-                "colors": ["Red", "Blue"],
-                "size_range": ["S", "M", "L"],
-                "quantity": 100,
-                "unit_price": 25.50,
-                "unit": "pcs"
-            }
-        ],
-        "size_colour_breakdown": {
-            "sizes": ["S", "M", "L"],
-            "colors": ["Red", "Blue"],
-            "values": {
-                "Red": {"S": 10, "M": 15, "L": 20},
-                "Blue": {"S": 15, "M": 20, "L": 20}
-            },
-            "grand_total": 100
-        },
-        "packing_instructions": {
-            "folding_instruction": "Fold neatly",
-            "packing_instruction": "Pack in poly bags",
-            "carton_bag_markings": "Handle with care"
-        },
-        "other_terms": {
-            "qc": "Standard QC",
-            "labels_tags": "As per buyer requirement",
-            "shortage_excess": "±5%",
-            "penalty": "As per agreement",
-            "notes": "Test PO for deletion testing"
-        },
-        "authorisation": {
-            "buyer_company": "Newline Apparel",
-            "buyer_designation": "Purchase Manager",
-            "buyer_name": "Test Buyer",
-            "supplier_company": "Test Supplier Ltd",
-            "supplier_designation": "Sales Manager",
-            "supplier_name": "Test Supplier"
-        }
-    }
-    
-    try:
-        response = requests.post(f"{BACKEND_URL}/pos", json=test_po_data)
-        if response.status_code == 200:
-            created_po = response.json()
-            po_id = created_po['id']
-            print(f"✅ Test PO created successfully with ID: {po_id}")
-            return po_id
-        else:
-            print(f"❌ Failed to create test PO: {response.status_code} - {response.text}")
-            return None
-    except Exception as e:
-        print(f"❌ Error creating test PO: {str(e)}")
-        return None
-
 def main():
-    """Main test execution"""
-    print("Starting Backend API Tests for DELETE PO Endpoint")
+    """Main test execution for Per-row Pricing Feature"""
+    print("Starting Backend API Tests for Per-row Pricing Feature")
     print(f"Backend URL: {BACKEND_URL}")
+    print("=" * 80)
     
-    # Test delete PO functionality
-    success = test_delete_po_endpoint()
+    all_tests_passed = True
     
-    if success:
-        print("\n🎉 All tests completed successfully!")
+    # Scenario 1: Settings API - Default Unit Price
+    print("\n🧪 RUNNING SCENARIO 1: Settings API - Default Unit Price")
+    if not test_settings_default_unit_price():
+        all_tests_passed = False
+        print("❌ SCENARIO 1 FAILED")
+    else:
+        print("✅ SCENARIO 1 PASSED")
+    
+    # Scenario 2: Create PO with New Format
+    print("\n🧪 RUNNING SCENARIO 2: Create PO with New Format")
+    success, po_id = test_create_po_new_format()
+    if not success:
+        all_tests_passed = False
+        print("❌ SCENARIO 2 FAILED")
+    else:
+        print("✅ SCENARIO 2.1 PASSED")
+        
+        # Test retrieving the PO
+        if po_id and test_retrieve_new_format_po(po_id):
+            print("✅ SCENARIO 2.2 PASSED")
+        else:
+            all_tests_passed = False
+            print("❌ SCENARIO 2.2 FAILED")
+    
+    # Scenario 3: Backward Compatibility
+    print("\n🧪 RUNNING SCENARIO 3: Backward Compatibility - Load Old PO")
+    if not test_backward_compatibility():
+        all_tests_passed = False
+        print("❌ SCENARIO 3 FAILED")
+    else:
+        print("✅ SCENARIO 3 PASSED")
+    
+    # Final Results
+    print("\n" + "=" * 80)
+    if all_tests_passed:
+        print("🎉 ALL PER-ROW PRICING TESTS COMPLETED SUCCESSFULLY!")
+        print("✅ Settings API with default_unit_price works correctly")
+        print("✅ PO creation with new format (colors as objects) works")
+        print("✅ Data persistence verified for new format")
+        print("✅ Backward compatibility with old format maintained")
+        print("=" * 80)
         sys.exit(0)
     else:
-        print("\n💥 Some tests failed!")
+        print("💥 SOME PER-ROW PRICING TESTS FAILED!")
+        print("❌ Check the detailed output above for specific failures")
+        print("=" * 80)
         sys.exit(1)
 
 if __name__ == "__main__":
