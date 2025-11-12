@@ -387,7 +387,8 @@ export default function POEditor() {
         size_colour_breakdown: preparedMatrix,
         packing_instructions: packing,
         other_terms: terms,
-        authorisation
+        authorisation,
+        tax_details: taxDetails
       };
 
       if (id && id !== 'new') {
