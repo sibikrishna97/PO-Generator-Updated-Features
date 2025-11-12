@@ -1085,8 +1085,14 @@ export default function POEditor() {
                           onChange={(e) => updateOrderLine(idx, 'quantity', e.target.value === '' ? 0 : parseInt(e.target.value) || 0)}
                           placeholder="0"
                           data-testid={`order-line-${idx}-quantity`}
+                          disabled={orderLines.length === 1}
                         />
-                        <p className="text-xs text-neutral-500 mt-1">Note: Pricing is managed in Size–Colour Breakdown table below</p>
+                        <p className="text-xs text-neutral-500 mt-1">
+                          {orderLines.length === 1 
+                            ? 'Auto-synced from Size-Colour Breakdown Total Quantity. Pricing managed in breakdown table.'
+                            : 'Note: Pricing is managed in Size-Colour Breakdown table below'
+                          }
+                        </p>
                       </div>
                     </div>
                   </div>
