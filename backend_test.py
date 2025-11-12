@@ -609,13 +609,21 @@ def main():
             all_tests_passed = False
             print("❌ SCENARIO 2.2 FAILED")
     
-    # Scenario 3: Backward Compatibility
-    print("\n🧪 RUNNING SCENARIO 3: Backward Compatibility - Load Old PO")
-    if not test_backward_compatibility():
+    # Scenario 3: Update Existing PO
+    print("\n🧪 RUNNING SCENARIO 3: Update Existing PO with New Format")
+    if not test_update_existing_po():
         all_tests_passed = False
         print("❌ SCENARIO 3 FAILED")
     else:
         print("✅ SCENARIO 3 PASSED")
+    
+    # Scenario 4: Backward Compatibility
+    print("\n🧪 RUNNING SCENARIO 4: Backward Compatibility - Load Old PO")
+    if not test_backward_compatibility():
+        all_tests_passed = False
+        print("❌ SCENARIO 4 FAILED")
+    else:
+        print("✅ SCENARIO 4 PASSED")
     
     # Final Results
     print("\n" + "=" * 80)
