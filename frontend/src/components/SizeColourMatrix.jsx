@@ -206,43 +206,48 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
       }
     };
     
-    const grandTotal = calculateGrandTotal(sizes, colors, newValues);
+    const grandTotal = calculateGrandTotal(sizes, colorObjects, newValues);
+    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
     
-    onChange({ sizes, colors, values: newValues, grandTotal });
+    onChange({ sizes, colors: colorData, values: newValues, grandTotal });
   };
 
   const addSize = () => {
     const newSize = `Size${sizes.length + 1}`;
     const newSizes = [...sizes, newSize];
-    const grandTotal = calculateGrandTotal(newSizes, colors, values);
-    onChange({ sizes: newSizes, colors, values, grandTotal });
+    const grandTotal = calculateGrandTotal(newSizes, colorObjects, values);
+    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes: newSizes, colors: colorData, values, grandTotal });
   };
 
   const removeSize = (index) => {
     if (sizes.length <= 1) return;
     const newSizes = sizes.filter((_, i) => i !== index);
     const newValues = { ...values };
-    colors.forEach(color => {
-      if (newValues[color]) {
-        delete newValues[color][sizes[index]];
+    colorObjects.forEach(colorObj => {
+      const colorName = colorObj.name;
+      if (newValues[colorName]) {
+        delete newValues[colorName][sizes[index]];
       }
     });
-    const grandTotal = calculateGrandTotal(newSizes, colors, newValues);
-    onChange({ sizes: newSizes, colors, values: newValues, grandTotal });
+    const grandTotal = calculateGrandTotal(newSizes, colorObjects, newValues);
+    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes: newSizes, colors: colorData, values: newValues, grandTotal });
   };
 
   const addColor = () => {
-    const newColorName = `Color${colors.length + 1}`;
+    const newColorName = `Color${colorObjects.length + 1}`;
     const newColorObj = {
       id: `color-${Date.now()}-${colorObjects.length}`,
-      name: newColorName
+      name: newColorName,
+      unitPrice: defaultUnitPrice
     };
     const newColorObjects = [...colorObjects, newColorObj];
     setColorObjects(newColorObjects);
     
-    const newColors = newColorObjects.map(obj => obj.name);
-    const grandTotal = calculateGrandTotal(sizes, newColors, values);
-    onChange({ sizes, colors: newColors, values, grandTotal });
+    const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    onChange({ sizes, colors: colorData, values, grandTotal });
   };
 
   const handleDragEnd = (event) => {
