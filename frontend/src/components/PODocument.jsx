@@ -208,34 +208,42 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
         </div>
       )}
 
-      {/* Size–Colour Breakdown - Full Width Table */}
+      {/* Size–Colour Breakdown - Full Width Table with Pricing */}
       {matrix && matrix.sizes?.length > 0 && matrix.colors?.length > 0 && (
         <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
-          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Size–Colour Breakdown</div>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Size–Colour Breakdown (with Pricing)</div>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ backgroundColor: '#F5F5F7' }}>
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'left', minWidth: '120px' }}>Colour</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'left', minWidth: '100px' }}>Colour</th>
                 {matrix.sizes.map((size, i) => (
-                  <th key={i} style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '60px' }}>{size}</th>
+                  <th key={i} style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '50px' }}>{size}</th>
                 ))}
-                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '70px' }}>Total</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '55px' }}>Row Qty</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '70px' }}>Unit Price</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '85px' }}>Row Amount</th>
               </tr>
             </thead>
             <tbody>
-              {matrix.colors.map((color, ri) => {
-                const rowTotal = matrix.sizes.reduce((acc, size) => {
-                  return acc + (Number(matrix.values?.[color]?.[size]) || 0);
+              {matrix.colors.map((colorData, ri) => {
+                const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || colorData.unit_price || 0);
+                const rowQty = matrix.sizes.reduce((acc, size) => {
+                  return acc + (Number(matrix.values?.[colorName]?.[size]) || 0);
                 }, 0);
+                const rowAmount = rowQty * unitPrice;
+                
                 return (
                   <tr key={ri}>
-                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>{color}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>{colorName}</td>
                     {matrix.sizes.map((size, ci) => (
                       <td key={ci} style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>
-                        {Number(matrix.values?.[color]?.[size]) || 0}
+                        {Number(matrix.values?.[colorName]?.[size]) || 0}
                       </td>
                     ))}
-                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', fontWeight: '500' }}>{rowTotal}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', fontWeight: '500' }}>{rowQty}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{formatINR(unitPrice)}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', fontWeight: '500' }}>{formatINR(rowAmount)}</td>
                   </tr>
                 );
               })}
@@ -244,17 +252,50 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
               <tr style={{ fontWeight: '600', backgroundColor: '#F5F5F7' }}>
                 <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>Total</td>
                 {matrix.sizes.map((size, ci) => {
-                  const colTotal = matrix.colors.reduce((acc, color) => {
-                    return acc + (Number(matrix.values?.[color]?.[size]) || 0);
+                  const colTotal = matrix.colors.reduce((acc, colorData) => {
+                    const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                    return acc + (Number(matrix.values?.[colorName]?.[size]) || 0);
                   }, 0);
                   return (
                     <td key={ci} style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{colTotal}</td>
                   );
                 })}
                 <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>{matrix.grandTotal || 0}</td>
+                <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'center' }}>—</td>
+                <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>
+                  {formatINR(
+                    matrix.colors.reduce((acc, colorData) => {
+                      const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                      const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || colorData.unit_price || 0);
+                      const rowQty = matrix.sizes.reduce((sum, size) => sum + (Number(matrix.values?.[colorName]?.[size]) || 0), 0);
+                      return acc + (rowQty * unitPrice);
+                    }, 0)
+                  )}
+                </td>
               </tr>
             </tfoot>
           </table>
+          
+          {/* Totals Summary Bar */}
+          <div style={{ padding: '10px 12px', backgroundColor: '#F9FAFB', borderTop: '0.75pt solid #D1D5DB', display: 'flex', justifyContent: 'flex-end', gap: '30px', fontSize: '10pt', fontWeight: '600' }}>
+            <div>
+              <span style={{ color: '#6B7280' }}>Total Quantity: </span>
+              <span>{matrix.grandTotal || 0} pieces</span>
+            </div>
+            <div>
+              <span style={{ color: '#6B7280' }}>Total Amount: </span>
+              <span style={{ color: '#2563EB' }}>
+                {formatINR(
+                  matrix.colors.reduce((acc, colorData) => {
+                    const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                    const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || colorData.unit_price || 0);
+                    const rowQty = matrix.sizes.reduce((sum, size) => sum + (Number(matrix.values?.[colorName]?.[size]) || 0), 0);
+                    return acc + (rowQty * unitPrice);
+                  }, 0)
+                )}
+              </span>
+            </div>
+          </div>
         </div>
       )}
 
