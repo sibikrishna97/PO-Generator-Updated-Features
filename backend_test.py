@@ -133,10 +133,7 @@ def test_create_po_new_format():
                 "style_code": "NL-T001",
                 "product_description": "Premium Cotton T-Shirt with Per-Row Pricing",
                 "fabric_gsm": "180 GSM Cotton",
-                "colors": [
-                    {"name": "Black", "unit_price": 295},
-                    {"name": "Navy", "unit_price": 300}
-                ],
+                "colors": [],  # Empty - backend should extract from size_colour_breakdown
                 "size_range": ["S", "M", "L", "XL"],
                 "quantity": 200,
                 "unit_price": 297.50,  # Average price
