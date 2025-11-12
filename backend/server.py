@@ -338,16 +338,23 @@ async def update_po(po_id: str, po_update: POUpdate):
         
         # If colors/size_range not provided in order_lines, derive from breakdown
         if 'order_lines' in update_data and 'size_colour_breakdown' in update_data:
+            breakdown_colors = update_data['size_colour_breakdown'].get('colors', [])
+            breakdown_sizes = update_data['size_colour_breakdown'].get('sizes', [])
+            
+            # Extract color names if colors are objects
+            color_names = []
+            if breakdown_colors:
+                for c in breakdown_colors:
+                    if isinstance(c, dict):
+                        color_names.append(c.get('name', ''))
+                    else:
+                        color_names.append(c)
+            
             for line in update_data['order_lines']:
                 if not line.get('colors'):
-                    # Extract color names from color objects (backward compatible)
-                    breakdown_colors = update_data['size_colour_breakdown']['colors']
-                    if breakdown_colors and isinstance(breakdown_colors[0], dict):
-                        line['colors'] = [c.get('name', c) if isinstance(c, dict) else c for c in breakdown_colors]
-                    else:
-                        line['colors'] = breakdown_colors
+                    line['colors'] = color_names
                 if not line.get('size_range'):
-                    line['size_range'] = update_data['size_colour_breakdown']['sizes']
+                    line['size_range'] = breakdown_sizes
         
         update_data['updated_at'] = datetime.now(timezone.utc).isoformat()
         
