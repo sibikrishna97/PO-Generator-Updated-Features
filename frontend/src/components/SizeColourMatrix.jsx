@@ -184,9 +184,13 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     })
   );
   
-  // Helper function to calculate grand total
-  const calculateGrandTotal = (sizesList, colorsList, valuesList) => {
-    return colorsList.reduce((acc, c) => {
+  // Helper to get color names from color objects
+  const getColorNames = (colorObjs) => colorObjs.map(c => c.name);
+  
+  // Helper function to calculate grand total quantity
+  const calculateGrandTotal = (sizesList, colorObjs, valuesList) => {
+    const colorNames = getColorNames(colorObjs);
+    return colorNames.reduce((acc, c) => {
       return acc + sizesList.reduce((sum, s) => {
         return sum + (Number(valuesList?.[c]?.[s]) || 0);
       }, 0);
