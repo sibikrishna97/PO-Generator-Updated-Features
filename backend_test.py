@@ -278,6 +278,111 @@ def test_retrieve_new_format_po(po_id):
         print(f"❌ Error retrieving PO: {str(e)}")
         return False
 
+def test_update_existing_po():
+    """Test Scenario 3: Update Existing PO with New Pricing Format"""
+    print("\n" + "=" * 60)
+    print("SCENARIO 3: TESTING UPDATE EXISTING PO WITH NEW FORMAT")
+    print("=" * 60)
+    
+    # First get an existing PO to update
+    print("\n3.1 Finding existing PO to update...")
+    try:
+        response = requests.get(f"{BACKEND_URL}/pos")
+        if response.status_code == 200:
+            pos = response.json()
+            if len(pos) > 0:
+                # Use the first PO for updating
+                existing_po = pos[0]
+                po_id = existing_po['id']
+                po_number = existing_po.get('po_number', 'Unknown')
+                print(f"✅ Found existing PO to update: {po_number} (ID: {po_id})")
+                
+                # Update with new pricing format
+                update_data = {
+                    "size_colour_breakdown": {
+                        "sizes": ["S", "M", "L", "XL"],
+                        "colors": [
+                            {"name": "Updated Black", "unit_price": 320},
+                            {"name": "Updated Navy", "unit_price": 335}
+                        ],
+                        "values": {
+                            "Updated Black": {"S": 15, "M": 25, "L": 20, "XL": 10},
+                            "Updated Navy": {"S": 20, "M": 30, "L": 25, "XL": 15}
+                        },
+                        "grand_total": 160
+                    },
+                    "order_lines": [
+                        {
+                            "style_code": "UPD-001",
+                            "product_description": "Updated Product with New Pricing",
+                            "fabric_gsm": "200 GSM",
+                            "colors": [],  # Empty - should be populated by backend
+                            "size_range": ["S", "M", "L", "XL"],
+                            "quantity": 160,
+                            "unit_price": 327.50,
+                            "unit": "pcs"
+                        }
+                    ]
+                }
+                
+                print(f"\n3.2 Updating PO {po_number} with new pricing format...")
+                response = requests.put(f"{BACKEND_URL}/pos/{po_id}", json=update_data)
+                print(f"Update Response Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    updated_po = response.json()
+                    print("✅ PO updated successfully")
+                    
+                    # Verify the update worked
+                    breakdown = updated_po.get('size_colour_breakdown', {})
+                    colors = breakdown.get('colors', [])
+                    
+                    if isinstance(colors, list) and len(colors) >= 2:
+                        updated_black = next((c for c in colors if c['name'] == 'Updated Black'), None)
+                        updated_navy = next((c for c in colors if c['name'] == 'Updated Navy'), None)
+                        
+                        if updated_black and updated_black.get('unit_price') == 320:
+                            print("✅ Updated Black color price correctly saved (320)")
+                        else:
+                            print(f"❌ Updated Black color incorrect: {updated_black}")
+                            return False
+                        
+                        if updated_navy and updated_navy.get('unit_price') == 335:
+                            print("✅ Updated Navy color price correctly saved (335)")
+                        else:
+                            print(f"❌ Updated Navy color incorrect: {updated_navy}")
+                            return False
+                        
+                        # Check if order_lines colors were extracted
+                        order_lines = updated_po.get('order_lines', [])
+                        if order_lines and len(order_lines) > 0:
+                            line_colors = order_lines[0].get('colors', [])
+                            expected_names = ["Updated Black", "Updated Navy"]
+                            if isinstance(line_colors, list) and set(line_colors) == set(expected_names):
+                                print("✅ Order line colors correctly extracted after update")
+                                return True
+                            else:
+                                print(f"❌ Order line colors not extracted after update. Expected: {expected_names}, Got: {line_colors}")
+                                return False
+                        else:
+                            print("❌ No order lines found after update")
+                            return False
+                    else:
+                        print(f"❌ Invalid colors after update: {colors}")
+                        return False
+                else:
+                    print(f"❌ Failed to update PO: {response.status_code} - {response.text}")
+                    return False
+            else:
+                print("⚠️  No existing POs found to update")
+                return True  # Skip this test if no POs exist
+        else:
+            print(f"❌ Failed to get existing POs: {response.status_code}")
+            return False
+    except Exception as e:
+        print(f"❌ Error in update test: {str(e)}")
+        return False
+
 def test_backward_compatibility():
     """Test Scenario 3: Backward Compatibility - Load Old PO"""
     print("\n" + "=" * 60)
