@@ -119,7 +119,7 @@ export default function Settings() {
         toast.success('Logo removed successfully');
         
         // Force re-fetch to ensure UI is in sync
-        await fetchLogo();
+        await fetchSettings();
       }
     } catch (error) {
       console.error('Error deleting logo:', error);
@@ -127,6 +127,24 @@ export default function Settings() {
       toast.error(errorMessage);
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const handleSaveDefaultPrice = async () => {
+    try {
+      setSaving(true);
+      const response = await axios.put(`${API}/settings`, {
+        default_unit_price: parseFloat(defaultUnitPrice) || 0
+      });
+      
+      if (response.status === 200) {
+        toast.success('Default unit price updated successfully');
+      }
+    } catch (error) {
+      console.error('Error saving default price:', error);
+      toast.error('Failed to save default unit price');
+    } finally {
+      setSaving(false);
     }
   };
 
