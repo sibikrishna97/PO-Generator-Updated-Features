@@ -554,16 +554,41 @@ export default function POEditor() {
     }
   };
 
-  // Auto-sync order line quantity from matrix total
+  // Calculate total amount from matrix
+  const calculateMatrixTotalAmount = () => {
+    if (!matrix.colors || !matrix.sizes || !matrix.values) return 0;
+    
+    return matrix.colors.reduce((total, colorData) => {
+      const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+      const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || 0);
+      
+      const rowQty = matrix.sizes.reduce((sum, size) => {
+        return sum + (Number(matrix.values?.[colorName]?.[size]) || 0);
+      }, 0);
+      
+      return total + (rowQty * unitPrice);
+    }, 0);
+  };
+
+  // Auto-sync order line quantity and total amount from matrix
   React.useEffect(() => {
     if (orderLines.length === 1 && matrix.grandTotal !== undefined) {
       const updated = [...orderLines];
+      const totalAmount = calculateMatrixTotalAmount();
+      
       if (updated[0].quantity !== matrix.grandTotal) {
         updated[0].quantity = matrix.grandTotal;
-        setOrderLines(updated);
       }
+      
+      // Store total amount in unit_price temporarily (we'll use a separate display)
+      // This is just for the calculation, we won't show unit_price field
+      if (matrix.grandTotal > 0) {
+        updated[0].unit_price = totalAmount; // Store total amount here
+      }
+      
+      setOrderLines(updated);
     }
-  }, [matrix.grandTotal]);
+  }, [matrix.grandTotal, matrix.colors, matrix.values]);
 
   const prepareDocumentData = () => ({
     docType,
