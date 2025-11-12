@@ -1064,7 +1064,7 @@ export default function POEditor() {
                       />
                       <p className="text-xs text-neutral-500 mt-1">Note: Colours and Size Range will be auto-populated from Size–Colour Breakdown</p>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-3">
+                    <div className="grid md:grid-cols-1 gap-3">
                       <div>
                         <Label>Quantity</Label>
                         <Input
@@ -1075,26 +1075,7 @@ export default function POEditor() {
                           placeholder="0"
                           data-testid={`order-line-${idx}-quantity`}
                         />
-                      </div>
-                      <div>
-                        <Label>Unit Price</Label>
-                        <Input
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          value={line.unit_price === 0 ? '' : line.unit_price}
-                          onChange={(e) => updateOrderLine(idx, 'unit_price', e.target.value === '' ? 0 : parseFloat(e.target.value) || 0)}
-                          placeholder="0.00"
-                          data-testid={`order-line-${idx}-price`}
-                        />
-                      </div>
-                      <div>
-                        <Label>Total</Label>
-                        <Input
-                          value={(line.quantity * line.unit_price).toFixed(2)}
-                          disabled
-                          className="bg-neutral-50"
-                        />
+                        <p className="text-xs text-neutral-500 mt-1">Note: Pricing is managed in Size–Colour Breakdown table below</p>
                       </div>
                     </div>
                   </div>
