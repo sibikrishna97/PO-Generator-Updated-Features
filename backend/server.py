@@ -167,6 +167,8 @@ class AppSettings(BaseModel):
     next_pi_number: int = 1
     pi_prefix: str = "PI/"
     use_pi_prefix: bool = False
+    # Pricing settings
+    default_unit_price: Optional[float] = 0.0
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class PurchaseOrder(BaseModel):
