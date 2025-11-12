@@ -249,7 +249,49 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        {/* Additional Settings can be added here in future */}
+        {/* Pricing Settings Card */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Pricing Settings</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="default-unit-price">Default Unit Price for New Colour Rows</Label>
+                <p className="text-sm text-neutral-500 mt-1 mb-3">
+                  When you add a new colour row in the Size–Colour Breakdown table, it will be prefilled with this value. You can override it per row.
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1 max-w-xs">
+                    <Input
+                      id="default-unit-price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={defaultUnitPrice}
+                      onChange={(e) => setDefaultUnitPrice(parseFloat(e.target.value) || 0)}
+                      placeholder="0.00"
+                      data-testid="default-unit-price-input"
+                    />
+                  </div>
+                  <Button
+                    onClick={handleSaveDefaultPrice}
+                    disabled={saving}
+                    data-testid="save-default-price-button"
+                  >
+                    {saving ? 'Saving...' : 'Save Price'}
+                  </Button>
+                </div>
+              </div>
+
+              <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                <p className="text-sm text-amber-800">
+                  <strong>Note:</strong> This setting only affects new colour rows. Existing rows will retain their current prices.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
