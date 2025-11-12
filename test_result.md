@@ -107,7 +107,7 @@ user_problem_statement: "Per-row custom pricing in Size-Colour table: Add editab
 backend:
   - task: "Per-row Pricing Data Model"
     implemented: true
-    working: false
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 2
     priority: "high"
@@ -128,6 +128,9 @@ backend:
       - working: false
         agent: "testing"
         comment: "CORRECTED TEST RESULTS: Even with corrected test data (empty colors:[] in order_lines), PO creation still fails with same validation error. ANALYSIS: The issue occurs during POCreate model validation BEFORE the create_po logic runs. When size_colour_breakdown.colors contains objects, and if any order_lines.colors field gets populated with these objects during validation, OrderLine model rejects them. The create_po extraction logic (lines 258-264) runs AFTER Pydantic validation. CONCLUSION: Backend per-row pricing implementation has a fundamental validation flow issue that prevents new format PO creation."
+      - working: true
+        agent: "testing"
+        comment: "✅ FINAL COMPREHENSIVE TEST PASSED: All 4 scenarios completed successfully after Pydantic model mutation fix. Scenario 1 (Settings API): default_unit_price field works correctly, PUT updates persist. Scenario 2 (Create PO with New Format): PO creation with colors as objects [{name: 'Black', unit_price: 295}, {name: 'Navy Blue', unit_price: 310}] works perfectly, order_lines.colors correctly populated with extracted names ['Black', 'Navy Blue']. Scenario 3 (Update Existing PO): PO updates with new pricing format work correctly. Scenario 4 (Backward Compatibility): Old POs with string colors load correctly and convert to objects with unit_price: 0.0. The fix addressed the core Pydantic validation flow issue by converting to dict first, manipulating data, then creating new model objects."
 
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
