@@ -200,6 +200,7 @@ class PurchaseOrder(BaseModel):
     packing_instructions: PackingInstructions
     other_terms: OtherTerms
     authorisation: Authorisation
+    tax_details: Optional[TaxDetails] = Field(default_factory=lambda: TaxDetails())
     logo_url: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
