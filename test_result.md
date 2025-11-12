@@ -107,15 +107,18 @@ user_problem_statement: "Per-row custom pricing in Size-Colour table: Add editab
 backend:
   - task: "Per-row Pricing Data Model"
     implemented: true
-    working: "NA"
+    working: false
     file: "/app/backend/server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
       - working: "NA"
         agent: "main"
         comment: "Updated Pydantic models: Added ColorRow class with name/unitPrice, updated SizeColourBreakdown to support both old (strings) and new (objects) format with validator for backward compatibility. Added default_unit_price to AppSettings model."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUES FOUND: 1) Settings API missing default_unit_price field - GET /api/settings returns all fields except default_unit_price. 2) PO creation with new format fails - Pydantic validation error when trying to create PO with colors as objects [{name: 'Black', unit_price: 295}]. Error: 'Input should be a valid string' for colors field. The OrderLine model still expects colors as List[str] instead of supporting both formats. ✅ Backward compatibility works - old POs with string colors load correctly and are converted to objects with unit_price: 0.0."
 
 frontend:
   - task: "Size-Colour Matrix with Per-row Pricing"
