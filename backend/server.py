@@ -206,6 +206,7 @@ class PurchaseOrder(BaseModel):
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class POCreate(BaseModel):
+    doc_type: str = "PO"
     po_number: str
     po_date: str
     bill_to: Party
@@ -220,6 +221,7 @@ class POCreate(BaseModel):
     packing_instructions: PackingInstructions
     other_terms: OtherTerms
     authorisation: Authorisation
+    tax_details: Optional[TaxDetails] = Field(default_factory=lambda: TaxDetails())
     logo_url: Optional[str] = None
 
 class POUpdate(BaseModel):
