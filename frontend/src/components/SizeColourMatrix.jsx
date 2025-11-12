@@ -18,9 +18,21 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { formatINR } from '../utils/formatters';
 
-// Sortable row component - now using colorId for stable keys
-function SortableColorRow({ colorId, color, sizes, values, onUpdate, onRemove, onUpdateName, canRemove }) {
+// Sortable row component - now using colorId for stable keys with pricing
+function SortableColorRow({ 
+  colorId, 
+  color, 
+  sizes, 
+  values, 
+  onUpdate, 
+  onRemove, 
+  onUpdateName, 
+  onUpdatePrice,
+  unitPrice,
+  canRemove 
+}) {
   const {
     attributes,
     listeners,
