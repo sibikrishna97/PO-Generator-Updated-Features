@@ -340,8 +340,15 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     }, 0);
   };
 
-  const grandTotal = colors.reduce((acc, color) => {
-    return acc + getRowTotal(color);
+  // Calculate totals
+  const grandTotalQty = colorObjects.reduce((acc, colorObj) => {
+    return acc + getRowTotal(colorObj.name);
+  }, 0);
+  
+  const grandTotalAmount = colorObjects.reduce((acc, colorObj) => {
+    const rowQty = getRowTotal(colorObj.name);
+    const rowAmount = rowQty * (colorObj.unitPrice || 0);
+    return acc + rowAmount;
   }, 0);
 
   return (
