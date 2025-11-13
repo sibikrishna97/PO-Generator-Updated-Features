@@ -164,8 +164,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     setColorObjects(prevColorObjects => {
       // Convert incoming colors to comparable format
       const incomingColors = colors.map(c => 
-        typeof c === 'string' ? { name: c, unitPrice: defaultUnitPrice } : 
-        { name: c.name, unitPrice: c.unitPrice || c.unit_price || defaultUnitPrice }
+        typeof c === 'string' ? { name: c, unitPrice: defaultUnitPrice, hsnCode: '' } : 
+        { name: c.name, unitPrice: c.unitPrice || c.unit_price || defaultUnitPrice, hsnCode: c.hsnCode || c.hsn_code || '' }
       );
       
       // Check if data has changed
