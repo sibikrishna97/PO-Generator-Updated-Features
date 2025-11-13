@@ -20,7 +20,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { formatINR } from '../utils/formatters';
 
-// Sortable row component - now using colorId for stable keys with pricing
+// Sortable row component - now using colorId for stable keys with pricing and HSN
 function SortableColorRow({ 
   colorId, 
   color, 
@@ -30,7 +30,9 @@ function SortableColorRow({
   onRemove, 
   onUpdateName, 
   onUpdatePrice,
+  onUpdateHSN,
   unitPrice,
+  hsnCode,
   canRemove 
 }) {
   const {
