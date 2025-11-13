@@ -1158,7 +1158,7 @@ export default function POEditor() {
           {/* Size-Colour Matrix */}
           <Card>
             <CardContent className="pt-6">
-              <h2 className="text-lg font-semibold mb-4">Size–Colour Breakdown (with Pricing)</h2>
+              <h2 className="text-lg font-semibold mb-4">Item-wise Quantity & Pricing Details</h2>
               <SizeColourMatrix
                 sizes={matrix.sizes}
                 colors={matrix.colors}
