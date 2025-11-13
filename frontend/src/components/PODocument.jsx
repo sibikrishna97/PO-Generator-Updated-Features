@@ -256,6 +256,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
             <tfoot>
               <tr style={{ fontWeight: '600', backgroundColor: '#F5F5F7' }}>
                 <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>Total</td>
+                <td style={{ fontSize: '9.5pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}></td>
                 {matrix.sizes.map((size, ci) => {
                   const colTotal = matrix.colors.reduce((acc, colorData) => {
                     const colorName = typeof colorData === 'string' ? colorData : colorData.name;
