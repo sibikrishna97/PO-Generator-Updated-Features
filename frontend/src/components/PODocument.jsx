@@ -213,7 +213,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
       {/* Size–Colour Breakdown - Full Width Table with Pricing */}
       {matrix && matrix.sizes?.length > 0 && matrix.colors?.length > 0 && (
         <div className="mb-3 avoid-break" style={{ border: '0.75pt solid #D1D5DB', borderRadius: '4px', overflow: 'hidden' }}>
-          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Size–Colour Breakdown (with Pricing)</div>
+          <div className="po-section-title" style={{ fontSize: '11pt', fontWeight: '600', padding: '8px', paddingBottom: '4px' }}>Item-wise Quantity & Pricing Details</div>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ backgroundColor: '#F5F5F7' }}>
