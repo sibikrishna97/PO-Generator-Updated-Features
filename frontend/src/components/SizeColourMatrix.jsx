@@ -342,6 +342,16 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     onChange({ sizes, colors: colorData, values, grandTotal });
   };
 
+  const updateHSN = (index, newHSN) => {
+    const newColorObjects = [...colorObjects];
+    newColorObjects[index] = { ...newColorObjects[index], hsnCode: newHSN };
+    setColorObjects(newColorObjects);
+    
+    const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
+    onChange({ sizes, colors: colorData, values, grandTotal });
+  };
+
   const getRowTotal = (color) => {
     return sizes.reduce((sum, size) => {
       return sum + (Number(values?.[color]?.[size]) || 0);
