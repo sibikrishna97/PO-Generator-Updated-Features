@@ -259,7 +259,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     setColorObjects(newColorObjects);
     
     const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
-    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
     onChange({ sizes, colors: colorData, values, grandTotal });
   };
 
@@ -276,7 +276,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
       
       // Values remain the same - just the order changes
       const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
-      const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+      const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
       
       onChange({ sizes, colors: colorData, values, grandTotal });
     }
@@ -291,7 +291,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     const newValues = { ...values };
     delete newValues[colorToRemove];
     const grandTotal = calculateGrandTotal(sizes, newColorObjects, newValues);
-    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
     onChange({ sizes, colors: colorData, values: newValues, grandTotal });
   };
 
@@ -327,7 +327,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     }
     
     const grandTotal = calculateGrandTotal(sizes, newColorObjects, newValues);
-    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
     onChange({ sizes, colors: colorData, values: newValues, grandTotal });
   };
 
@@ -337,7 +337,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     setColorObjects(newColorObjects);
     
     const grandTotal = calculateGrandTotal(sizes, newColorObjects, values);
-    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    const colorData = newColorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
     onChange({ sizes, colors: colorData, values, grandTotal });
   };
 
