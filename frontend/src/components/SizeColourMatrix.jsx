@@ -479,6 +479,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
           <tfoot className="border-t-2 border-neutral-300">
             <tr className="bg-neutral-50 font-semibold">
               <td className="p-2 border-r border-neutral-200">Total</td>
+              <td className="p-2 border-r border-neutral-200">{/* Empty cell for HSN Code */}</td>
               {sizes.map((size, ci) => {
                 const colTotal = getColTotal(size);
                 return (
