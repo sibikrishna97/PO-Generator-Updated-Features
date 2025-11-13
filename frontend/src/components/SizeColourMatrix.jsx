@@ -86,6 +86,15 @@ function SortableColorRow({
           )}
         </div>
       </td>
+      <td className="border border-neutral-300 px-2 py-1">
+        <Input
+          type="text"
+          value={hsnCode || ''}
+          onChange={(e) => onUpdateHSN(e.target.value)}
+          className="h-7 text-sm"
+          placeholder="HSN Code"
+        />
+      </td>
       {sizes.map(size => (
         <td key={size} className="border border-neutral-300 px-2 py-1">
           <Input
