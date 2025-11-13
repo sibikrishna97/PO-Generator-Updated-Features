@@ -220,7 +220,7 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     };
     
     const grandTotal = calculateGrandTotal(sizes, colorObjects, newValues);
-    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice }));
+    const colorData = colorObjects.map(obj => ({ name: obj.name, unitPrice: obj.unitPrice, hsnCode: obj.hsnCode }));
     
     onChange({ sizes, colors: colorData, values: newValues, grandTotal });
   };
