@@ -253,7 +253,8 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
     const newColorObj = {
       id: `color-${Date.now()}-${colorObjects.length}`,
       name: newColorName,
-      unitPrice: defaultUnitPrice
+      unitPrice: defaultUnitPrice,
+      hsnCode: ''
     };
     const newColorObjects = [...colorObjects, newColorObj];
     setColorObjects(newColorObjects);
