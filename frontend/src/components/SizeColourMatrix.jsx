@@ -388,6 +388,9 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
                   </Button>
                 </div>
               </th>
+              <th className="text-center p-2 min-w-[120px] border-r border-neutral-200">
+                <span className="font-semibold">HSN Code</span>
+              </th>
               {sizes.map((size, i) => (
                 <th key={i} className="text-center p-2 min-w-[90px] border-r border-neutral-200" data-testid={`matrix-size-header-${size}`}>
                   <div className="flex items-center justify-center gap-1">
