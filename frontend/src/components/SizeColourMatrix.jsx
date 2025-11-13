@@ -144,14 +144,16 @@ export const SizeColourMatrix = ({ sizes, colors, values, onChange, defaultUnitP
         return {
           id: `color-${Date.now()}-${index}`,
           name: color,
-          unitPrice: defaultUnitPrice
+          unitPrice: defaultUnitPrice,
+          hsnCode: ''
         };
       } else {
         // New format - add ID if missing
         return {
           id: color.id || `color-${Date.now()}-${index}`,
           name: color.name,
-          unitPrice: color.unitPrice || color.unit_price || defaultUnitPrice
+          unitPrice: color.unitPrice || color.unit_price || defaultUnitPrice,
+          hsnCode: color.hsnCode || color.hsn_code || ''
         };
       }
     });
