@@ -218,6 +218,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
             <thead>
               <tr style={{ backgroundColor: '#F5F5F7' }}>
                 <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'left', minWidth: '100px' }}>Colour</th>
+                <th style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'center', minWidth: '80px' }}>HSN Code</th>
                 {matrix.sizes.map((size, i) => (
                   <th key={i} style={{ fontSize: '9.5pt', fontWeight: '600', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right', minWidth: '50px' }}>{size}</th>
                 ))}
@@ -229,6 +230,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
             <tbody>
               {matrix.colors.map((colorData, ri) => {
                 const colorName = typeof colorData === 'string' ? colorData : colorData.name;
+                const hsnCode = typeof colorData === 'string' ? '' : (colorData.hsnCode || colorData.hsn_code || '');
                 const unitPrice = typeof colorData === 'string' ? 0 : (colorData.unitPrice || colorData.unit_price || 0);
                 const rowQty = matrix.sizes.reduce((acc, size) => {
                   return acc + (Number(matrix.values?.[colorName]?.[size]) || 0);
@@ -238,6 +240,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
                 return (
                   <tr key={ri}>
                     <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB' }}>{colorName}</td>
+                    <td style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'center' }}>{hsnCode}</td>
                     {matrix.sizes.map((size, ci) => (
                       <td key={ci} style={{ fontSize: '9pt', padding: '6px 8px', border: '0.5pt solid #D1D5DB', textAlign: 'right' }}>
                         {Number(matrix.values?.[colorName]?.[size]) || 0}
