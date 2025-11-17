@@ -241,6 +241,12 @@ export default function Directory() {
                           {buyer.contact_name && (
                             <p className="text-sm text-neutral-500">Contact: {buyer.contact_name}</p>
                           )}
+                          {buyer.phone && (
+                            <p className="text-sm text-neutral-500">Phone: {buyer.phone}</p>
+                          )}
+                          {buyer.email && (
+                            <p className="text-sm text-neutral-500">Email: {buyer.email}</p>
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Button
