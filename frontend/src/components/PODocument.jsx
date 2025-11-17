@@ -123,6 +123,9 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
             <div key={idx} className="text-[9pt]">{line}</div>
           ))}
           {buyer?.gstin && <div className="text-[9pt] mt-1">GSTIN: {buyer.gstin}</div>}
+          {buyer?.contact_name && <div className="text-[9pt]">Contact: {buyer.contact_name}</div>}
+          {buyer?.phone && <div className="text-[9pt]">Phone: {buyer.phone}</div>}
+          {buyer?.email && <div className="text-[9pt]">Email: {buyer.email}</div>}
         </div>
       </div>
 
