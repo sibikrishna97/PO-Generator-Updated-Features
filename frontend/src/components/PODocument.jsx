@@ -141,6 +141,7 @@ export const PODocument = React.forwardRef(({ data }, ref) => {
           {supplier?.gstin && <div className="text-[9pt] mt-1">GSTIN: {supplier.gstin}</div>}
           {supplier?.contact_name && <div className="text-[9pt]">Contact: {supplier.contact_name}</div>}
           {supplier?.phone && <div className="text-[9pt]">Phone: {supplier.phone}</div>}
+          {supplier?.email && <div className="text-[9pt]">Email: {supplier.email}</div>}
         </div>
 
         {/* PO Meta Details - As Rows */}
