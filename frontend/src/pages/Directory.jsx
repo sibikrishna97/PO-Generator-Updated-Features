@@ -349,6 +349,12 @@ export default function Directory() {
                           {billto.contact_name && (
                             <p className="text-sm text-neutral-500">Contact: {billto.contact_name}</p>
                           )}
+                          {billto.phone && (
+                            <p className="text-sm text-neutral-500">Phone: {billto.phone}</p>
+                          )}
+                          {billto.email && (
+                            <p className="text-sm text-neutral-500">Email: {billto.email}</p>
+                          )}
                         </div>
                         <div className="flex gap-2">
                           <Button
